@@ -257,6 +257,12 @@ public class stroke_panel extends JPanel {
     };
     JPanel through_preview = new JPanel();
 
+    public void flag_update_selected_caster(){
+        if (ink.selected_caster()!=null){
+            ink.selected_caster().casts_updated=true;
+        }
+    }
+
     public stroke_panel(final JFrame frame, final Ink ink) {
 
         this.ink = ink;
@@ -430,7 +436,9 @@ public class stroke_panel extends JPanel {
 
                 if (ink.selected_caster() != null) {
                     ink.selected_caster().bb.opacity = v;
-                    flag_rerender_selected_caster();
+
+                    flag_update_selected_caster();
+                    //flag_rerender_selected_caster();
                     frame.repaint();
                 }
 
@@ -448,7 +456,9 @@ public class stroke_panel extends JPanel {
 
                 if (ink.selected_caster() != null) {
                     ink.selected_caster().bb.thickness = v;
-                    flag_rerender_selected_caster();
+
+                    flag_update_selected_caster();
+                    //flag_rerender_selected_caster();
                     frame.repaint();
                 }
 
@@ -464,7 +474,9 @@ public class stroke_panel extends JPanel {
             Color newColor = tcc.getColor();
             if (ink.selected_caster() != null) {
                 ink.selected_caster().bb.color = newColor;
-                flag_rerender_selected_caster();
+
+                flag_update_selected_caster();
+                //flag_rerender_selected_caster();
                 frame.repaint();
             }
             //banner.setForeground(newColor);

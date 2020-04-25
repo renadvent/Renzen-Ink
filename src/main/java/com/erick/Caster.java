@@ -186,10 +186,26 @@ public class Caster {
     // renders the strokes to the canvas buffer
     public void update_casts() {
 
-        if (casts_updated && casts_rendered) {
-            casts_updated = false;
-        }else if (casts_updated && !casts_rendered){
-            Graphics2D g2d = null;
+        Graphics2D g2d = null;
+
+        if (casts_updated){
+
+            wipe_buffer(stroke_buffer);
+            wipe_buffer(shade_buffer);
+            wipe_buffer(highlighted_strokes_buffer);
+            wipe_buffer(tool_buffer);
+            wipe_buffer(highlighted_tools_buffer);
+
+            if (p1.last_rendered_curves!=null) {
+                g2d = stroke_buffer.createGraphics(); // might change
+                bb.draw_curves(g2d, p1.last_rendered_curves);
+                render_list_to_buffer(p1.last_rendered_curves, highlighted_strokes_buffer);
+                casts_updated = false;
+                g2d.dispose();
+                return;
+            }
+
+            return;
             //draw saved last curves with new color/opacity
 
         }
@@ -201,7 +217,7 @@ public class Caster {
             t.get_intersection_points();
             update_tools();
 
-            Graphics2D g2d = null;
+            //Graphics2D g2d = null;
             RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             p1.last_rendered_curves=new LinkedList<Path2D.Double>();
