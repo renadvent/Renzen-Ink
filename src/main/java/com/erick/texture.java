@@ -25,6 +25,7 @@ public class texture {
         stroke_rendered_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         tool_rendered_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         shade_rendered_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        alpha_rendered_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         overlay_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
@@ -120,6 +121,8 @@ public class texture {
     private BufferedImage tool_rendered_buffer; // viewers' tools render to this buffer
     private BufferedImage shade_rendered_buffer; // viewers write shade to this buffer
 
+    public BufferedImage alpha_rendered_buffer;
+
     BufferedImage overlay_buffer;
 
     private LinkedList<component> components; // individual components to be rendered to component buffer
@@ -161,6 +164,8 @@ public class texture {
             }
 
         }
+
+        g2d.drawImage(alpha_rendered_buffer,null,0,0);//might have to edit later
 
         return (stroke_rendered_buffer);
     }

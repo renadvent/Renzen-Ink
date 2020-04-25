@@ -13,7 +13,7 @@ public class Ink {
     private Caster selected_caster;
     private texture selected_texture;
     
-    private canvas_panel can_pan;
+    canvas_panel can_pan;
     private action_panel act_pan;
     private stroke_panel str_pan;
     private Menu menu;

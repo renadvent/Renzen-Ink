@@ -28,6 +28,7 @@ public class Caster {
     boolean cast_splatter = false;
 
     boolean casts_rendered = false;
+    boolean casts_updated = false; // redraw without re-rendering
 
     boolean cast_from_source = false;
 
@@ -168,7 +169,8 @@ public class Caster {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
         g2d.setStroke(new BasicStroke(bb.thickness));
-        g2d.setColor(new Color(255,0,0,bb.opacity));
+        //g2d.setColor(new Color(255,0,0,bb.opacity));
+        g2d.setColor(new Color(bb.color.getRed(),bb.color.getGreen(),bb.color.getBlue(),bb.opacity));
         for (Path2D.Double p : ll){
             g2d.draw(p);
         }
@@ -183,6 +185,14 @@ public class Caster {
 
     // renders the strokes to the canvas buffer
     public void update_casts() {
+
+        if (casts_updated && casts_rendered) {
+            casts_updated = false;
+        }else if (casts_updated && !casts_rendered){
+            Graphics2D g2d = null;
+            //draw saved last curves with new color/opacity
+
+        }
 
         if (!casts_rendered) {
 

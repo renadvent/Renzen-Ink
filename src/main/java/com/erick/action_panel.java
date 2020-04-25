@@ -1,15 +1,7 @@
 package com.erick;
 
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.BorderFactory;
@@ -40,14 +32,14 @@ public class action_panel extends JPanel {
     // keeps changelisteners from causing rerenders
     // when updating sliders etc due to selection change
     // specifically, stops flag_selected_for_rerender from completing
-    boolean set_by_code=false; 
+    boolean set_by_code = false;
 
     @Override
     public void paintComponent(Graphics g) {
 
         Caster v = ink.selected_caster();
 
-        set_by_code=true;
+        set_by_code = true;
 
         if ((v != null) && (v != lastSelected)) {
             // num_of_rays.setValue(v.get_ray_count());
@@ -75,7 +67,7 @@ public class action_panel extends JPanel {
 
         }
 
-        set_by_code=false;
+        set_by_code = false;
 
     }
 
@@ -97,7 +89,9 @@ public class action_panel extends JPanel {
     public JCheckBox check_strokes = null;
     public JCheckBox check_tools = null;
 
-    public action_panel(JFrame frame, Ink ink) {
+    public final JCheckBox alpha_draw = new JCheckBox();
+
+    public action_panel(JFrame frame, final Ink ink) {
 
         this.frame = frame;
         this.ink = ink;
@@ -126,6 +120,48 @@ public class action_panel extends JPanel {
         this.add(new JLabel("CASTER BUTTONS", JLabel.CENTER));
         create_flip_button();
         create_move_caster_button();
+
+        this.add(new JLabel("erase", JLabel.CENTER));
+        //alpha_draw = ;
+        this.add(alpha_draw);
+        alpha_draw.addActionListener(new ActionListener() {
+
+            boolean draw = false;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                draw = !draw;
+            }
+
+            MouseMotionListener listener = null;
+
+            {
+                listener = new MouseMotionListener() {
+
+                    @Override
+                    public void mouseDragged(MouseEvent e) {
+
+                        if (draw) {
+                            Graphics2D g2d = ink.selected_texture().alpha_rendered_buffer.createGraphics();
+                            Color color = new Color(0, 0, 100, 255);
+                            int thickness = 20;
+                            g2d.fillOval(e.getX(), e.getY(), thickness, thickness);
+                            g2d.dispose();
+                            ink.can_pan().repaint();
+                        }
+
+                    }
+
+                    @Override
+                    public void mouseMoved(MouseEvent e) {
+
+                    }
+                };
+
+                ink.can_pan().addMouseMotionListener(listener);
+            }
+
+        });
 
         this.add(new JLabel("CASTER LIST", JLabel.CENTER));
 
