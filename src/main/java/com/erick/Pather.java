@@ -8,6 +8,9 @@ import java.awt.Graphics2D;
 
 public class Pather {
 
+    // new variables
+    double max_dist_between_points;
+
     // Brusher brush=new Brusher();
     int layers = 5;
     int[] connect_at = new int[] {1};//{ 3, 5 };

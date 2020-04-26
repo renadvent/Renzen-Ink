@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.IndexColorModel;
@@ -29,6 +30,7 @@ public class Caster {
 
     boolean casts_rendered = false;
     boolean casts_updated = false; // redraw without re-rendering
+    boolean cvs_edited = false;; //
 
     boolean cast_from_source = false;
 
@@ -187,6 +189,8 @@ public class Caster {
     public void update_casts() {
 
         Graphics2D g2d = null;
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
 
         if (casts_updated){
 
@@ -198,6 +202,7 @@ public class Caster {
 
             if (p1.last_rendered_curves!=null) {
                 g2d = stroke_buffer.createGraphics(); // might change
+                g2d.setRenderingHints(rh);
                 bb.draw_curves(g2d, p1.last_rendered_curves);
                 render_list_to_buffer(p1.last_rendered_curves, highlighted_strokes_buffer);
                 casts_updated = false;
@@ -210,6 +215,40 @@ public class Caster {
 
         }
 
+        //UPDATE CVS
+   /*     if (cvs_edited){
+
+            double [] coordinates1 = new double[6];
+            double [] coordinates2 = new double[6];
+            LinkedList<Path2D.Double> updated_curves = new LinkedList<Path2D.Double>();
+
+            for (Path2D.Double p : p1.last_rendered_curves) {
+
+                //skips short lines within a tolerance
+                PathIterator pi = p.getPathIterator(null);
+                pi.next();
+                pi.currentSegment(coordinates1);
+
+                updated_curves.add(coordinates1[0],coordinates1[1])
+
+
+                (Path2D.Double) pi.
+
+
+                //double distance = Math.hypot(coordinates1[0]-coordinates2[0], coordinates1[1]-coordinates2[1]);
+
+                double distance = Math.hypot(coordinates1[0] - coordinates1[2], coordinates1[1] - coordinates2[3]);
+
+                int distTol = 50;
+                if (distance <= distTol) {
+                    continue;
+                }
+            }
+
+            cvs_edited=false;
+
+        }*/
+
         if (!casts_rendered) {
 
             reset_caster();
@@ -218,7 +257,6 @@ public class Caster {
             update_tools();
 
             //Graphics2D g2d = null;
-            RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             p1.last_rendered_curves=new LinkedList<Path2D.Double>();
 

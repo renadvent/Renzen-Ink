@@ -1,4 +1,9 @@
 
+
+update: change Path2D.Double to Curve2D.Float so they can be updated easier
+
+
+//
 what to use REST api for...
 
 make a sign in website and profile. save stuff to profile. sign in through app/website.

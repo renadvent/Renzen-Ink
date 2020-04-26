@@ -77,6 +77,12 @@ public class action_panel extends JPanel {
         }
     }
 
+    public void flag_cvs_edited() {
+        if ((ink.selected_caster() != null) && (!set_by_code)) {
+            ink.selected_caster().cvs_edited = false;
+        }
+    }
+
     JSlider num_of_rays;
     JSlider num_of_strikes;
     JSlider tolerance;
@@ -130,10 +136,18 @@ public class action_panel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 draw = !draw;
+                lx = null;
+                ly = null;
+
             }
 
             MouseMotionListener listener = null;
+            boolean start = false;
+
+            Integer lx;
+            Integer ly;
 
             {
                 listener = new MouseMotionListener() {
@@ -141,13 +155,29 @@ public class action_panel extends JPanel {
                     @Override
                     public void mouseDragged(MouseEvent e) {
 
+
                         if (draw) {
+
+                            if ((lx == null) && (ly == null)) {
+                                lx = e.getX();
+                                ly = e.getY();
+                                return;
+                            }
+
                             Graphics2D g2d = ink.selected_texture().alpha_rendered_buffer.createGraphics();
                             Color color = new Color(0, 0, 100, 255);
-                            int thickness = 20;
-                            g2d.fillOval(e.getX(), e.getY(), thickness, thickness);
+                            int thickness = 30;
+                            g2d.setStroke(new BasicStroke(thickness));
+                            g2d.drawLine(lx, ly, e.getX(), e.getY());
+                            lx = null;
+                            ly = null;
+                            //g2d.fillOval(e.getX(), e.getY(), thickness, thickness);
                             g2d.dispose();
                             ink.can_pan().repaint();
+
+                        } else {
+                            lx = null;
+                            ly = null;
                         }
 
                     }
