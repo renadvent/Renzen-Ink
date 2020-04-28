@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 public class texture {
 
     // PUBLIC
-    static LinkedList <texture> textures=new LinkedList<texture>();
+    static LinkedList <texture> textures = new LinkedList<texture>();
 
     // constructor for a blank canvas
     public texture(int width, int height) {
@@ -26,6 +26,8 @@ public class texture {
         tool_rendered_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         shade_rendered_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         alpha_rendered_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        prop_rendered_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         overlay_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
@@ -120,6 +122,7 @@ public class texture {
     private BufferedImage stroke_rendered_buffer; // viewers write to this buffer
     private BufferedImage tool_rendered_buffer; // viewers' tools render to this buffer
     private BufferedImage shade_rendered_buffer; // viewers write shade to this buffer
+    BufferedImage prop_rendered_buffer;
 
     public BufferedImage alpha_rendered_buffer;
 

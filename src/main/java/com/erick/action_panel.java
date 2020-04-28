@@ -3,6 +3,7 @@ package com.erick;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
+import java.util.Enumeration;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -14,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.tree.*;
 
 public class action_panel extends JPanel {
 
@@ -367,6 +369,23 @@ public class action_panel extends JPanel {
                     ink.act_pan().add(new_caster_button);
                     ink.change_selected_caster(new_caster);
                     ink.act_pan().selected_button = new_caster_button;
+
+                    //temp
+                    DefaultMutableTreeNode node=new DefaultMutableTreeNode("tool #"+tool_counter);
+                    //ink.lay_pan.tools.add(node);
+
+                    DefaultTreeModel model = (DefaultTreeModel) ink.lay_pan.tree.getModel();
+                    //DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+                    model.insertNodeInto(node, ink.lay_pan.tools, ink.lay_pan.tools.getChildCount());
+
+                    //((DefaultTreeModel) lay_pan.tree.insertNodeInto(child, root, root.getChildCount());
+
+                    ink.lay_pan.tree.scrollPathToVisible(new TreePath(node.getPath()));
+
+
+                    //ink.lay_pan.revalidate();
+                    //ink.lay_pan.tree.reload();
+                    //ink.lay_pan.repaint();
 
                     new_caster_button.addActionListener(new ActionListener() {
 

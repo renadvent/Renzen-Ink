@@ -22,7 +22,7 @@ public class Ink {
     private JTabbedPane jtpr;
     private JTabbedPane jtpl;
     private prop_panel prop_pan;
-    private layer_panel lay_pan;
+    layer_panel lay_pan;
     private animation_panel anim_panel;
 
     private Menu menu;
@@ -104,7 +104,7 @@ public class Ink {
 
 
         menu = new Menu(); // doesn't show
-        frame.getContentPane().add(menu,BorderLayout.CENTER);
+        frame.getContentPane().add(menu,BorderLayout.NORTH);
 
         can_pan = new canvas_panel(frame, this);
         frame.getContentPane().add(new JScrollPane(can_pan), BorderLayout.CENTER);
@@ -113,20 +113,23 @@ public class Ink {
         jtpl=new JTabbedPane();
         frame.getContentPane().add(jtpl, BorderLayout.WEST);
         act_pan = new action_panel(frame, this);
-        jtpl.addTab("actions",new JScrollPane(act_pan));
+        jtpl.addTab("Actions",new JScrollPane(act_pan));
 
-        lay_pan=new layer_panel();
-        jtpl.addTab("layers",new JScrollPane(lay_pan));
+        lay_pan=new layer_panel(frame, this);
+        jtpl.addTab("Layers",new JScrollPane(lay_pan));
 
         //frame.getContentPane().add(new JScrollPane(act_pan), BorderLayout.WEST);
 
         jtpr = new JTabbedPane();
         frame.getContentPane().add(jtpr, BorderLayout.EAST);
         str_pan = new stroke_panel(frame, this);
-        jtpr.addTab("stroke",new JScrollPane(str_pan));
+        jtpr.addTab("Stroke",new JScrollPane(str_pan));
 
         prop_pan = new prop_panel(frame, this);
-        jtpr.addTab("proportions", new JScrollPane(prop_pan));
+        jtpr.addTab("Proportions", new JScrollPane(prop_pan));
+
+        library lib_pan=new library();
+        jtpr.addTab("Library",new JScrollPane(lib_pan));
 
 
         //frame.getContentPane().add(new JScrollPane(str_pan), BorderLayout.EAST);
@@ -134,6 +137,8 @@ public class Ink {
         anim_panel=new animation_panel();
         JTabbedPane jtps = new JTabbedPane();
         jtps.addTab("timelapse",new JScrollPane(anim_panel));
+
+
 
         frame.getContentPane().add(jtps,BorderLayout.SOUTH);
 
