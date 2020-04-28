@@ -112,14 +112,16 @@ public class frame { // collection of frames
 
     }
 
-    void create_part() {
-        parts.add(new part(0,0,0));
+    part create_part() {
+        part temp = new part(0,0,0);
+        parts.add(temp);
+        return temp;
     }
 
 
     // must be customized by frame
     // just values
-    class part {
+    static class part {
 
         // shape can be a box, circle, line, curve, triangle
         // for now, just rect

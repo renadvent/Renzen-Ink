@@ -54,7 +54,7 @@ DESIGNATE an areaas a "surface"
     YOU ARE ABLE TO TOGGLE "DRAW REVERSE OF SURFACE" or "BEHIND SURFACE" (pop up or in window)
     for lighting or reflection purposes. updates main image in real time
 
-    once something is declared a surface, you can hid it to paint behind it, or tell it to cast shadows
+    once something is declared a surface, you can hide it to paint behind it, or tell it to cast shadows
     receive reflections, etc.
 
 everything needs to be able to generate geometry

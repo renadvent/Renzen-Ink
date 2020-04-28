@@ -11,6 +11,8 @@ public class Ink {
     private JFrame frame;
     private Caster selected_caster;
     private texture selected_texture;
+    frame selected_frame;
+    component selected_component;
     
     canvas_panel can_pan;
     private action_panel act_pan;
@@ -33,6 +35,10 @@ public class Ink {
     public texture selected_texture() {
         return selected_texture;
     }
+
+    public frame selected_frame(){return selected_frame; }
+
+    public component selected_component(){return selected_component;}
 
     public canvas_panel can_pan() {
         return can_pan;

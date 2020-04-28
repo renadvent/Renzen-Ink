@@ -125,6 +125,10 @@ public class texture {
 
     BufferedImage overlay_buffer;
 
+    LinkedList<component> getComponents(){
+        return components;
+    }
+
     private LinkedList<component> components; // individual components to be rendered to component buffer
     private LinkedList<Caster> casters; // viewer's are placed on the drawing to render strokes
 
