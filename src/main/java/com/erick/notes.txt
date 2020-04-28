@@ -1,5 +1,6 @@
 
 ANIMATE CREATION
+edit while it "grows"
 
 update: change Path2D.Double to Curve2D.Float so they can be updated easier
 

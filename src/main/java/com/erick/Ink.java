@@ -19,8 +19,12 @@ public class Ink {
     private stroke_panel str_pan;
 
 
-    private JTabbedPane jtp;
+    private JTabbedPane jtpr;
+    private JTabbedPane jtpl;
     private prop_panel prop_pan;
+    private layer_panel lay_pan;
+    private animation_panel anim_panel;
+
     private Menu menu;
 
     // GETTERS
@@ -97,6 +101,8 @@ public class Ink {
         frame = new JFrame("Ink");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
+
         menu = new Menu(); // doesn't show
         frame.getContentPane().add(menu,BorderLayout.CENTER);
 
@@ -104,22 +110,32 @@ public class Ink {
         frame.getContentPane().add(new JScrollPane(can_pan), BorderLayout.CENTER);
 
 
-
+        jtpl=new JTabbedPane();
+        frame.getContentPane().add(jtpl, BorderLayout.WEST);
         act_pan = new action_panel(frame, this);
-        //jtp.addTab("actions",new JScrollPane(act_pan));
-        frame.getContentPane().add(new JScrollPane(act_pan), BorderLayout.WEST);
+        jtpl.addTab("actions",new JScrollPane(act_pan));
 
-        jtp = new JTabbedPane();
-        frame.getContentPane().add(jtp, BorderLayout.EAST);
+        lay_pan=new layer_panel();
+        jtpl.addTab("layers",new JScrollPane(lay_pan));
+
+        //frame.getContentPane().add(new JScrollPane(act_pan), BorderLayout.WEST);
+
+        jtpr = new JTabbedPane();
+        frame.getContentPane().add(jtpr, BorderLayout.EAST);
         str_pan = new stroke_panel(frame, this);
-        jtp.addTab("stroke",new JScrollPane(str_pan));
+        jtpr.addTab("stroke",new JScrollPane(str_pan));
 
         prop_pan = new prop_panel(frame, this);
-        jtp.addTab("proportions", new JScrollPane(prop_pan));
+        jtpr.addTab("proportions", new JScrollPane(prop_pan));
+
 
         //frame.getContentPane().add(new JScrollPane(str_pan), BorderLayout.EAST);
 
+        anim_panel=new animation_panel();
+        JTabbedPane jtps = new JTabbedPane();
+        jtps.addTab("timelapse",new JScrollPane(anim_panel));
 
+        frame.getContentPane().add(jtps,BorderLayout.SOUTH);
 
         frame.pack();
         frame.setVisible(true);
