@@ -1,5 +1,6 @@
 package com.erick;
 
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -9,41 +10,6 @@ import java.util.LinkedList;
 // including rendering
 
 
-/*
-
-example flow:
-
-frame=container.create_frame()
-
-part1=frame.create_part("eye")
-part1.set.position(new relative_pos(.5,.7))
-part1.set.size(new absolute_size(50,50))
-
-part1.set.shape(new Shape(....))
-
-part2=frame.create_part()
-
-con=frame.create_constraint(part1,part2)
-con.set.base(part1)
-con.set.size_ratio(1.5)
-con.set.dist_ratio(3)
-con.set.angle(90)
-
-frame.validate_constraints // updates values based on constraints if possible
-
-frame.draw_bBoxes(b)
-frame.draw_parts(b)
-
-//-------------
-
-texture.update_components
-texture.drawComponents
-    Component.frame.draw_parts
-caster.update_cast
-caster.draw_casts
-
-
- */
 
 public class frame { // collection of frames
 
@@ -53,78 +19,112 @@ public class frame { // collection of frames
     // a frame is a collection of parts and other frames
 
     String name;
-    LinkedList<Line2D.Float> last_gen_curves = new LinkedList<Line2D.Float>();
-    LinkedList<frame> frames = new LinkedList<frame>();
+
+    LinkedList<frame> frames = new LinkedList<frame>(); // not using rn
+
     LinkedList<part> parts = new LinkedList<part>();
     LinkedList<constraint> constraints = new LinkedList<constraint>();
+    LinkedList<Line2D.Float> last_gen_curves = new LinkedList<Line2D.Float>();
 
-    double x;
-    double y;
+    int x;
+    int y;
 
-    double width;
-    double height;
+    int width;
+    int height;
 
     double pitch;
     double yaw;
     double roll;
 
+    // call after constraint validation
+    void draw_parts(BufferedImage b){
 
+        Graphics2D g2d = b.createGraphics();
 
-    void create_curves(part p) {
-    }
+        for (part p : parts){
 
-    void update_curve_CVs() {
-    }
+            // draw rect
+            g2d.drawRect(x+p.val_x,y+p.val_y,x+p.width,y+p.height);
 
-    void filter_curve() {
+        }
+
     }
 
     LinkedList<Line2D.Float> get_last_curves() {
         return last_gen_curves;
     }
 
-
-
+    // fills values of parts
     void validate_constraints() {
-    }
 
-    //calc position of bb of part
-    double part_bbx1(part p) {
-        return 0;
-    }
+        LinkedList<constraint> used_constraints = new LinkedList<>();
 
-    double part_bby1(part p) {
-        return 0;
-    }
+        for (part p : parts){
 
-    double part_bbx2(part p) {
-        return 0;
-    }
+            LinkedList<constraint> temp = new LinkedList<constraint>();
 
-    double part_bby2(part p) {
-        return 0;
-    }
+            for (constraint i : constraints){
+                if (i.base_part==p || i.constrained_part==p){
 
+                    // make sure constraint not already calculated
+                    if (!used_constraints.contains(i)) {
+                        temp.add(i); // part uses this constraint
+                        used_constraints.add(i);
+                    }
+                }
+            }
+
+            // calculate constraint impact on part here
+            // in order added
+
+            for (constraint j: temp){
+
+                // make sure position satisfies all constraints
+                // constraints are against the x,y (not counting width, height, for now)
+
+                double check_w = j.base_part.width * j.size_ratio;
+                double check_h = j.base_part.height * j.size_ratio;
+
+                double check_x = j.base_part.x-j.constrained_part.x;
+                double check_y = j.base_part.y-j.constrained_part.y;
+
+                // how to check for incompatible constraints?
+                // Simplex method?
+                // https://people.richland.edu/james/ictcm/2006/simplex.html ?
+
+                if (j.constrained_part.width<check_w){
+                    j.constrained_part.val_w= (int) check_w;
+                    j.constrained_part.altered=true;
+                }
+
+                if (j.constrained_part.height<check_h){
+                    j.constrained_part.val_h= (int) check_h;
+                    j.constrained_part.altered=true;
+                }
+
+            }
+
+
+
+        }
+
+
+
+    }
 
     void create_part() {
-
+        parts.add(new part(0,0,0));
     }
 
-    void rotate(double p, double y, double r) {
-
-    }
-
-    void place(double x, double y) {
-
-    }
-
-    void translate(double tx, double ty) {
-
-    }
 
     // must be customized by frame
     // just values
     class part {
+
+        // shape can be a box, circle, line, curve, triangle
+        // for now, just rect
+
+        boolean altered; // used during constraint process to revalidate within function
 
         part(double sds, double sdx, double sdy) {
             stand_dev_size = sds;
@@ -176,13 +176,24 @@ public class frame { // collection of frames
 
         }
 
+        //bbox
+
+        int x;
+        int y;
+        int width;
+        int height;
+
+        Integer val_x; //validated by validate function
+        Integer val_y;
+        Integer val_w;
+        Integer val_h;
+
+
+
     }
 
     class bBox {
-        double x;
-        double y;
-        double width;
-        double height;
+
     }
 
     class constraint {
@@ -191,7 +202,9 @@ public class frame { // collection of frames
         part constrained_part; // box
 
 
-        double size_ratio;
+        double size_ratio; // supposed to be in terms of frame
+                            // not each other
+
         double dist_ratio; //relation to base_part
         double angle_2D; //
 

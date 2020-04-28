@@ -1,0 +1,49 @@
+// when resizing a bBox, all others resize
+
+
+
+program generates proportions.
+(1) objects must be placed in space
+(2) create constraints from PLACEMENT, not hypothetical
+(3) distances are then described as multiples of a base (defined in frame)
+(4) a base is a box, is a square (which can be scaled)
+(5) a part is defined as a width and height multiple of the base
+
+
+
+/*
+
+example flow:
+
+frame=container.create_frame()
+
+part1=frame.create_part("eye")
+part1.set.position(new relative_pos(.5,.7))
+part1.set.size(new absolute_size(50,50))
+
+part1.set.shape(new Shape(....))
+
+part2=frame.create_part()
+
+con=frame.create_constraint(part1,part2)
+con.set.base(part1)
+con.set.size_ratio(1.5)
+con.set.dist_ratio(3)
+con.set.angle(90)
+
+frame.validate_constraints // updates values based on constraints if possible
+
+frame.draw_bBoxes(b)
+frame.draw_parts(b)
+frame.draw_tips_and_tools(b)
+
+//-------------
+
+texture.update_components
+texture.drawComponents
+    Component.frame.draw_parts
+caster.update_cast
+caster.draw_casts
+
+
+ */

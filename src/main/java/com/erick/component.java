@@ -2,9 +2,18 @@ package com.erick;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 // buffers that are rendered to the component buffer
+
+// components can either be a loaded image
+// a drawn image
+// or a frame or collection of frames
+
+
 class component {
+
+    LinkedList<frame> frames = new LinkedList<>();
 
     private BufferedImage component_buffer;
     private int x, y;

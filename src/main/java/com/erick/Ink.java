@@ -2,8 +2,7 @@ package com.erick;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 public class Ink {
 
@@ -16,6 +15,10 @@ public class Ink {
     canvas_panel can_pan;
     private action_panel act_pan;
     private stroke_panel str_pan;
+
+
+    private JTabbedPane jtp;
+    private prop_panel prop_pan;
     private Menu menu;
 
     // GETTERS
@@ -37,6 +40,9 @@ public class Ink {
 
     public action_panel act_pan() {
         return act_pan;
+    }
+    public prop_panel prop_pan() {
+        return prop_pan;
     }
 
     // SETTERS
@@ -91,11 +97,21 @@ public class Ink {
         can_pan = new canvas_panel(frame, this);
         frame.getContentPane().add(new JScrollPane(can_pan), BorderLayout.CENTER);
 
+
+
         act_pan = new action_panel(frame, this);
+        //jtp.addTab("actions",new JScrollPane(act_pan));
         frame.getContentPane().add(new JScrollPane(act_pan), BorderLayout.WEST);
 
+        jtp = new JTabbedPane();
+        frame.getContentPane().add(jtp, BorderLayout.EAST);
         str_pan = new stroke_panel(frame, this);
-        frame.getContentPane().add(new JScrollPane(str_pan), BorderLayout.EAST);
+        jtp.addTab("stroke",new JScrollPane(str_pan));
+
+        prop_pan = new prop_panel(frame, this);
+        jtp.addTab("proportions", new JScrollPane(prop_pan));
+
+        //frame.getContentPane().add(new JScrollPane(str_pan), BorderLayout.EAST);
 
 
 
