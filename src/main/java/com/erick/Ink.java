@@ -1,8 +1,11 @@
 package com.erick;
 
+import com.erick.panels.*;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public class Ink {
 
@@ -11,8 +14,8 @@ public class Ink {
     private JFrame frame;
     private Caster selected_caster;
     private texture selected_texture;
-    frame selected_frame;
-    component selected_component;
+    public frame selected_frame;
+    public component selected_component;
     
     canvas_panel can_pan;
     private action_panel act_pan;
@@ -22,7 +25,7 @@ public class Ink {
     private JTabbedPane jtpr;
     private JTabbedPane jtpl;
     private prop_panel prop_pan;
-    layer_panel lay_pan;
+    public layer_panel lay_pan;
     private animation_panel anim_panel;
 
     private Menu menu;
@@ -54,6 +57,18 @@ public class Ink {
     public prop_panel prop_pan() {
         return prop_pan;
     }
+
+    texture new_texture(){
+        // all can be accessed at texture.textures
+        //lay_pan.textures.insertN
+
+        //DefaultMutableTreeNode node=new DefaultMutableTreeNode("texture #"+texture.textures.size());
+        //lay_pan.model.insertNodeInto(node, lay_pan.tools, lay_pan.tools.getChildCount());
+
+        return new texture(1280,1024);
+    }
+
+
 
     // SETTERS
     public void change_selected_caster(Caster v) {
@@ -91,7 +106,10 @@ public class Ink {
     // GUI
     public void create_and_show_default_GUI() {
 
-        texture c = new texture(1280, 1024);
+        texture c = new_texture();
+
+
+
         change_selected_texture(c);
 
         c.load_component("C:\\Users\\erick\\OneDrive\\Documents\\Ink\\ink-app\\src\\main\\java\\com\\erick\\guidance\\body.jpg");
@@ -136,11 +154,16 @@ public class Ink {
 
         anim_panel=new animation_panel();
         JTabbedPane jtps = new JTabbedPane();
-        jtps.addTab("timelapse",new JScrollPane(anim_panel));
+        jtps.addTab("timelapse + randomization",new JScrollPane(anim_panel));
 
 
 
         frame.getContentPane().add(jtps,BorderLayout.SOUTH);
+
+        //temp
+        //DefaultMutableTreeNode node=new DefaultMutableTreeNode("texture #1");
+        //DefaultTreeModel model = (DefaultTreeModel) lay_pan.tree.getModel();
+        //model.insertNodeInto(node, lay_pan.textures, lay_pan.textures.getChildCount());
 
         frame.pack();
         frame.setVisible(true);

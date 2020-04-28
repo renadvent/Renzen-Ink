@@ -12,16 +12,16 @@ public class Pather {
     double max_dist_between_points;
 
     // Brusher brush=new Brusher();
-    int layers = 5;
-    int[] connect_at = new int[] {1};//{ 3, 5 };
-    Curve stroke = new Curve();
-    LinkedList<Path2D.Double> last_rendered_curves=new LinkedList<Path2D.Double>();
+    public int layers = 5;
+    public int[] connect_at = new int[] {1};//{ 3, 5 };
+    public Curve stroke = new Curve();
+    public LinkedList<Path2D.Double> last_rendered_curves=new LinkedList<Path2D.Double>();
     double rex=5;//rand ends
     double rey=5;
 
-    class Curve {
+    public class Curve {
 
-        LinkedList<Section> sections = new LinkedList<Section>();
+        public LinkedList<Section> sections = new LinkedList<Section>();
 
 
 
@@ -32,11 +32,11 @@ public class Pather {
             //sections.getLast().cvs.get(0).prop=(7/4);
         }
 
-        class Section {
-            boolean render=true;
+        public class Section {
+            public boolean render=true;
 
             // need to order LinkedList
-            LinkedList<CV> cvs = new LinkedList<CV>();
+            public LinkedList<CV> cvs = new LinkedList<CV>();
 
             Section() {
                 // default
@@ -46,13 +46,13 @@ public class Pather {
 
             public class CV {
 
-                double prop;
+                public double prop;
 
-                double rx;
-                double ry;
+                public double rx;
+                public double ry;
 
-                double ox;
-                double oy;
+                public double ox;
+                public double oy;
 
                 CV(double px, double rx, double ry, double ox, double oy) {
                     prop = px;

@@ -11,9 +11,9 @@ import java.util.LinkedList;
 // or a frame or collection of frames
 
 
-class component {
+public class component {
 
-    LinkedList<frame> frames = new LinkedList<>();
+    public LinkedList<frame> frames = new LinkedList<>();
 
     private BufferedImage component_buffer;
     private int x, y;

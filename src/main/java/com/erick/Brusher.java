@@ -19,12 +19,12 @@ public class Brusher{ // used bystroke
     int texture;
     // COLOR
     
-    int opacity=100;
-    Color color=new Color (0,0,0,opacity);
+    public int opacity=100;
+    public Color color=new Color (0,0,0,opacity);
     int spacing;
     int angle;
 
-    int thickness=1;
+    public int thickness=1;
 
     public class envelope{
         // used to create repetitions along line

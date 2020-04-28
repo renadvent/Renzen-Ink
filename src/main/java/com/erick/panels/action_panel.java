@@ -1,4 +1,8 @@
-package com.erick;
+package com.erick.panels;
+
+import com.erick.Caster;
+import com.erick.Ink;
+import com.erick.texture;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -365,27 +369,17 @@ public class action_panel extends JPanel {
                             false);
 
                     // SELECT BUTTON
-                    final JButton new_caster_button = new JButton("tool #" + tool_counter);
+                    final JButton new_caster_button = new JButton("Caster #" + tool_counter);
                     ink.act_pan().add(new_caster_button);
                     ink.change_selected_caster(new_caster);
                     ink.act_pan().selected_button = new_caster_button;
 
                     //temp
                     DefaultMutableTreeNode node=new DefaultMutableTreeNode("tool #"+tool_counter);
-                    //ink.lay_pan.tools.add(node);
+                    ink.lay_pan.model.insertNodeInto(node, ink.lay_pan.tools, ink.lay_pan.tools.getChildCount());
 
-                    DefaultTreeModel model = (DefaultTreeModel) ink.lay_pan.tree.getModel();
-                    //DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-                    model.insertNodeInto(node, ink.lay_pan.tools, ink.lay_pan.tools.getChildCount());
-
-                    //((DefaultTreeModel) lay_pan.tree.insertNodeInto(child, root, root.getChildCount());
 
                     ink.lay_pan.tree.scrollPathToVisible(new TreePath(node.getPath()));
-
-
-                    //ink.lay_pan.revalidate();
-                    //ink.lay_pan.tree.reload();
-                    //ink.lay_pan.repaint();
 
                     new_caster_button.addActionListener(new ActionListener() {
 

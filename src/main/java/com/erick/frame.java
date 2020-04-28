@@ -112,7 +112,7 @@ public class frame { // collection of frames
 
     }
 
-    part create_part() {
+    public part create_part() {
         part temp = new part(0,0,0);
         parts.add(temp);
         return temp;

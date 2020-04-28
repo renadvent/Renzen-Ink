@@ -1,5 +1,7 @@
-package com.erick;
+package com.erick.panels;
+import com.erick.Ink;
 import com.erick.Pather.Curve.Section.CV;
+import com.erick.point;
 
 import java.awt.Color;
 import java.awt.Graphics;

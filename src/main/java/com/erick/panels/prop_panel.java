@@ -1,9 +1,11 @@
-package com.erick;
+package com.erick.panels;
+
+import com.erick.Ink;
+import com.erick.frame;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 
 public class prop_panel extends JPanel {
@@ -49,7 +51,7 @@ public class prop_panel extends JPanel {
 
                 if (ink.selected_component()!=null){
 
-                    final frame temp = new frame();
+                    final com.erick.frame temp = new frame();
                     ink.selected_component().frames.add(temp);
                     ink.selected_frame=temp;
 

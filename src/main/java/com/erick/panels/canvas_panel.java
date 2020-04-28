@@ -1,4 +1,7 @@
-package com.erick;
+package com.erick.panels;
+
+import com.erick.Ink;
+import com.erick.texture;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -15,7 +18,7 @@ public class canvas_panel extends JPanel {
     private Ink ink;
     private JFrame frame;
 
-    canvas_panel(JFrame frame, Ink ink) {
+    public canvas_panel(JFrame frame, Ink ink) {
         this.ink = ink;
         this.frame=frame;
     }

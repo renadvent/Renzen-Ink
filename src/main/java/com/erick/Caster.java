@@ -22,23 +22,23 @@ public class Caster {
     // defaults
 
     // temp
-    boolean cast_through = false;
-    boolean cast_along = true;
-    boolean cast_press = false;
-    boolean cast_light = false;
-    boolean cast_splatter = false;
+    public boolean cast_through = false;
+    public boolean cast_along = true;
+    public boolean cast_press = false;
+    public boolean cast_light = false;
+    public boolean cast_splatter = false;
 
-    boolean casts_rendered = false;
-    boolean casts_updated = false; // redraw without re-rendering
-    boolean cvs_edited = false;; //
+    public boolean casts_rendered = false;
+    public boolean casts_updated = false; // redraw without re-rendering
+    public boolean cvs_edited = false;; //
 
-    boolean cast_from_source = false;
+    public boolean cast_from_source = false;
 
-    int min_penetrations = 0;
-    int max_penetrations = 0;
-    double max_ray_length = 1200;
-    int tolerance = 75;// 100;
-    int rays; // number of rays coming from POV line
+    public  int min_penetrations = 0;
+    public int max_penetrations = 0;
+    public double max_ray_length = 1200;
+    public int tolerance = 75;// 100;
+    public int rays; // number of rays coming from POV line
 
     // these to be replaced
     public BufferedImage parent_component_rendered_buffer; // POV's read from this buffer
@@ -60,8 +60,10 @@ public class Caster {
     public BufferedImage splatter_buffer;
 
     // these to be replaced
-    double from_x, from_y;// position of POV line in convas
-    double to_x, to_y;
+    public double from_x;
+    public double from_y;// position of POV line in convas
+    public double to_x;
+    public double to_y;
 
     // TEMP
     boolean highlighted = false;
@@ -79,8 +81,8 @@ public class Caster {
     LinkedList<point> draw_from_caster = new LinkedList<point>();
 
     // used to determine stroke drawing algorithm
-    Pather_Old stroke_style = new Pather_Old();
-    Shade_Style shade_style = new Shade_Style();
+    public Pather_Old stroke_style = new Pather_Old();
+    public Shade_Style shade_style = new Shade_Style();
 
     // PUBLIC
 
@@ -178,12 +180,12 @@ public class Caster {
         }
     }
 
-    Pather p1=new Pather();
+    public Pather p1=new Pather();
     //Pather p2=new Pather();
     //Pather p3=new Pather();
 
-    Tracer t=new Tracer(this);
-    Brusher bb = new Brusher();
+    public Tracer t=new Tracer(this);
+    public Brusher bb = new Brusher();
 
     // renders the strokes to the canvas buffer
     public void update_casts() {

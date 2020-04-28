@@ -1,4 +1,6 @@
-package com.erick;
+package com.erick.panels;
+
+import com.erick.Ink;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -9,12 +11,15 @@ import java.awt.*;
 public class layer_panel extends JPanel {
 
     JTree tree;
-    final DefaultMutableTreeNode tools;
+    public final DefaultMutableTreeNode tools;
+    final DefaultMutableTreeNode textures;
+
     DefaultMutableTreeNode top;
     DefaultMutableTreeNode rootNode;
     protected DefaultTreeModel treeModel;
+    public DefaultTreeModel model;
 
-    layer_panel(JFrame frame, final Ink ink){
+    public layer_panel(JFrame frame, final Ink ink){
 
 
         rootNode = new DefaultMutableTreeNode("Ink");
@@ -34,9 +39,13 @@ public class layer_panel extends JPanel {
 
         //tree = new JTree(top);
 
-        tools = new DefaultMutableTreeNode("Tools");
+        tools = new DefaultMutableTreeNode("Casters");
+        textures = new DefaultMutableTreeNode("Textures");
+
+        rootNode.add(textures);
         rootNode.add(tools);
 
+        model = (DefaultTreeModel) tree.getModel();
 
 
         this.add(tree);

@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 public class texture {
 
     // PUBLIC
-    static LinkedList <texture> textures = new LinkedList<texture>();
+    public static LinkedList <texture> textures = new LinkedList<texture>();
 
     // constructor for a blank canvas
     public texture(int width, int height) {
@@ -128,7 +128,7 @@ public class texture {
 
     BufferedImage overlay_buffer;
 
-    LinkedList<component> getComponents(){
+    public LinkedList<component> getComponents(){
         return components;
     }
 
