@@ -1,5 +1,7 @@
 package com.erick.view;
 
+//import com.erick.Ink_Controller;
+import com.erick.abstractviewpanel;
 import com.erick.model.Caster;
 import com.erick.Ink;
 import com.erick.model.texture;
@@ -7,6 +9,7 @@ import com.erick.model.texture;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -20,7 +23,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.*;
 
-public class action_panel extends JPanel {
+public class action_panel extends JPanel implements abstractviewpanel {
 
     Rectangle2D.Double r;
     Caster lastSelected;
@@ -102,7 +105,7 @@ public class action_panel extends JPanel {
 
     public final JCheckBox alpha_draw = new JCheckBox();
 
-    public action_panel(JFrame frame, final Ink ink) {
+    public action_panel(final JFrame frame, final Ink ink) {
 
         this.frame = frame;
         this.ink = ink;
@@ -322,6 +325,11 @@ public class action_panel extends JPanel {
 
             }
         });
+    }
+
+    @Override
+    public void modelPropertyChange(PropertyChangeEvent evt) {
+
     }
 
     class ClickListener extends MouseAdapter {

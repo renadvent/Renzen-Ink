@@ -1,5 +1,8 @@
 package com.erick.model;
 
+import com.erick.AbstractModel;
+import com.erick.defcon;
+
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -10,7 +13,7 @@ import java.awt.AlphaComposite;
 
 import javax.imageio.ImageIO;
 
-public class texture {
+public class texture extends AbstractModel {
 
     // PUBLIC
     public static LinkedList <texture> textures = new LinkedList<texture>();
@@ -41,8 +44,14 @@ public class texture {
 
     // add a component to canvas
     public void add_component(Component comp) {
+
         Components.add(comp);
-    };
+
+        //----
+        firePropertyChange(defcon.NEW_COMPONENT,null, comp);
+    }
+
+
 
     public Graphics2D create_blank_component_graphics(int w, int h) {
         Component temp = new Component(this, w, h);
@@ -58,6 +67,11 @@ public class texture {
             boolean to_shade) {
         Caster x = create_caster(from_x, from_y, to_x, to_y, rays, to_flip);
         x.cast_through = to_shade;
+
+
+        //---
+        firePropertyChange(defcon.NEW_VIEW,null,x);
+
         return x;
     }
 
@@ -77,6 +91,9 @@ public class texture {
         }
 
         casters.add(temp_pov);
+
+        firePropertyChange(defcon.NEW_CASTER,null,temp_pov);
+
 
         return temp_pov;
     }
@@ -208,6 +225,8 @@ public class texture {
         }
 
         comp.drawImage(img, 0, 0, null);
+
+        firePropertyChange(defcon.LOADED_COMPONENT,null, comp);
     }
 
     private void wipe_buffer(Graphics2D g2d) {

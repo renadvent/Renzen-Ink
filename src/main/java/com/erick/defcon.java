@@ -1,6 +1,8 @@
-package com.erick.guidance;
+package com.erick;
 
-public class DefaultController extends AbstractController
+import java.awt.*;
+
+public class defcon extends AbstractController
 {
 
     public static final String ELEMENT_TEXT_PROPERTY = "Text";
@@ -9,6 +11,12 @@ public class DefaultController extends AbstractController
     public static final String ELEMENT_Y_PROPERTY = "Y";
     public static final String ELEMENT_OPACITY_PROPERTY = "Opacity";
     public static final String ELEMENT_ROTATION_PROPERTY = "Rotation";
+
+
+    public static final String NEW_COMPONENT = "Component";
+    public static final String NEW_VIEW = "View";
+    public static final String NEW_CASTER = "Caster";
+    public static final String LOADED_COMPONENT = "Load_Comp";
 
     //  Code omitted
 

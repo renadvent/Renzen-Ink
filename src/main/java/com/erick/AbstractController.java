@@ -1,15 +1,18 @@
-package com.erick.guidance;
+package com.erick;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 public abstract class AbstractController implements PropertyChangeListener {
 
     private ArrayList<abstractviewpanel> registeredViews;
-    private ArrayList<abstractmodel> registeredModels;
+    private ArrayList<AbstractModel> registeredModels;
 
     public AbstractController() {
         registeredViews = new ArrayList<abstractviewpanel>();
-        registeredModels = new ArrayList<abstractmodel>();
+        registeredModels = new ArrayList<AbstractModel>();
     }
 
 
@@ -23,11 +26,11 @@ public abstract class AbstractController implements PropertyChangeListener {
         model.removePropertyChangeListener(this);
     }
 
-    public void addView(AbstractViewPanel view) {
+    public void addView(abstractviewpanel view) {
         registeredViews.add(view);
     }
 
-    public void removeView(AbstractViewPanel view) {
+    public void removeView(abstractviewpanel view) {
         registeredViews.remove(view);
     }
 
@@ -38,7 +41,11 @@ public abstract class AbstractController implements PropertyChangeListener {
 
     public void propertyChange(PropertyChangeEvent evt) {
 
-        for (AbstractViewPanel view: registeredViews) {
+        System.out.println("property Change Event");
+        for (abstractviewpanel view: registeredViews) {
+            //me
+
+            System.out.println(evt.getPropertyName());
             view.modelPropertyChange(evt);
         }
     }
