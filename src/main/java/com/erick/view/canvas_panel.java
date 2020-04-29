@@ -15,6 +15,8 @@ import javax.swing.JFrame;
 
 public class canvas_panel extends JPanel {
 
+    public Rectangle2D.Double resize_tool_1;
+    public Rectangle2D.Double resize_tool_2;
     private Ink ink;
     private JFrame frame;
 
@@ -46,7 +48,12 @@ public class canvas_panel extends JPanel {
          if (move_tool != null) {
             g2d.fill(move_tool);
         } 
-
+         
+         if (resize_tool_1 != null){g2d.fill(resize_tool_1);}
+        if (resize_tool_2 != null) {
+            g2d.fill(resize_tool_2);
+        }
+         
         st=java.lang.System.currentTimeMillis()-st;
         System.out.println("render millisecs: "+st);
 

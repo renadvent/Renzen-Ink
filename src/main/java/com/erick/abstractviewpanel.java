@@ -6,4 +6,6 @@ public interface abstractviewpanel {
 
     void modelPropertyChange(PropertyChangeEvent evt);
 
+
+
 }

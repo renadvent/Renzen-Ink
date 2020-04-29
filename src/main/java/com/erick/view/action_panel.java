@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.tree.*;
 
 public class action_panel extends JPanel implements abstractviewpanel {
@@ -41,6 +42,20 @@ public class action_panel extends JPanel implements abstractviewpanel {
     // when updating sliders etc due to selection change
     // specifically, stops flag_selected_for_rerender from completing
     boolean set_by_code = false;
+
+    /*    public void modelPropertyChange(final PropertyChangeEvent evt) {
+
+        if (evt.getPropertyName().equals(DefaultController.ELEMENT_X_PROPERTY)) {
+
+            String newStringValue = evt.getNewValue().toString();
+            if (!xPositionTextField.getText().equals(newStringValue))
+                xPositionTextField.setText(newStringValue);
+
+        }
+
+        //  Remaining code omitted
+
+    }*/
 
     @Override
     public void paintComponent(Graphics g) {
@@ -207,10 +222,12 @@ public class action_panel extends JPanel implements abstractviewpanel {
 
     private void create_move_caster_button() {
 
-        JButton move_caster = new JButton("move");
+        final JCheckBox move_caster = new JCheckBox("transform");//new JButton("move");
         move_caster.addActionListener(new ActionListener() {
 
             Rectangle2D.Double r;
+            Rectangle2D.Double t;
+            Rectangle2D.Double f;
             boolean active;
             double width;
             double height;
@@ -218,20 +235,56 @@ public class action_panel extends JPanel implements abstractviewpanel {
             {
                 active = false;
 
+                MouseInputAdapter ia = new MouseInputAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+
+/*                        super.mouseClicked(e);
+                        if (move_caster.isSelected()){
+                            active=false;
+                            move_caster.setSelected(false);
+                            //ink.can_pan().revalidate();
+                        }*/
+                    }
+                };
+
+                //ink.can_pan().addMouseMotionListener(ia);
+
                 MouseMotionAdapter cl = new MouseMotionAdapter() {
 
                     {
-                        Rectangle2D.Double r = new Rectangle2D.Double();
+                        r = new Rectangle2D.Double();
                         ink.can_pan().move_tool = r;
-                        r.width = 20;
-                        r.height = 20;
+                        r.width = 50;
+                        r.height = 50;
+
+                        t = new Rectangle2D.Double();
+                        ink.can_pan().resize_tool_1 = t;
+                        t.width=50;
+                        t.height=50;
+
+                        f = new Rectangle2D.Double();
+                        ink.can_pan().resize_tool_2 = f;
+                        f.height=50;
+                        f.width=50;
+
                     }
 
-                    public void mouseMoved(MouseEvent e) {
-                        if (active) {
+                    public void mouseDragged(MouseEvent e) {
+                    //public void mouseMoved(MouseEvent e) {
 
-                            r.x = e.getX();
-                            r.y = e.getY();
+                        // detect where it was clicked
+
+                        boolean in_move_square= (r.contains(e.getX(),e.getY()));
+                        boolean in_top_square= (t.contains(e.getX(),e.getY()));
+                        boolean in_bottom_square= (f.contains(e.getX(),e.getY()));
+
+
+                        //e.
+                        if (active && in_move_square) {
+
+                            r.x = e.getX()-r.width/2;
+                            r.y = e.getY()-r.height/2;
 
                             Caster v = ink.selected_caster();
 
@@ -241,14 +294,46 @@ public class action_panel extends JPanel implements abstractviewpanel {
                             flag_rerender_selected_caster();
                             frame.repaint();
 
+                        }else if (active && in_top_square){
+
+                            t.x = e.getX()-t.width/2;
+                            t.y = e.getY()-t.height/2;
+
+                            Caster v = ink.selected_caster();
+
+                            v.to_x=e.getX();
+                            v.to_y=e.getY();
+
+                            flag_rerender_selected_caster();
+                            frame.repaint();
+
+                            //v.set
+
+                        }else if (active && in_bottom_square){
+
+                            f.x = e.getX()-f.width/2;
+                            f.y = e.getY()-f.height/2;
+
+                            Caster v = ink.selected_caster();
+
+                            v.from_x=e.getX();
+                            v.from_y=e.getY();
+
+                            flag_rerender_selected_caster();
+                            frame.repaint();
+
                         }
                     }
 
+                    //public void mouse
+
                 };
 
+                ink.can_pan().addMouseListener(ia);
                 ink.can_pan().addMouseMotionListener(cl);
             }
 
+            // initial placement of tool
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -256,16 +341,26 @@ public class action_panel extends JPanel implements abstractviewpanel {
                     if (ink.selected_caster() != null) {
                         active = true;
                         Caster temp = ink.selected_caster();
-                        r = new Rectangle2D.Double(temp.from_x, temp.from_y, 50, 50);
-                        ink.can_pan().move_tool = r;
+
+                        //r = new Rectangle2D.Double(temp.from_x, temp.from_y, 50, 50);
+                        //ink.can_pan().move_tool = r;
                         Caster v = ink.selected_caster();
                         width = (v.from_x - v.to_x) / 2;
                         height = (v.from_y - v.to_y) / 2;
+
+                        r.x=temp.from_x-width;
+                        r.y=temp.from_y-height;
+
+                        f.x=temp.from_x;
+                        f.y=temp.from_y;
+
+                        t.x=temp.to_x;
+                        t.y=temp.to_y;
                     }
 
                 } else if (active) {
-                    r = null;
-                    ink.can_pan().move_tool = null;
+                    //r = null;
+                    //ink.can_pan().move_tool = null;
                     active = false;
                 }
 
