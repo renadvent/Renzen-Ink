@@ -3,6 +3,7 @@ package com.erick.view;
 import com.erick.Ink;
 import com.erick.model.Part;
 import com.erick.model.frame;
+import com.erick.select_multiple;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +60,7 @@ public class prop_panel extends JPanel {
         select_parts.addActionListener(new ActionListener() {
 
 
-            rect_from_mouse.select_multiple sm = null; //new rect_from_mouse.select_multiple()
+            select_multiple sm = null; //new rect_from_mouse.select_multiple()
 
             {
 
@@ -70,7 +71,8 @@ public class prop_panel extends JPanel {
             public void actionPerformed(ActionEvent e) {
 
                 if (select_parts.isSelected()){
-                    sm = new rect_from_mouse.select_multiple(ink.selected_frame.items);
+                    //sm = new select_multiple(ink.selected_frame.items,ink);
+                    sm = new select_multiple(selectable.list,ink);
                     ink.can_pan().addMouseListener(sm);
                     ink.can_pan().addMouseMotionListener(sm);
                 }
@@ -404,7 +406,7 @@ public class prop_panel extends JPanel {
 
         }
 
-        public static class select_multiple extends MouseInputAdapter{
+        /*public static class select_multiple extends MouseInputAdapter{
 
             LinkedList<selectable> boxes=null;
 
@@ -430,7 +432,7 @@ public class prop_panel extends JPanel {
 
                 //ink.can_pan.repaint();
             }
-        }
+        }*/
 
 /*    class get_one_click extends MouseAdapter{
 

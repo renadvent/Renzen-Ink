@@ -65,7 +65,9 @@ public class canvas_panel extends JPanel {
         // draw highlighted selectables
         for (selectable p : selectable.list){
 
-            if (p.selected){
+            //for (selectable k : p.items)
+
+            if(p.selected && (p.rect!=null)){
                 System.out.println("highlighted drawn");
                 g2d.setColor(new Color (0,255,0));
                 g2d.draw(p.rect);

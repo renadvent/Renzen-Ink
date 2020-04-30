@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 public class selectable {
 
-    static LinkedList<selectable> list = new LinkedList<selectable>();
+    public static LinkedList<selectable> list = new LinkedList<selectable>();
 
     public selectable(){
         System.out.println("selectable added");
@@ -16,6 +16,6 @@ public class selectable {
 
     LinkedList<Shape> items = new LinkedList<Shape>();
     public Rectangle2D.Double rect = null;
-    boolean selected=false;
+    public boolean selected=false;
 
 }
