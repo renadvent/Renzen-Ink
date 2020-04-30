@@ -58,11 +58,18 @@ public class canvas_panel extends JPanel {
 
             Rectangle2D.Double te = (Rectangle2D.Double) s;
 
-            System.out.println(te.getX());
-            System.out.println(te.getY());
-            System.out.println(te.getWidth());
-            System.out.println(te.getHeight());
+            //if (s.selected)
             g2d.draw(s);
+        }
+
+        // draw highlighted selectables
+        for (selectable p : selectable.list){
+
+            if (p.selected){
+                System.out.println("highlighted drawn");
+                g2d.setColor(new Color (0,255,0));
+                g2d.draw(p.rect);
+            }
         }
          
         st=java.lang.System.currentTimeMillis()-st;

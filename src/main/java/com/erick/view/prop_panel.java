@@ -3,7 +3,6 @@ package com.erick.view;
 import com.erick.Ink;
 import com.erick.model.Part;
 import com.erick.model.frame;
-import com.erick.model.texture;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +29,8 @@ public class prop_panel extends JPanel {
     JButton addConstraint = new JButton("add constraint");
     JButton testConstraints = new JButton("test constraints");
 
+    JCheckBox select_parts = new JCheckBox("select parts");
+
     JButton addTip = new JButton("add tip");
     JButton addTag = new JButton("add tag");
 
@@ -54,6 +55,28 @@ public class prop_panel extends JPanel {
         // just for test
         ink.selected_component = ink.selected_texture().getComponents().getFirst();
 
+        this.add(select_parts);
+        select_parts.addActionListener(new ActionListener() {
+
+
+            rect_from_mouse.select_multiple sm = null; //new rect_from_mouse.select_multiple()
+
+            {
+
+
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (select_parts.isSelected()){
+                    sm = new rect_from_mouse.select_multiple(ink.selected_frame.items);
+                    ink.can_pan().addMouseListener(sm);
+                    ink.can_pan().addMouseMotionListener(sm);
+                }
+
+            }
+        });
 
         this.add(movePart);
         movePart.addActionListener(new ActionListener() {
@@ -64,11 +87,24 @@ public class prop_panel extends JPanel {
                     @Override
                     void set_variables() {
                         super.set_variables();
-
                         // need to fix here
 
-                        ink.selected_part.rect.x=end_x;
+                        ink.selected_part.rect.x=end_x; //maybe use Integer types so it can reset by itself
                         ink.selected_part.rect.y=end_y;
+                    }
+
+                    @Override
+                    public void on_completion() {
+                        super.on_completion();
+
+                        boolean contains = ink.selected_frame.rect.contains(ink.selected_part.rect);
+
+                        if (!contains){
+                            ink.selected_part.rect.x=start_x;
+                            ink.selected_part.rect.y=start_y;
+                            reset();
+                            ink.can_pan().repaint();
+                        }
                     }
                 };
 
@@ -126,7 +162,7 @@ public class prop_panel extends JPanel {
                 if (ink.selected_frame() != null) {
 
                     final Part temp = ink.create_part();
-                    ink.selected_frame().parts.add(temp);
+                    ink.selected_frame().items.add(temp);
                     ink.selected_part = temp;
 
                     final JButton new_part = new JButton("part: " + frame_counter);
@@ -294,12 +330,11 @@ public class prop_panel extends JPanel {
 
         //=================================================================
 
-        private static class move_with_mouse extends MouseInputAdapter {
+        public static class move_with_mouse extends MouseInputAdapter {
 
             //final Rectangle2D.Double r_temp;
             private final Ink ink;
             //boolean completed=false;
-
 
             int start_x;
             int start_y;
@@ -307,10 +342,23 @@ public class prop_panel extends JPanel {
             int end_x;
             int end_y;
 
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                start_x=(int) ink.selected_part.rect.x;
+                start_y=(int) ink.selected_part.rect.y;
+            }
+
+            void reset(){
+                ink.can_pan().addMouseMotionListener(this);
+                ink.can_pan().addMouseListener(this);
+            }
+
             public move_with_mouse(Ink ink) {
                 this.ink = ink;
                 ink.can_pan().addMouseMotionListener(this);
                 ink.can_pan().addMouseListener(this);
+                ink.can_pan().repaint();
                 //r_temp = new Rectangle2D.Double();
                 //ink.can_pan().prop_renderables.add(r_temp);
             }
@@ -320,6 +368,7 @@ public class prop_panel extends JPanel {
                 super.mouseReleased(e);
                 ink.can_pan().removeMouseMotionListener(this);
                 ink.can_pan().removeMouseListener(this);
+                on_completion();
             }
 
             public void on_completion() {
@@ -353,6 +402,34 @@ public class prop_panel extends JPanel {
             }
 
 
+        }
+
+        public static class select_multiple extends MouseInputAdapter{
+
+            LinkedList<selectable> boxes=null;
+
+            select_multiple(LinkedList<selectable> sl){
+
+                boxes=sl;
+
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                for (selectable sb : boxes){
+
+                    if (sb.rect!=null) {
+                        if (sb.rect.contains(e.getX(), e.getY())) {
+                            sb.selected = !sb.selected;
+                        }
+                    }
+
+                }
+
+                //ink.can_pan.repaint();
+            }
         }
 
 /*    class get_one_click extends MouseAdapter{

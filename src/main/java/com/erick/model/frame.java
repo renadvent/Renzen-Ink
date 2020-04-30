@@ -1,5 +1,8 @@
 package com.erick.model;
 
+import com.erick.view.drawable;
+import com.erick.view.selectable;
+
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
@@ -12,7 +15,7 @@ import java.util.LinkedList;
 
 
 
-public class frame { // collection of frames
+public class frame <T> extends selectable implements drawable { // collection of frames
 
     // a frame is a box that contains parts
     // that are related positionally by position
@@ -25,7 +28,9 @@ public class frame { // collection of frames
 
     LinkedList<frame> frames = new LinkedList<frame>(); // not using rn
 
-    public LinkedList<Part> parts = new LinkedList<Part>();
+
+    public LinkedList<Part> items = new LinkedList<Part>();
+
     LinkedList<Constraint> constraints = new LinkedList<Constraint>();
     LinkedList<Line2D.Float> last_gen_curves = new LinkedList<Line2D.Float>();
 
@@ -44,7 +49,7 @@ public class frame { // collection of frames
 
         Graphics2D g2d = b.createGraphics();
 
-        for (Part p : parts){
+        for (Part p : items){
 
             // draw rect
             g2d.drawRect(x+p.val_x,y+p.val_y,x+p.width,y+p.height);
@@ -62,7 +67,7 @@ public class frame { // collection of frames
 
         LinkedList<Constraint> used_constraints = new LinkedList<>();
 
-        for (Part p : parts){
+        for (Part p : items){
 
             LinkedList<Constraint> temp = new LinkedList<Constraint>();
 
@@ -117,7 +122,7 @@ public class frame { // collection of frames
 
     public Part create_part() {
         Part temp = new Part(0,0,0);
-        parts.add(temp);
+        items.add(temp);
         return temp;
     }
 

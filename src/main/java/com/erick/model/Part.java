@@ -1,16 +1,18 @@
 package com.erick.model;
 
-import java.awt.geom.Rectangle2D;
+import com.erick.view.drawable;
+import com.erick.view.selectable;
+
 import java.util.LinkedList;
 
 // must be customized by frame
 // just values
-public class Part {
+public class Part extends selectable implements drawable {
 
     // shape can be a box, circle, line, curve, triangle
     // for now, just rect
 
-    public Rectangle2D.Double rect = null;
+    //public Rectangle2D.Double rect = null;
 
     boolean altered; // used during constraint process to revalidate within function
 

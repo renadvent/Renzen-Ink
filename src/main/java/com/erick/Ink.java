@@ -11,13 +11,11 @@ import javax.swing.tree.DefaultTreeModel;
 
 import com.erick.model.Caster;
 import com.erick.model.Component;
-import com.erick.model.frame;
 import com.erick.model.texture;
 import com.erick.view.action_panel;
 import com.erick.view.canvas_panel;
 import com.erick.view.prop_panel;
-
-import javax.swing.*;
+import com.erick.view.stroke_panel;
 
 public class Ink extends AbstractController {
 
@@ -33,7 +31,7 @@ public class Ink extends AbstractController {
 
     private final Ink_Controller ink_con = new Ink_Controller(this);
 
-    final canvas_panel can_pan = new canvas_panel(frame, this);
+    public final canvas_panel can_pan = new canvas_panel(frame, this);
     final action_panel act_pan = new action_panel(frame, this);
     final stroke_panel str_pan = new stroke_panel(frame, this);
     final JTabbedPane jtpr = new JTabbedPane();
