@@ -1,9 +1,6 @@
 package com.erick;
 
-import com.erick.model.Caster;
-import com.erick.model.Component;
-import com.erick.model.frame;
-import com.erick.model.texture;
+import com.erick.model.*;
 import com.erick.view.*;
 
 import java.awt.BorderLayout;
@@ -25,6 +22,7 @@ import javax.swing.*;
 public class Ink extends AbstractController {
 
     private static final long serialVersionUID = 1L;
+    public Part selected_part;
 
     JFrame frame = new JFrame("Ink");
 
@@ -138,6 +136,14 @@ public class Ink extends AbstractController {
 
     public prop_panel prop_pan() {
         return ink.prop_pan;
+    }
+
+    public Part create_part(){
+
+        Part temp = selected_frame().create_part();
+
+        return temp;
+
     }
 
     private Caster selected_caster;

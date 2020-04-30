@@ -2,6 +2,7 @@ package com.erick.model;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
@@ -20,9 +21,11 @@ public class frame { // collection of frames
 
     String name;
 
+    public Rectangle2D.Double rect = null;
+
     LinkedList<frame> frames = new LinkedList<frame>(); // not using rn
 
-    LinkedList<Part> parts = new LinkedList<Part>();
+    public LinkedList<Part> parts = new LinkedList<Part>();
     LinkedList<Constraint> constraints = new LinkedList<Constraint>();
     LinkedList<Line2D.Float> last_gen_curves = new LinkedList<Line2D.Float>();
 
