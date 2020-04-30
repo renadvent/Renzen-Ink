@@ -9,6 +9,17 @@ public class selectable {
 
     public static LinkedList<selectable> list = new LinkedList<selectable>();
 
+    public static int count_selected(){
+        int temp=0;
+        for (selectable s : list){
+            if (s.selected){
+                temp++;
+            }
+        }
+        return temp;
+
+    }
+
     public selectable(){
         System.out.println("selectable added");
         list.add(this);

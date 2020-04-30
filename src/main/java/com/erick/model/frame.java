@@ -9,6 +9,11 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+
+
 
 // handles all aspects of proportion
 // including rendering
@@ -63,7 +68,10 @@ public class frame <T> extends selectable implements drawable { // collection of
     }
 
     // fills values of parts
-    void validate_constraints() {
+
+    // TODO
+    // does not yet return false
+    public boolean validate_constraints() {
 
         LinkedList<Constraint> used_constraints = new LinkedList<>();
 
@@ -85,6 +93,7 @@ public class frame <T> extends selectable implements drawable { // collection of
             // calculate constraint impact on part here
             // in order added
 
+            // redo this part
             for (Constraint j: temp){
 
                 // make sure position satisfies all constraints
@@ -115,6 +124,8 @@ public class frame <T> extends selectable implements drawable { // collection of
 
 
         }
+
+        return true;
 
 
 

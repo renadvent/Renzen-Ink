@@ -29,11 +29,11 @@ public class select_multiple extends MouseInputAdapter {
         for (selectable sb : boxes){
 
             if (sb.rect!=null) {
-                System.out.println(("RECT EXISTS"));
+                //System.out.println(("RECT EXISTS"));
                 if (sb.rect.contains(e.getX(), e.getY())) {
-                    System.out.println(("A: "+sb.selected));
+                    //System.out.println(("A: "+sb.selected));
                     sb.selected = (!sb.selected);
-                    System.out.println(("B "+sb.selected));
+                    //System.out.println(("B "+sb.selected));
                 }
             }
 

@@ -101,7 +101,7 @@ public class prop_panel extends JPanel {
 
                         boolean contains = ink.selected_frame.rect.contains(ink.selected_part.rect);
 
-                        if (!contains){
+                        if (!contains || (!ink.selected_frame.validate_constraints())){
                             ink.selected_part.rect.x=start_x;
                             ink.selected_part.rect.y=start_y;
                             reset();
@@ -211,7 +211,26 @@ public class prop_panel extends JPanel {
 
         });
 
+        // TODO
+        // do this
         this.add(addConstraint);
+        addConstraint.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (selectable.count_selected()==2){
+                    //add constraint
+                    if (ink.selected_frame!=null){
+                        //ink.selected_frame.
+                    }
+                }
+
+            }
+        });
+
+
+
+
         add(lockPart);
         add(editConstraint);
 
