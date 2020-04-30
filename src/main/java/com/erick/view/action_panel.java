@@ -232,19 +232,30 @@ public class action_panel extends JPanel implements abstractviewpanel {
             double width;
             double height;
 
+            boolean in_move_square=false;
+            boolean in_top_square=false;
+            boolean in_bottom_square=false;
+
+            boolean released = false;
+
+
             {
                 active = false;
 
                 MouseInputAdapter ia = new MouseInputAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
 
-/*                        super.mouseClicked(e);
-                        if (move_caster.isSelected()){
-                            active=false;
-                            move_caster.setSelected(false);
-                            //ink.can_pan().revalidate();
-                        }*/
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        super.mousePressed(e);
+                        released=false;
+                        in_move_square = (r.contains(e.getX(), e.getY()));
+                        in_top_square = (t.contains(e.getX(), e.getY()));
+                        in_bottom_square = (f.contains(e.getX(), e.getY()));
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        released = true;
                     }
                 };
 
@@ -275,52 +286,77 @@ public class action_panel extends JPanel implements abstractviewpanel {
 
                         // detect where it was clicked
 
-                        boolean in_move_square= (r.contains(e.getX(),e.getY()));
-                        boolean in_top_square= (t.contains(e.getX(),e.getY()));
-                        boolean in_bottom_square= (f.contains(e.getX(),e.getY()));
+                        //if  (!released){
+
+                          //  released=false;
+                        //}
+
+/*if                        if (released) {
+                            //from last time, test again
+                            in_move_square = (r.contains(e.getX(), e.getY()));
+                            in_top_square = (t.contains(e.getX(), e.getY()));
+                            in_bottom_square = (f.contains(e.getX(), e.getY()));
+                            released=false;
+                        }*/
 
 
                         //e.
-                        if (active && in_move_square) {
+                        if (!released) {
+                            if (active && in_move_square) {
 
-                            r.x = e.getX()-r.width/2;
-                            r.y = e.getY()-r.height/2;
+                                r.x = e.getX() - r.width / 2;
+                                r.y = e.getY() - r.height / 2;
+
+                                Caster v = ink.selected_caster();
+
+                                v.set_from(e.getX() - width, e.getY() - height);
+                                v.set_to(e.getX() + width, e.getY() + height);
+
+                                flag_rerender_selected_caster();
+                                frame.repaint();
+
+                            } else if (active && in_top_square) {
+
+                                t.x = e.getX() - t.width / 2;
+                                t.y = e.getY() - t.height / 2;
+
+                                Caster v = ink.selected_caster();
+
+                                v.to_x = e.getX();
+                                v.to_y = e.getY();
+
+                                flag_rerender_selected_caster();
+                                frame.repaint();
+
+                                //v.set
+
+                            } else if (active && in_bottom_square) {
+
+                                f.x = e.getX() - f.width / 2;
+                                f.y = e.getY() - f.height / 2;
+
+                                Caster v = ink.selected_caster();
+
+                                v.from_x = e.getX();
+                                v.from_y = e.getY();
+
+                                flag_rerender_selected_caster();
+                                frame.repaint();
+
+                            }
 
                             Caster v = ink.selected_caster();
+                            width = (v.from_x - v.to_x) / 2;
+                            height = (v.from_y - v.to_y) / 2;
 
-                            v.set_from(e.getX() - width, e.getY() - height);
-                            v.set_to(e.getX() + width, e.getY() + height);
+                            r.x=v.from_x-width;
+                            r.y=v.from_y-height;
 
-                            flag_rerender_selected_caster();
-                            frame.repaint();
+                            f.x=v.from_x;
+                            f.y=v.from_y;
 
-                        }else if (active && in_top_square){
-
-                            t.x = e.getX()-t.width/2;
-                            t.y = e.getY()-t.height/2;
-
-                            Caster v = ink.selected_caster();
-
-                            v.to_x=e.getX();
-                            v.to_y=e.getY();
-
-                            flag_rerender_selected_caster();
-                            frame.repaint();
-
-                            //v.set
-
-                        }else if (active && in_bottom_square){
-
-                            f.x = e.getX()-f.width/2;
-                            f.y = e.getY()-f.height/2;
-
-                            Caster v = ink.selected_caster();
-
-                            v.from_x=e.getX();
-                            v.from_y=e.getY();
-
-                            flag_rerender_selected_caster();
-                            frame.repaint();
+                            t.x=v.to_x;
+                            t.y=v.to_y;
 
                         }
                     }
@@ -362,6 +398,7 @@ public class action_panel extends JPanel implements abstractviewpanel {
                     //r = null;
                     //ink.can_pan().move_tool = null;
                     active = false;
+                    //released=false;
                 }
 
                 frame.repaint();
