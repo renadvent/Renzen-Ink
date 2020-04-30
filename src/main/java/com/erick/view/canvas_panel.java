@@ -62,7 +62,7 @@ public class canvas_panel extends JPanel {
             System.out.println(te.getY());
             System.out.println(te.getWidth());
             System.out.println(te.getHeight());
-            g2d.fill(s);
+            g2d.draw(s);
         }
          
         st=java.lang.System.currentTimeMillis()-st;

@@ -13,6 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.event.MouseInputAdapter;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.min;
 
 public class prop_panel extends JPanel {
 
@@ -111,8 +112,8 @@ public class prop_panel extends JPanel {
                             end_x = e.getX();
                             end_y = e.getY();
 
-                            r_temp.width = start_x - end_x;
-                            r_temp.height = start_y - end_y;
+                            r_temp.width = abs(start_x - end_x);
+                            r_temp.height = abs(start_y - end_y);
 
                             ink.can_pan().repaint();
 
@@ -128,6 +129,9 @@ public class prop_panel extends JPanel {
 
                             end_x = e.getX();
                             end_y = e.getY();
+
+                            r_temp.x=min(end_x,start_x);
+                            r_temp.y=min(end_y,start_y);
 
                             r_temp.width = abs(start_x - end_x);
                             r_temp.height = abs(start_y - end_y);
