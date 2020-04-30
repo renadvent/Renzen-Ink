@@ -3,11 +3,9 @@ package com.erick.view;
 import com.erick.Ink;
 import com.erick.model.texture;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.LinkedList;
 //import java.awt.Rectangle2D;
 
 import javax.swing.JPanel;
@@ -17,6 +15,7 @@ public class canvas_panel extends JPanel {
 
     public Rectangle2D.Double resize_tool_1;
     public Rectangle2D.Double resize_tool_2;
+    public LinkedList<Shape> prop_renderables=new LinkedList<Shape>();
     private Ink ink;
     private JFrame frame;
 
@@ -52,6 +51,18 @@ public class canvas_panel extends JPanel {
          if (resize_tool_1 != null){g2d.fill(resize_tool_1);}
         if (resize_tool_2 != null) {
             g2d.fill(resize_tool_2);
+        }
+
+        for (Shape s : prop_renderables){
+            System.out.println("drawing renderables");
+
+            Rectangle2D.Double te = (Rectangle2D.Double) s;
+
+            System.out.println(te.getX());
+            System.out.println(te.getY());
+            System.out.println(te.getWidth());
+            System.out.println(te.getHeight());
+            g2d.fill(s);
         }
          
         st=java.lang.System.currentTimeMillis()-st;

@@ -345,18 +345,22 @@ public class action_panel extends JPanel implements abstractviewpanel {
 
                             }
 
+
                             Caster v = ink.selected_caster();
-                            width = (v.from_x - v.to_x) / 2;
-                            height = (v.from_y - v.to_y) / 2;
 
-                            r.x=v.from_x-width;
-                            r.y=v.from_y-height;
+                            if (v!=null) {
+                                width = (v.from_x - v.to_x) / 2;
+                                height = (v.from_y - v.to_y) / 2;
 
-                            f.x=v.from_x;
-                            f.y=v.from_y;
+                                r.x = v.from_x - width;
+                                r.y = v.from_y - height;
 
-                            t.x=v.to_x;
-                            t.y=v.to_y;
+                                f.x = v.from_x;
+                                f.y = v.from_y;
+
+                                t.x = v.to_x;
+                                t.y = v.to_y;
+                            }
 
                         }
                     }
