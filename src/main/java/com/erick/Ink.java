@@ -20,6 +20,13 @@ import com.erick.view.stroke_panel;
 public class Ink extends AbstractController {
 
     private static final long serialVersionUID = 1L;
+
+    //static
+
+
+
+
+
     public Part selected_part;
 
     JFrame frame = new JFrame("Ink");

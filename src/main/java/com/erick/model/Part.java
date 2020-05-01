@@ -2,24 +2,29 @@ package com.erick.model;
 
 import com.erick.view.drawable;
 import com.erick.view.selectable;
-
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
+import org.opencv.core.MatOfByte;
+import org.opencv.imgcodecs.Imgcodecs;
 
-
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.LinkedList;
+
+//import org.apache
+
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 
 // must be customized by frame
 // just values
 public class Part extends selectable implements drawable {
 
 
-    //https://stackoverflow.com/questions/14942881/image-3d-rotation-opencv
-    //https://docs.opencv.org/2.4/modules/imgproc/doc/geometric_transformations.html
-    //https://stackoverflow.com/questions/7019407/translating-and-rotating-an-image-in-3d-using-opencv
-    //https://stackoverflow.com/questions/17087446/how-to-calculate-perspective-transform-for-opencv-from-rotation-angles
-    static {System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
+
+    //-------------------------------
 
     // shape can be a box, circle, line, curve, triangle
     // for now, just rect

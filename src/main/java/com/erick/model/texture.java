@@ -2,21 +2,154 @@ package com.erick.model;
 
 import com.erick.AbstractModel;
 import com.erick.defcon;
+import com.erick.view.canvas_panel;
+import com.erick.view.selectable;
+import org.opencv.core.*;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+
+import java.nio.Buffer;
 import java.util.LinkedList;
 import java.awt.AlphaComposite;
 
 import javax.imageio.ImageIO;
 
+
+
+//import jaiimageio.PerspectiveTransform;
+
+
+import static org.opencv.core.CvType.CV_32F;
+
 public class texture extends AbstractModel {
+
+
+    //https://stackoverflow.com/questions/14942881/image-3d-rotation-opencv
+    //https://docs.opencv.org/2.4/modules/imgproc/doc/geometric_transformations.html
+    //https://stackoverflow.com/questions/7019407/translating-and-rotating-an-image-in-3d-using-opencv
+    //https://stackoverflow.com/questions/17087446/how-to-calculate-perspective-transform-for-opencv-from-rotation-angles
+    static {System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
+
+
+    //CONVERTS BUFFERED IMAGE TO BYTE ARRAY
+    //byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+    // Then you can simply put it to Mat if you set type to CV_8UC3
+    //image_final.put(0, 0, pixels);
+
+    //Ultraviolet
+    //https://stackoverflow.com/a/46196408/12245915
+
+    public static Mat BufferedImage2Mat() throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        BufferedImage image = new BufferedImage(1000,1000, BufferedImage.TYPE_BYTE_GRAY); //ARGB doesn't work here
+        System.out.println("SIZE: "+byteArrayOutputStream.size());
+
+        if (!ImageIO.write(image, "bmp", byteArrayOutputStream)) {
+            System.out.println("failed!!!!");
+            //return null;
+        }
+        System.out.println("SIZE: "+byteArrayOutputStream.size());
+        byteArrayOutputStream.flush();
+        System.out.println("SIZE: "+byteArrayOutputStream.size());
+        byte[] array = byteArrayOutputStream.toByteArray();
+        MatOfByte mb =new MatOfByte(array);
+        System.out.println("SIZE: "+array.length);
+        //return Imgcodecs.imdecode(mb, Imgcodecs.IMREAD_UNCHANGED);
+        return Imgcodecs.imdecode(mb, Imgcodecs.IMREAD_UNCHANGED);
+        //return Imgcodecs.imdecode(new MatOfByte(byteArrayOutputStream.toByteArray()), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
+    }
+
+/*    public static Mat BufferedImage2Mat(BufferedImage bi) {
+        Mat mat = new Mat(bi.getHeight(), bi.getWidth(), CvType.CV_8UC3);
+        byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
+        //byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
+        mat.put(0, 0, data);
+        return mat;
+    }*/
+
+    public static BufferedImage Mat2BufferedImage(Mat matrix)throws IOException {
+        MatOfByte mob=new MatOfByte();
+        Imgcodecs.imencode("jpg", matrix, mob);
+        return ImageIO.read(new ByteArrayInputStream(mob.toArray()));
+    }
+
+
+    //BufferedImage rect_sect;
+
+    //static LinkedList<BufferedImage> transformed;
+    public static void get_rects() throws IOException {
+
+        canvas_panel.draw_from_anywhere=new LinkedList<BufferedImage>();
+
+        LinkedList<BufferedImage> transformed=new LinkedList<BufferedImage>();
+        //Graphics2D g2d = stroke_rendered_buffer.createGraphics();
+
+        for (selectable p: selectable.list){
+
+            if(p.rect!=null && p.rect.width>100 && p.rect.height>100 ) {
+
+                BufferedImage temp;
+
+                temp = texture.test_buffer.getSubimage(100,100,100,100);
+                //temp = stroke_rendered_buffer.getSubimage((int) p.rect.x, (int) p.rect.y, (int) p.rect.width, (int) p.rect.height);
+                Mat m_temp = BufferedImage2Mat();
+
+
+                Mat corners = Mat.zeros(4, 2, CV_32F);
+
+                corners.put(0, 0, 0);
+                corners.put(0, 1, 512);
+                corners.put(1, 0, 0);
+                corners.put(1, 1, 0);
+                corners.put(2, 0, 512);
+                corners.put(2, 1, 0);
+                corners.put(3, 0, 512);
+                corners.put(3, 1, 512);
+
+                //----
+
+                Mat target = Mat.zeros(4, 2, CV_32F);
+
+                Mat M = Imgproc.getPerspectiveTransform(corners, target);
+                //warped = Imgproc.warpPerspective(image, M, (maxWidth, maxHeight))
+
+
+                Imgproc.warpPerspective(m_temp, M, corners, new Size(1280, 1024));
+
+                temp = Mat2BufferedImage(M);
+
+
+                canvas_panel.draw_from_anywhere.add(temp);
+            }
+
+
+
+
+
+
+
+        }
+
+        //if (ink.se)
+        //return temp;
+    }
+
+    //-------------------------------------------------------------------------------
 
     // PUBLIC
     public static LinkedList <texture> textures = new LinkedList<texture>();
+
+    public static BufferedImage test_buffer = new BufferedImage(1000,1000, BufferedImage.TYPE_INT_ARGB);
 
     // constructor for a blank canvas
     public texture(int width, int height) {
@@ -33,6 +166,8 @@ public class texture extends AbstractModel {
         prop_rendered_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         overlay_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+
 
         orig_height = height;
         orig_width = width;
@@ -136,14 +271,14 @@ public class texture extends AbstractModel {
     private int orig_height;
 
     private BufferedImage component_rendered_buffer; // viewers read from this buffer
-    private BufferedImage stroke_rendered_buffer; // viewers write to this buffer
+    public BufferedImage stroke_rendered_buffer; // viewers write to this buffer
     private BufferedImage tool_rendered_buffer; // viewers' tools render to this buffer
     private BufferedImage shade_rendered_buffer; // viewers write shade to this buffer
     BufferedImage prop_rendered_buffer;
 
     public BufferedImage alpha_rendered_buffer;
 
-    BufferedImage overlay_buffer;
+    public BufferedImage overlay_buffer;
 
     public LinkedList<Component> getComponents(){
         return Components;
