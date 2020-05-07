@@ -5,9 +5,6 @@ import com.erick.model.texture;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 //import java.awt.Rectangle2D;
 
@@ -33,8 +30,6 @@ public class canvas_panel extends JPanel {
     }
 
     Rectangle2D move_tool;
-
-    public static LinkedList<BufferedImage> draw_from_anywhere=new LinkedList<>();
 
     @Override
     public void paintComponent(Graphics g) {
@@ -72,38 +67,12 @@ public class canvas_panel extends JPanel {
 
             //for (selectable k : p.items)
 
-            //texture.get_rect(p.rect,ink.te)
-
             if(p.selected && (p.rect!=null)){
                 System.out.println("highlighted drawn");
                 g2d.setColor(new Color (0,255,0));
                 g2d.draw(p.rect);
             }
-
-
         }
-
-        // this code is so bad...
-  /*      texture t = ink.selected_texture();
-
-        if (t!=null) {
-            try {
-                texture.get_rects();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Iterator<selectable> iter = selectable.list.iterator();
-
-            for (BufferedImage bi : draw_from_anywhere) {
-
-                selectable in = iter.next();
-                if (in.rect != null && in.rect.width>100 && in.rect.height>100) {
-                    g2d.drawImage(bi, null, (int) in.rect.x, (int) in.rect.y);
-                }
-
-
-            }
-        }*/
          
         st=java.lang.System.currentTimeMillis()-st;
         System.out.println("render millisecs: "+st);

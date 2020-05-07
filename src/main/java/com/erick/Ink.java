@@ -1,29 +1,34 @@
 package com.erick;
 
-import com.erick.model.*;
+import com.erick.model.Caster;
+import com.erick.model.Component;
+import com.erick.model.Part;
+import com.erick.model.texture;
+import com.erick.view.Menu;
 import com.erick.view.*;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-
-import com.erick.model.Caster;
-import com.erick.model.Component;
-import com.erick.model.texture;
-import com.erick.view.action_panel;
-import com.erick.view.canvas_panel;
-import com.erick.view.prop_panel;
-import com.erick.view.stroke_panel;
+import java.awt.*;
 
 public class Ink extends AbstractController {
 
     private static final long serialVersionUID = 1L;
+/*
+<<<<<<< HEAD
 
     //static
 
+<<<<<<< HEAD
+    final LinkedList<JPanel>  ses_panels = new LinkedList<>();
+=======
+    public Part selected_part;
+>>>>>>> parent of 7790d25... beginning rewrite
+=======
+>>>>>>> parent of 51432fc... long way to go
 
+*/
 
 
 
