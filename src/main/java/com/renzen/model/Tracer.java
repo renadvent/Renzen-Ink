@@ -1,35 +1,22 @@
 package com.renzen.model;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.LinkedList;
 
 public class Tracer {
 
-
-    //LinkedList<point> intersection_points;
-    //LinkedList<point> draw_from_caster = new LinkedList<point>();
     Caster c;
 
-    Tracer (Caster c){
+    Tracer(Caster c) {
 
-        this.c=c;
+        this.c = c;
     }
 
-    private void add_intersection_point(point a) {
+    private void add_intersection_point(Point a) {
         c.intersection_points.add(a);
     }
 
     public void get_intersection_points() {
-
-        // TODO
-        // generate current_viewer_x points etc ahead of time
-        // make a linked list of these points, and then run algo
-        // so algo is not dependent on originating from a straight line
-
-        // TEMP
-
-        // was being called twice
-        //reset_caster();
 
         double viewer_width = c.from_x - c.to_x;
         double viewer_height = c.from_y - c.to_y;
@@ -53,7 +40,7 @@ public class Tracer {
             int penetration_count = 0;
             Color this_pixel = null;
             Color last_pixel = null;
-            point last_pen = null;
+            Point last_pen = null;
 
             // move along ray
             for (int j = 0; j < c.max_ray_length; j++) {
@@ -123,22 +110,22 @@ public class Tracer {
         return ((r < c.tolerance) && (g < c.tolerance) && (b < c.tolerance));
     }
 
-    private point add_penetration(double ray_path_x, double ray_path_y, double rx, double ry, point last_pen,
-            Color color) {
+    private Point add_penetration(double ray_path_x, double ray_path_y, double rx, double ry, Point last_pen,
+                                  Color color) {
 
-        point new_pen;
+        Point new_pen;
 
         if (last_pen == null) {
 
-            new_pen = new point((int) ray_path_x, (int) ray_path_y);
-            new_pen.set_origin_ray(new point((int) rx, (int) ry));
+            new_pen = new Point((int) ray_path_x, (int) ray_path_y);
+            new_pen.set_origin_ray(new Point((int) rx, (int) ry));
             new_pen.intersection_color = color;
 
         } else {
 
-            new_pen = new point((int) ray_path_x, (int) ray_path_y);
-            new_pen.set_origin_ray(new point((int) rx, (int) ry));
-            new_pen.penetration_points = (LinkedList<point>) last_pen.penetration_points.clone();
+            new_pen = new Point((int) ray_path_x, (int) ray_path_y);
+            new_pen.set_origin_ray(new Point((int) rx, (int) ry));
+            new_pen.penetration_points = (LinkedList<Point>) last_pen.penetration_points.clone();
             new_pen.penetration_points.add(last_pen);
             new_pen.intersection_color = color;
 
@@ -149,16 +136,16 @@ public class Tracer {
         return new_pen;
     }
 
-    private void add_collision(double ray_path_x, double ray_path_y, double rx, double ry, point last_pen,
-            Color found_color) {
+    private void add_collision(double ray_path_x, double ray_path_y, double rx, double ry, Point last_pen,
+                               Color found_color) {
 
-        point new_intersection_point;
-        new_intersection_point = new point((int) ray_path_x, (int) ray_path_y);
-        new_intersection_point.set_origin_ray(new point((int) rx, (int) ry));
+        Point new_intersection_point;
+        new_intersection_point = new Point((int) ray_path_x, (int) ray_path_y);
+        new_intersection_point.set_origin_ray(new Point((int) rx, (int) ry));
         new_intersection_point.set_color(found_color);
 
         if (last_pen != null) {
-            new_intersection_point.penetration_points = (LinkedList<point>) last_pen.penetration_points.clone();
+            new_intersection_point.penetration_points = (LinkedList<Point>) last_pen.penetration_points.clone();
 
             new_intersection_point.penetration_points.add(last_pen);
             last_pen = new_intersection_point;
@@ -174,9 +161,9 @@ public class Tracer {
     }
 
     private void store_to_ray_path(double current_ray_x, double current_ray_y, double current_viewer_x,
-            double current_viewer_y) {
-        point p = new point((int) current_ray_x, (int) current_ray_y);
-        point q = new point((int) current_viewer_x, (int) current_viewer_y);
+                                   double current_viewer_y) {
+        Point p = new Point((int) current_ray_x, (int) current_ray_y);
+        Point q = new Point((int) current_viewer_x, (int) current_viewer_y);
         p.set_origin_ray(q);
         c.ray_path.add(p);
 
@@ -185,6 +172,5 @@ public class Tracer {
         c.draw_from_caster.add(p);
     }
 
-    
 
 }

@@ -23,15 +23,26 @@ import org.opencv.imgproc.Imgproc;
 =======
 >>>>>>> parent of 7790d25... beginning rewrite*/
 
-public class texture extends AbstractModel {
+public class Texture extends AbstractModel {
 
     // PUBLIC
-    public static LinkedList <texture> textures = new LinkedList<texture>();
+    public static LinkedList<Texture> Textures = new LinkedList<Texture>();
+    private final int orig_width;
+    private final int orig_height;
+    private final BufferedImage component_rendered_buffer; // viewers read from this buffer
+    private final BufferedImage stroke_rendered_buffer; // viewers write to this buffer
+    private final BufferedImage tool_rendered_buffer; // viewers' tools render to this buffer
+    private final BufferedImage shade_rendered_buffer; // viewers write shade to this buffer
+    private final LinkedList<Component> Components; // individual components to be rendered to component buffer
+    private final LinkedList<Caster> casters; // viewer's are placed on the drawing to render strokes
+    public BufferedImage alpha_rendered_buffer;
+    BufferedImage prop_rendered_buffer;
+    BufferedImage overlay_buffer;
 
     // constructor for a blank canvas
-    public texture(int width, int height) {
+    public Texture(int width, int height) {
 
-        textures.add(this);
+        Textures.add(this);
 
         // initialize image buffers
         component_rendered_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -52,16 +63,16 @@ public class texture extends AbstractModel {
         casters = new LinkedList<Caster>();
     }
 
+    // PRIVATE
+
     // add a component to canvas
     public void add_component(Component comp) {
 
         Components.add(comp);
 
         //----
-        firePropertyChange(defcon.NEW_COMPONENT,null, comp);
+        firePropertyChange(defcon.NEW_COMPONENT, null, comp);
     }
-
-
 
     public Graphics2D create_blank_component_graphics(int w, int h) {
         Component temp = new Component(this, w, h);
@@ -74,13 +85,13 @@ public class texture extends AbstractModel {
 
     // add a viewer to canvas
     public Caster create_viewer(int from_x, int from_y, int to_x, int to_y, int rays, boolean to_flip,
-            boolean to_shade) {
+                                boolean to_shade) {
         Caster x = create_caster(from_x, from_y, to_x, to_y, rays, to_flip);
         x.cast_through = to_shade;
 
 
         //---
-        firePropertyChange(defcon.NEW_VIEW,null,x);
+        firePropertyChange(defcon.NEW_VIEW, null, x);
 
         return x;
     }
@@ -92,9 +103,9 @@ public class texture extends AbstractModel {
         temp_pov.set_to(f, g);
         temp_pov.set_ray_count(rays);
 
-         temp_pov.parent_component_rendered_buffer = this.component_rendered_buffer;
+        temp_pov.parent_component_rendered_buffer = this.component_rendered_buffer;
         //temp_pov.parent_stroke_rendered_buffer = this.stroke_rendered_buffer;
-        //temp_pov.parent_tool_rendered_buffer = this.tool_rendered_buffer; 
+        //temp_pov.parent_tool_rendered_buffer = this.tool_rendered_buffer;
 
         if (to_flip == true) {
             temp_pov.flip();
@@ -102,7 +113,7 @@ public class texture extends AbstractModel {
 
         casters.add(temp_pov);
 
-        firePropertyChange(defcon.NEW_CASTER,null,temp_pov);
+        firePropertyChange(defcon.NEW_CASTER, null, temp_pov);
 
 
         return temp_pov;
@@ -140,27 +151,9 @@ public class texture extends AbstractModel {
         return (orig_height);
     }
 
-    // PRIVATE
-
-    private final int orig_width;
-    private final int orig_height;
-
-    private final BufferedImage component_rendered_buffer; // viewers read from this buffer
-    private final BufferedImage stroke_rendered_buffer; // viewers write to this buffer
-    private final BufferedImage tool_rendered_buffer; // viewers' tools render to this buffer
-    private final BufferedImage shade_rendered_buffer; // viewers write shade to this buffer
-    BufferedImage prop_rendered_buffer;
-
-    public BufferedImage alpha_rendered_buffer;
-
-    BufferedImage overlay_buffer;
-
-    public LinkedList<Component> getComponents(){
+    public LinkedList<Component> getComponents() {
         return Components;
     }
-
-    private final LinkedList<Component> Components; // individual components to be rendered to component buffer
-    private final LinkedList<Caster> casters; // viewer's are placed on the drawing to render strokes
 
     public LinkedList<Caster> get_casters() {
         return casters;
@@ -173,7 +166,7 @@ public class texture extends AbstractModel {
 
         for (Component i : Components) {
             i.update_component(component_rendered_buffer);
-            g2d.drawImage(i.get_buffer(),null,0,0);
+            g2d.drawImage(i.get_buffer(), null, 0, 0);
         }
 
         return (component_rendered_buffer);
@@ -186,20 +179,19 @@ public class texture extends AbstractModel {
 
         for (Caster i : casters) {
 
-            i.update_casts();          
+            i.update_casts();
 
-            if (!i.highlighted){
-                g2d.drawImage (i.stroke_buffer,null,0,0);
-                g2d.drawImage (i.shade_buffer,null,0,0);
-            }
-            else if (i.highlighted){
-                g2d.drawImage (i.highlighted_strokes_buffer,null,0,0);
+            if (!i.highlighted) {
+                g2d.drawImage(i.stroke_buffer, null, 0, 0);
+                g2d.drawImage(i.shade_buffer, null, 0, 0);
+            } else if (i.highlighted) {
+                g2d.drawImage(i.highlighted_strokes_buffer, null, 0, 0);
                 System.out.println("showing highlight");
             }
 
         }
 
-        g2d.drawImage(alpha_rendered_buffer,null,0,0);//might have to edit later
+        g2d.drawImage(alpha_rendered_buffer, null, 0, 0);//might have to edit later
 
         return (stroke_rendered_buffer);
     }
@@ -211,10 +203,10 @@ public class texture extends AbstractModel {
 
         for (Caster i : casters) {
             i.update_tools();
-            if (!i.highlighted){
-                g2d.drawImage (i.tool_buffer, null, 0,0);
-            } else{
-                g2d.drawImage(i.highlighted_tools_buffer,null,0,0);
+            if (!i.highlighted) {
+                g2d.drawImage(i.tool_buffer, null, 0, 0);
+            } else {
+                g2d.drawImage(i.highlighted_tools_buffer, null, 0, 0);
             }
         }
 
@@ -236,7 +228,7 @@ public class texture extends AbstractModel {
 
         comp.drawImage(img, 0, 0, null);
 
-        firePropertyChange(defcon.LOADED_COMPONENT,null, comp);
+        firePropertyChange(defcon.LOADED_COMPONENT, null, comp);
     }
 
     private void wipe_buffer(Graphics2D g2d) {

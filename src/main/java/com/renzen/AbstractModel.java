@@ -6,13 +6,11 @@ import java.beans.PropertyChangeSupport;
 // shows the source code for the default controller class.
 // This class consists of only property constants and methods called by the GUI event listeners of the view.
 
-public abstract class AbstractModel
-{
+public abstract class AbstractModel {
 
     protected PropertyChangeSupport propertyChangeSupport;
 
-    public AbstractModel()
-    {
+    public AbstractModel() {
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
 

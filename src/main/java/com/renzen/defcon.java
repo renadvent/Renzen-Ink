@@ -2,8 +2,7 @@ package com.renzen;
 
 import java.awt.*;
 
-public class defcon extends AbstractController
-{
+public class defcon extends AbstractController {
 
     public static final String ELEMENT_TEXT_PROPERTY = "Text";
     public static final String ELEMENT_FONT_PROPERTY = "Font";

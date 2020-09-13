@@ -1,7 +1,6 @@
 package com.renzen.view;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
+import javax.swing.*;
 
 public class Menu extends JMenuBar {
 

@@ -16,9 +16,9 @@ public class Component {
 
     private final BufferedImage component_buffer;
     private int x, y;
-    
-	public Component(texture canvas, int width, int height) {
-		component_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+    public Component(Texture canvas, int width, int height) {
+        component_buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
 
     public void set_location(int x, int y) {
@@ -37,7 +37,7 @@ public class Component {
         return component_buffer;
     }
 
-    public Graphics2D get_graphics(){
+    public Graphics2D get_graphics() {
         return component_buffer.createGraphics();
     }
 

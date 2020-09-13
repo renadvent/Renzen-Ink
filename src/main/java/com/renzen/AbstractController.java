@@ -42,7 +42,7 @@ public abstract class AbstractController implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
 
         System.out.println("property Change Event");
-        for (abstractviewpanel view: registeredViews) {
+        for (abstractviewpanel view : registeredViews) {
             //me
 
             System.out.println(evt.getPropertyName());
@@ -50,6 +50,8 @@ public abstract class AbstractController implements PropertyChangeListener {
         }
     }
 
+
+    //from oracle
 
     /**
      * This is a convenience method that subclasses can call upon
@@ -60,16 +62,16 @@ public abstract class AbstractController implements PropertyChangeListener {
      * which the method ignores.
      *
      * @param propertyName = The name of the property.
-     * @param newValue = An object that represents the new value
-     * of the property.
+     * @param newValue     = An object that represents the new value
+     *                     of the property.
      */
     protected void setModelProperty(String propertyName, Object newValue) {
 
-        for (AbstractModel model: registeredModels) {
+        for (AbstractModel model : registeredModels) {
             try {
 
                 Method method = model.getClass().
-                        getMethod("set"+propertyName,
+                        getMethod("set" + propertyName,
 
 
                                 newValue.getClass());

@@ -3,34 +3,137 @@ package com.renzen.view;
 import com.renzen.Ink;
 import com.renzen.abstractviewpanel;
 import com.renzen.model.Caster;
-import com.renzen.model.texture;
+import com.renzen.model.Texture;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 
-public class action_panel extends JPanel implements abstractviewpanel {
-
-    Rectangle2D.Double r;
-    Caster lastSelected;
-
-    boolean set_by_code = false;
+public class Action_Panel extends JPanel implements abstractviewpanel {
 
     static final int min_rays = 10;
     static final int max_rays = 150;
     static final int init_rays = 125;
-
+    public final JCheckBox alpha_draw = new JCheckBox();
     public JButton selected_button = null;
-
+    public JCheckBox check_base = null;
+    public JCheckBox check_strokes = null;
+    public JCheckBox check_tools = null;
+    Rectangle2D.Double r;
+    Caster lastSelected;
+    boolean set_by_code = false;
     JFrame frame;
     Ink ink;
+    JSlider num_of_rays;
+    JSlider num_of_strikes;
+    JSlider tolerance;
+    JSlider num_of_rays_s;
+    JCheckBox draw_from_caster;
+    JCheckBox cast_shade;
+    JCheckBox cast_strokes;
+
+    public Action_Panel(final JFrame frame, final Ink ink) {
+
+        this.frame = frame;
+        this.ink = ink;
+
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+
+        create_strikes_slider();
+        create_tolerance_slider();
+        create_detail_slider();
+
+        this.add(new JLabel("VIEW TOGGLES", JLabel.CENTER));
+        create_show_base_checkbox();
+        create_show_strokes_checkbox();
+        create_show_tools_checkbox();
+
+        this.add(new JLabel("CREATE/DELETE CASTERS", JLabel.CENTER));
+        create_create_tool_button();
+        create_delete_caster_button();
+
+        this.add(new JLabel("CASTER TOGGLES", JLabel.CENTER));
+        create_draw_from_base_checkbox();
+        create_cast_shade_checkbox();
+        create_cast_strokes_checkbox();
+
+        this.add(new JLabel("CASTER BUTTONS", JLabel.CENTER));
+        create_flip_button();
+        create_move_caster_button();
+
+        this.add(new JLabel("erase", JLabel.CENTER));
+        //alpha_draw = ;
+        this.add(alpha_draw);
+        alpha_draw.addActionListener(new ActionListener() {
+
+            final boolean start = false;
+            boolean draw = false;
+            MouseMotionListener listener = null;
+            Integer lx;
+            Integer ly;
+
+            {
+                listener = new MouseMotionListener() {
+
+                    @Override
+                    public void mouseDragged(MouseEvent e) {
+
+
+                        if (draw) {
+
+                            if ((lx == null) && (ly == null)) {
+                                lx = e.getX();
+                                ly = e.getY();
+                                ink.can_pan().repaint();
+                                return;
+                            }
+
+                            Graphics2D g2d = ink.selected_texture().alpha_rendered_buffer.createGraphics();
+                            Color color = new Color(0, 0, 100, 255);
+                            int thickness = 30;
+                            g2d.setStroke(new BasicStroke(thickness));
+                            g2d.drawLine(lx, ly, e.getX(), e.getY());
+                            lx = null;
+                            ly = null;
+                            //g2d.fillOval(e.getX(), e.getY(), thickness, thickness);
+                            g2d.dispose();
+                            ink.can_pan().repaint();
+
+                        } else {
+                            lx = null;
+                            ly = null;
+                        }
+
+                    }
+
+                    @Override
+                    public void mouseMoved(MouseEvent e) {
+
+                    }
+                };
+
+                ink.can_pan().addMouseMotionListener(listener);
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                draw = !draw;
+                lx = null;
+                ly = null;
+
+            }
+
+        });
+
+        this.add(new JLabel("CASTER LIST", JLabel.CENTER));
+
+    }
 
     @Override
     public void paintComponent(Graphics g) {
@@ -81,121 +184,6 @@ public class action_panel extends JPanel implements abstractviewpanel {
         }
     }
 
-    JSlider num_of_rays;
-    JSlider num_of_strikes;
-    JSlider tolerance;
-    JSlider num_of_rays_s;
-    JCheckBox draw_from_caster;
-    JCheckBox cast_shade;
-    JCheckBox cast_strokes;
-
-    public JCheckBox check_base = null;
-    public JCheckBox check_strokes = null;
-    public JCheckBox check_tools = null;
-
-    public final JCheckBox alpha_draw = new JCheckBox();
-
-    public action_panel(final JFrame frame, final Ink ink) {
-
-        this.frame = frame;
-        this.ink = ink;
-
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-
-        //create_overall_detail_slider();
-        create_strikes_slider();
-        create_tolerance_slider();
-        create_detail_slider();
-
-        this.add(new JLabel("VIEW TOGGLES", JLabel.CENTER));
-        create_show_base_checkbox();
-        create_show_strokes_checkbox();
-        create_show_tools_checkbox();
-
-        this.add(new JLabel("CREATE/DELETE CASTERS", JLabel.CENTER));
-        create_create_tool_button();
-        create_delete_caster_button();
-
-        this.add(new JLabel("CASTER TOGGLES", JLabel.CENTER));
-        create_draw_from_base_checkbox();
-        create_cast_shade_checkbox();
-        create_cast_strokes_checkbox();
-
-        this.add(new JLabel("CASTER BUTTONS", JLabel.CENTER));
-        create_flip_button();
-        create_move_caster_button();
-
-        this.add(new JLabel("erase", JLabel.CENTER));
-        //alpha_draw = ;
-        this.add(alpha_draw);
-        alpha_draw.addActionListener(new ActionListener() {
-
-            boolean draw = false;
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                draw = !draw;
-                lx = null;
-                ly = null;
-
-            }
-
-            MouseMotionListener listener = null;
-            final boolean start = false;
-
-            Integer lx;
-            Integer ly;
-
-            {
-                listener = new MouseMotionListener() {
-
-                    @Override
-                    public void mouseDragged(MouseEvent e) {
-
-
-                        if (draw) {
-
-                            if ((lx == null) && (ly == null)) {
-                                lx = e.getX();
-                                ly = e.getY();
-                                ink.can_pan().repaint();
-                                return;
-                            }
-
-                            Graphics2D g2d = ink.selected_texture().alpha_rendered_buffer.createGraphics();
-                            Color color = new Color(0, 0, 100, 255);
-                            int thickness = 30;
-                            g2d.setStroke(new BasicStroke(thickness));
-                            g2d.drawLine(lx, ly, e.getX(), e.getY());
-                            lx = null;
-                            ly = null;
-                            //g2d.fillOval(e.getX(), e.getY(), thickness, thickness);
-                            g2d.dispose();
-                            ink.can_pan().repaint();
-
-                        } else {
-                            lx = null;
-                            ly = null;
-                        }
-
-                    }
-
-                    @Override
-                    public void mouseMoved(MouseEvent e) {
-
-                    }
-                };
-
-                ink.can_pan().addMouseMotionListener(listener);
-            }
-
-        });
-
-        this.add(new JLabel("CASTER LIST", JLabel.CENTER));
-
-    }
-
     private void create_move_caster_button() {
 
         final JCheckBox move_caster = new JCheckBox("transform");//new JButton("move");
@@ -208,9 +196,9 @@ public class action_panel extends JPanel implements abstractviewpanel {
             double width;
             double height;
 
-            boolean in_move_square=false;
-            boolean in_top_square=false;
-            boolean in_bottom_square=false;
+            boolean in_move_square = false;
+            boolean in_top_square = false;
+            boolean in_bottom_square = false;
 
             boolean released = false;
 
@@ -223,7 +211,7 @@ public class action_panel extends JPanel implements abstractviewpanel {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         super.mousePressed(e);
-                        released=false;
+                        released = false;
                         in_move_square = (r.contains(e.getX(), e.getY()));
                         in_top_square = (t.contains(e.getX(), e.getY()));
                         in_bottom_square = (f.contains(e.getX(), e.getY()));
@@ -247,24 +235,24 @@ public class action_panel extends JPanel implements abstractviewpanel {
 
                         t = new Rectangle2D.Double();
                         ink.can_pan().resize_tool_1 = t;
-                        t.width=50;
-                        t.height=50;
+                        t.width = 50;
+                        t.height = 50;
 
                         f = new Rectangle2D.Double();
                         ink.can_pan().resize_tool_2 = f;
-                        f.height=50;
-                        f.width=50;
+                        f.height = 50;
+                        f.width = 50;
 
                     }
 
                     public void mouseDragged(MouseEvent e) {
-                    //public void mouseMoved(MouseEvent e) {
+                        //public void mouseMoved(MouseEvent e) {
 
                         // detect where it was clicked
 
                         //if  (!released){
 
-                          //  released=false;
+                        //  released=false;
                         //}
 
 /*if                        if (released) {
@@ -324,7 +312,7 @@ public class action_panel extends JPanel implements abstractviewpanel {
 
                             Caster v = ink.selected_caster();
 
-                            if (v!=null) {
+                            if (v != null) {
                                 width = (v.from_x - v.to_x) / 2;
                                 height = (v.from_y - v.to_y) / 2;
 
@@ -364,14 +352,14 @@ public class action_panel extends JPanel implements abstractviewpanel {
                         width = (v.from_x - v.to_x) / 2;
                         height = (v.from_y - v.to_y) / 2;
 
-                        r.x=temp.from_x-width;
-                        r.y=temp.from_y-height;
+                        r.x = temp.from_x - width;
+                        r.y = temp.from_y - height;
 
-                        f.x=temp.from_x;
-                        f.y=temp.from_y;
+                        f.x = temp.from_x;
+                        f.y = temp.from_y;
 
-                        t.x=temp.to_x;
-                        t.y=temp.to_y;
+                        t.x = temp.to_x;
+                        t.y = temp.to_y;
                     }
 
                 } else if (active) {
@@ -441,103 +429,6 @@ public class action_panel extends JPanel implements abstractviewpanel {
 
     @Override
     public void modelPropertyChange(PropertyChangeEvent evt) {
-
-    }
-
-    class ClickListener extends MouseAdapter {
-
-        public boolean finish = false;
-        public int first_x = 0;
-        public int first_y = 0;
-        public boolean active = false;
-        texture c;
-        Ink ink;
-
-        int tool_counter = 1;
-
-        public ClickListener(texture c, Ink ink) {
-            this.c = c;
-            this.ink = ink;
-        }
-
-        public boolean active() {
-            return active;
-        }
-
-        public void activate_clickListener() {
-            active = true;
-        }
-
-        public void deactivate_clickListener() {
-            finish = false;
-            first_x = 0;
-            first_y = 0;
-            active = false;
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-
-            System.out.println("event " + active);
-
-            if (active) {
-
-                if (finish) {
-
-                    final Caster new_caster = ink.selected_texture().create_caster(first_x, first_y, e.getX(), e.getY(), 25,
-                            false);
-
-                    // SELECT BUTTON
-                    final JButton new_caster_button = new JButton("Caster #" + tool_counter);
-                    ink.act_pan().add(new_caster_button);
-                    ink.change_selected_caster(new_caster);
-                    ink.act_pan().selected_button = new_caster_button;
-
-                    //temp
-                    DefaultMutableTreeNode node=new DefaultMutableTreeNode("tool #"+tool_counter);
-                    ink.lay_pan.model.insertNodeInto(node, ink.lay_pan.tools, ink.lay_pan.tools.getChildCount());
-
-
-                    ink.lay_pan.tree.scrollPathToVisible(new TreePath(node.getPath()));
-
-                    new_caster_button.addActionListener(new ActionListener() {
-
-                        final Caster v = new_caster;
-
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-
-                            // HIGHLIGHT toggle
-                            if (ink.selected_caster() == v) {
-                                ink.change_selected_caster(null);
-                                ink.act_pan().selected_button = null;
-                            } else {
-                                ink.change_selected_caster(v);
-                                ink.act_pan().selected_button = new_caster_button;
-                            }
-
-                            ink.frame().repaint();
-                        }
-                    });
-
-                    tool_counter++;
-                    ink.frame().revalidate();
-                    ink.frame().repaint();
-                    deactivate_clickListener();
-
-                } else if (!finish) {
-
-                    System.out.println("start: " + e.getX() + ", " + e.getY());
-
-                    first_x = e.getX();
-                    first_y = e.getY();
-
-                    finish = true;
-                }
-
-            }
-
-        }
 
     }
 
@@ -777,5 +668,95 @@ public class action_panel extends JPanel implements abstractviewpanel {
         num_of_rays_s.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
         font = new Font("Serif", Font.ITALIC, 15);
         num_of_rays_s.setFont(font);
+    }
+
+    class ClickListener extends MouseAdapter {
+
+        public boolean finish = false;
+        public int first_x = 0;
+        public int first_y = 0;
+        public boolean active = false;
+        Texture c;
+        Ink ink;
+
+        int tool_counter = 1;
+
+        public ClickListener(Texture c, Ink ink) {
+            this.c = c;
+            this.ink = ink;
+        }
+
+        public boolean active() {
+            return active;
+        }
+
+        public void activate_clickListener() {
+            active = true;
+        }
+
+        public void deactivate_clickListener() {
+            finish = false;
+            first_x = 0;
+            first_y = 0;
+            active = false;
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+            System.out.println("event " + active);
+
+            if (active) {
+
+                if (finish) {
+
+                    final Caster new_caster = ink.selected_texture().create_caster(first_x, first_y, e.getX(), e.getY(), 25,
+                            false);
+
+                    // SELECT BUTTON
+                    final JButton new_caster_button = new JButton("Caster #" + tool_counter);
+                    ink.act_pan().add(new_caster_button);
+                    ink.change_selected_caster(new_caster);
+                    ink.act_pan().selected_button = new_caster_button;
+
+                    new_caster_button.addActionListener(new ActionListener() {
+
+                        final Caster v = new_caster;
+
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+
+                            // HIGHLIGHT toggle
+                            if (ink.selected_caster() == v) {
+                                ink.change_selected_caster(null);
+                                ink.act_pan().selected_button = null;
+                            } else {
+                                ink.change_selected_caster(v);
+                                ink.act_pan().selected_button = new_caster_button;
+                            }
+
+                            ink.frame().repaint();
+                        }
+                    });
+
+                    tool_counter++;
+                    ink.frame().revalidate();
+                    ink.frame().repaint();
+                    deactivate_clickListener();
+
+                } else if (!finish) {
+
+                    System.out.println("start: " + e.getX() + ", " + e.getY());
+
+                    first_x = e.getX();
+                    first_y = e.getY();
+
+                    finish = true;
+                }
+
+            }
+
+        }
+
     }
 }
