@@ -60,9 +60,9 @@ public class Tracer {
 
                 // continue along ray path
 
-                //added Math.abs to make constant direction when moving caster
-                double current_ray_x = (j * Math.abs(Math.cos(angle_perp_to_veiwer)) * c.flip_status) + current_viewer_x;
-                double current_ray_y = (j * Math.abs(Math.sin(angle_perp_to_veiwer)) * c.flip_status) + current_viewer_y;
+                //added Math.abs to make constant direction when moving caster //removed
+                double current_ray_x = (j * (Math.cos(angle_perp_to_veiwer)) * c.flip_status) + current_viewer_x;
+                double current_ray_y = (j * (Math.sin(angle_perp_to_veiwer)) * c.flip_status) + current_viewer_y;
 
                 if (on_canvas(canvas_width, canvas_height, current_ray_x, current_ray_y)) {
 

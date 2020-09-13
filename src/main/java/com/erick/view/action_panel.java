@@ -1,28 +1,21 @@
 package com.erick.view;
 
 //import com.erick.Ink_Controller;
+import com.erick.Ink;
 import com.erick.abstractviewpanel;
 import com.erick.model.Caster;
-import com.erick.Ink;
 import com.erick.model.texture;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.MouseInputAdapter;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.MouseInputAdapter;
-import javax.swing.tree.*;
 
 public class action_panel extends JPanel implements abstractviewpanel {
 
@@ -184,6 +177,7 @@ public class action_panel extends JPanel implements abstractviewpanel {
                             if ((lx == null) && (ly == null)) {
                                 lx = e.getX();
                                 ly = e.getY();
+                                ink.can_pan().repaint();
                                 return;
                             }
 
