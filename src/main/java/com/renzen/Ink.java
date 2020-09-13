@@ -23,7 +23,6 @@ public class Ink extends AbstractController {
     public final Canvas_Panel can_pan = new Canvas_Panel(frame, this);
     final Action_Panel act_pan = new Action_Panel(frame, this);
     final Stroke_Panel str_pan = new Stroke_Panel(frame, this);
-    final Prop_Panel prop_pan = new Prop_Panel(frame, this);
     Texture start = init_default_model();
     Ink ink = this;
     private Caster selected_caster;
@@ -63,7 +62,6 @@ public class Ink extends AbstractController {
         // right
         frame.getContentPane().add(jtpr, BorderLayout.EAST);
         jtpr.addTab("Stroke", new JScrollPane(str_pan));
-        jtpr.addTab("Proportions", new JScrollPane(prop_pan));
 
 
         // bottom
@@ -99,10 +97,6 @@ public class Ink extends AbstractController {
         return ink.act_pan;
     }
 
-    public Prop_Panel prop_pan() {
-        return ink.prop_pan;
-    }
-
     // SETTERS
     public void change_selected_caster(Caster v) {
 
@@ -132,12 +126,6 @@ public class Ink extends AbstractController {
     }
 
     Texture new_texture() {
-        // all can be accessed at texture.textures
-        //lay_pan.textures.insertN
-
-        //DefaultMutableTreeNode node=new DefaultMutableTreeNode("texture #"+texture.textures.size());
-        //lay_pan.model.insertNodeInto(node, lay_pan.tools, lay_pan.tools.getChildCount());
-
         return new Texture(1280, 1024);
     }
 
@@ -148,16 +136,9 @@ public class Ink extends AbstractController {
         Ink ink;
         JFrame frame;
 
-
         Ink_Controller(Ink ink) {
-
             this.ink = ink;
             this.frame = ink.frame;
-
-            //init_default_model();
-
         }
-
-
     }
 }

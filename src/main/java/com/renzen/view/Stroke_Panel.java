@@ -13,15 +13,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
-//import sun.tools.jconsole.ConnectDialog;
-//import java.awt.Rectangle2D;
-
 public class Stroke_Panel extends JPanel {
-
-    // color_gradient
-    // thickness_gradient
-    // connect_every_n_points []
-    // on_every_m_points []
 
     protected JColorChooser tcc;
     // preview canvases
@@ -78,8 +70,6 @@ public class Stroke_Panel extends JPanel {
 
             }
 
-            // single_preview.setBorder(BorderFactory.createLineBorder(Color.black));
-
             if (ink.selected_caster() != null) {
 
                 set_by_code = true;
@@ -87,19 +77,11 @@ public class Stroke_Panel extends JPanel {
                 opacity.setValue(ink.selected_caster().bb.opacity); // ?
                 thickness.setValue(ink.selected_caster().bb.thickness);
 
-                /*
-                 * for (int u : ink.selected_caster().p1.connect_at) {
-                 * connect_list.addSelectionInterval(u, u); }
-                 */
-
                 set_by_code = false;
 
                 Graphics2D g2d2 = (Graphics2D) g;// single_stroke_buffer.createGraphics();
                 g2d2.setColor(new Color(255, 0, 0));
                 wipe_buffer(single_stroke_buffer);
-
-                // ink.selected_caster().p1.create_curves_across_points(intersection_points);
-
 
                 g2d2.dispose();
 
@@ -127,19 +109,7 @@ public class Stroke_Panel extends JPanel {
                     LinkedList<Point> lp = new LinkedList<>();
                     lp.add(new Point(0, 100));
                     lp.add(new Point(100, 100));
-
-                    //ink.selected_caster().t.
-
-
                 }
-
-                /*
-                 * LinkedList<Shape> ll =
-                 * ink.selected_caster().stroke_style.generate_range_preview(0, 100, 1);
-                 *
-                 * ll = ink.selected_caster().stroke_style.generate_range_preview(0, 100, 10);
-                 * for (Shape s : ll) { g2d2.draw(s); }
-                 */
 
                 g2d2.dispose();
 
@@ -149,8 +119,6 @@ public class Stroke_Panel extends JPanel {
 
     };
     JPanel through_preview = new JPanel();
-
-    // Pather.Curve.Section.CV
 
     public Stroke_Panel(final JFrame frame, final Ink ink) {
 
@@ -189,7 +157,6 @@ public class Stroke_Panel extends JPanel {
                 if (ink.selected_caster() != null) {
                     ink.selected_caster().p1.connect_at = null;
                     ink.selected_caster().p1.connect_at = connect_list.getSelectedIndices();
-                    // System.out.println(connect_list.getSelectedIndices().toString());
 
                     int[] temp = connect_list.getSelectedIndices();
                     for (int w = 0; w < temp.length; w++) {
@@ -198,8 +165,6 @@ public class Stroke_Panel extends JPanel {
                     }
 
                     ink.selected_caster().p1.connect_at = temp;
-                    // don't select 1
-
                     flag_rerender_selected_caster();
                     frame.repaint();
                 }
@@ -368,61 +333,18 @@ public class Stroke_Panel extends JPanel {
                     //flag_rerender_selected_caster();
                     frame.repaint();
                 }
-                //banner.setForeground(newColor);
-
             }
         });
         tcc.setBorder(BorderFactory.createTitledBorder(
                 "Choose Text Color"));
 
-        //add(bannerPanel, BorderLayout.CENTER);
         add(tcc, BorderLayout.PAGE_END);
-
-        /*
-         * JLabel sliderLabel; sliderLabel = new JLabel("main mod", JLabel.CENTER);
-         * sliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT); main_mod = new
-         * JSlider(JSlider.HORIZONTAL, -300, 300, 0);
-         *
-         *
-         *
-         * set_slider_properties(main_mod, 100, 50); this.add(sliderLabel);
-         * this.add(main_mod);
-         */
 
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        // preview
-        /*
-         * Graphics2D g2d = (Graphics2D) g;
-         *
-         * if (ink.selected_caster() != null) {
-         *
-         * set_by_code = true; main_mod.setValue((int)
-         * ink.selected_caster().stroke_style.cvis_main.getLast().main_const);
-         *
-         * Graphics2D g2d2 = single_stroke_buffer.createGraphics(); g2d2.setColor(new
-         * Color(255, 0, 0)); wipe_buffer(single_stroke_buffer);
-         *
-         * // g2d.drawRect(0,0, 100, 150); LinkedList<Shape> ll =
-         * ink.selected_caster().stroke_style.generate_range_preview(100, 100, 1); for
-         * (Shape s : ll) { // need to check if these shapes are clicked on
-         * g2d2.draw(s); }
-         *
-         * ll = ink.selected_caster().stroke_style.generate_range_preview(100, 200, 10);
-         * for (Shape s : ll) { g2d2.draw(s); }
-         *
-         * g2d2.dispose();
-         *
-         * }
-         *
-         * g2d.drawImage(single_stroke_buffer, 0, 100, null); // see javadoc for more
-         * info on the parameters
-         */
-
         set_by_code = false;
     }
 
@@ -436,7 +358,6 @@ public class Stroke_Panel extends JPanel {
         BufferedImage temp = new BufferedImage(render_width, render_height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = temp.createGraphics();
         g2d.setColor(new Color(255, 0, 0));
-        // g2d.drawRect(0, 0, 100, 500);
 
         return temp;
     }
@@ -475,18 +396,6 @@ public class Stroke_Panel extends JPanel {
         num_of_rays_s.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
         font = new Font("Serif", Font.ITALIC, 15);
         num_of_rays_s.setFont(font);
-    }
-
-    public class gradient {
-
-        // they are connected in order
-        LinkedList<control_point> points_along;
-
-        class control_point {
-            Color color;
-            double strength;
-            double position;
-        }
     }
 
 }
