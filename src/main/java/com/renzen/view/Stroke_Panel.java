@@ -128,21 +128,6 @@ public class Stroke_Panel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         single_stroke_buffer = create_initial_stroke_buffer();
 
-        add(new JLabel("STROKE PREVIEWS", JLabel.CENTER));
-
-        add(new JLabel("Single Stroke (Preview)", JLabel.CENTER));
-        single_preview.setPreferredSize(new Dimension(100, 100));
-        single_preview.setBorder(BorderFactory.createLineBorder(Color.black));
-        add(single_preview);
-
-        add(new JLabel("Layered Along (Preview)", JLabel.CENTER));
-        along_preview.setPreferredSize(new Dimension(100, 100));
-        add(along_preview);
-
-        add(new JLabel("Layered Through (Preview)", JLabel.CENTER));
-        through_preview.setPreferredSize(new Dimension(100, 100));
-        add(through_preview);
-
         add(new JLabel("CV", JLabel.CENTER));
 
         add(new JLabel("connect skip", JLabel.CENTER));
@@ -336,8 +321,7 @@ public class Stroke_Panel extends JPanel {
             }
         });
         tcc.setBorder(BorderFactory.createTitledBorder(
-                "Choose Text Color"));
-
+                "Choose Line Color"));
         add(tcc, BorderLayout.PAGE_END);
 
     }
