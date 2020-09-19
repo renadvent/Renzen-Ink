@@ -1,10 +1,13 @@
 package com.renzen;
 
-import com.renzen.model.Caster;
-import com.renzen.model.Component;
-import com.renzen.model.Texture;
-import com.renzen.view.Menu;
-import com.renzen.view.*;
+import com.renzen.Models.Caster;
+import com.renzen.Models.Component;
+import com.renzen.Models.Pather;
+import com.renzen.Models.Texture;
+import com.renzen.Views.Action_Panel;
+import com.renzen.Views.Canvas_Panel;
+import com.renzen.Views.Menu;
+import com.renzen.Views.Stroke_Panel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,10 +25,11 @@ public class Ink extends AbstractController {
     JFrame frame = new JFrame("Ink");
     public final Canvas_Panel can_pan = new Canvas_Panel(frame, this);
     final Action_Panel act_pan = new Action_Panel(frame, this);
-    final Stroke_Panel str_pan = new Stroke_Panel(frame, this);
+    public final Stroke_Panel str_pan = new Stroke_Panel(frame, this);
     Texture start = init_default_model();
     Ink ink = this;
     private Caster selected_caster;
+    public Pather.Curve.Section.CV selected_cv;
 
     public Ink() {
         EventQueue.invokeLater(new Runnable() {
@@ -105,6 +109,17 @@ public class Ink extends AbstractController {
         }
 
         selected_caster = v;
+        ink.selected_cv=v.p1.stroke.sections.getFirst().cvs.getFirst();
+
+        //str_pan.firePropertyChange("",0,selected_cv.);
+
+        //TODO CHANGE SLIDERS
+        str_pan.firePropertyChange("rx", str_pan.getRx().getValue(),str_pan.selected_cv.rx);
+        str_pan.firePropertyChange("ry", str_pan.getRx().getValue(),str_pan.selected_cv.ry);
+        str_pan.firePropertyChange("ox", str_pan.getRx().getValue(),str_pan.selected_cv.ox);
+        str_pan.firePropertyChange("oy", str_pan.getRx().getValue(),str_pan.selected_cv.oy);
+
+        //str_pan.firePropertyChange("prop_along",selected_caster.bb.);
 
         if (selected_caster() != null) {
             selected_caster().highlighted = true;
@@ -131,7 +146,7 @@ public class Ink extends AbstractController {
 
     //-----------------------------------------------------------------
 
-    public class Ink_Controller {
+    public static class Ink_Controller {
 
         Ink ink;
         JFrame frame;
