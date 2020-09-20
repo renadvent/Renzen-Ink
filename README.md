@@ -1,5 +1,5 @@
 # ink-app
-java drawing application
+java drawing application (is currently being rewritten)
 
 ## Description
 This app allows you to Take an outline, and fill in the spaces between them with lines to make a drawing.
