@@ -7,7 +7,8 @@ import java.awt.*;
 import java.util.LinkedList;
 
 // used to track intersenction points between rays and canvas components
-@Getter@Setter
+@Getter
+@Setter
 public class Point {
 
     public int iteration;

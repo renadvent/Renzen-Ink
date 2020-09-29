@@ -1,9 +1,9 @@
 package com.renzen.Views;
 
 import com.renzen.Ink;
-import com.renzen.abstractviewpanel;
 import com.renzen.Models.Caster;
 import com.renzen.Models.Texture;
+import com.renzen.abstractviewpanel;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

@@ -8,7 +8,8 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Random;
 
-@Getter@Setter
+@Getter
+@Setter
 public class Pather {
 
     public int layers = 5;

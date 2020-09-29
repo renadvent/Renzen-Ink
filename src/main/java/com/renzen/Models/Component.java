@@ -12,7 +12,8 @@ import java.awt.image.BufferedImage;
 // a drawn image
 // or a frame or collection of frames
 
-@Getter@Setter
+@Getter
+@Setter
 public class Component {
 
     //public LinkedList<frame> frames = new LinkedList<>();

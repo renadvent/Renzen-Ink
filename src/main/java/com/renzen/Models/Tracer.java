@@ -6,7 +6,8 @@ import lombok.Setter;
 import java.awt.*;
 import java.util.LinkedList;
 
-@Getter@Setter
+@Getter
+@Setter
 public class Tracer {
 
     Caster c;

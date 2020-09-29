@@ -14,9 +14,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
-@Getter@Setter
+@Getter
+@Setter
 public class Stroke_Panel extends JPanel {
 
+    public CV selected_cv;
     protected JColorChooser tcc;
     // preview canvases
     BufferedImage single_stroke_buffer;
@@ -27,10 +29,9 @@ public class Stroke_Panel extends JPanel {
     JCheckBox render_pre;
     JCheckBox render_main;
     JCheckBox render_post;
-    JSlider line_thickness;
 
     // connect_every_n_rays
-
+    JSlider line_thickness;
     // TODO
     // move to stroke style
     JSlider layer_each_stroke;
@@ -46,7 +47,6 @@ public class Stroke_Panel extends JPanel {
     JSlider oy = new JSlider(JSlider.HORIZONTAL, -300, 300, 0);
     JSlider opacity = new JSlider(JSlider.HORIZONTAL, 0, 255, 1);
     JSlider thickness = new JSlider(JSlider.HORIZONTAL, 0, 50, 1);
-    public CV selected_cv;
     String[] temp_list = {"CV #1", "CV #2"};
     JList<String> cv_list = new JList<String>(temp_list);
     int max_list_skip = 7;

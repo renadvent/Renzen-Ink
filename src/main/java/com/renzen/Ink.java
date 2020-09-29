@@ -22,6 +22,7 @@ public class Ink extends AbstractController {
     private final Ink_Controller ink_con = new Ink_Controller(this);
     public Texture selected_texture;
     public Component selected_component;
+    public Pather.Curve.Section.CV selected_cv;
     JFrame frame = new JFrame("Ink");
     public final Canvas_Panel can_pan = new Canvas_Panel(frame, this);
     final Action_Panel act_pan = new Action_Panel(frame, this);
@@ -29,7 +30,6 @@ public class Ink extends AbstractController {
     Texture start = init_default_model();
     Ink ink = this;
     private Caster selected_caster;
-    public Pather.Curve.Section.CV selected_cv;
 
     public Ink() {
         EventQueue.invokeLater(new Runnable() {
@@ -109,15 +109,15 @@ public class Ink extends AbstractController {
         }
 
         selected_caster = v;
-        ink.selected_cv=v.p1.stroke.sections.getFirst().cvs.getFirst();
+        ink.selected_cv = v.p1.stroke.sections.getFirst().cvs.getFirst();
 
         //str_pan.firePropertyChange("",0,selected_cv.);
 
         //TODO CHANGE SLIDERS
-        str_pan.firePropertyChange("rx", str_pan.getRx().getValue(),str_pan.selected_cv.rx);
-        str_pan.firePropertyChange("ry", str_pan.getRx().getValue(),str_pan.selected_cv.ry);
-        str_pan.firePropertyChange("ox", str_pan.getRx().getValue(),str_pan.selected_cv.ox);
-        str_pan.firePropertyChange("oy", str_pan.getRx().getValue(),str_pan.selected_cv.oy);
+        str_pan.firePropertyChange("rx", str_pan.getRx().getValue(), str_pan.selected_cv.rx);
+        str_pan.firePropertyChange("ry", str_pan.getRx().getValue(), str_pan.selected_cv.ry);
+        str_pan.firePropertyChange("ox", str_pan.getRx().getValue(), str_pan.selected_cv.ox);
+        str_pan.firePropertyChange("oy", str_pan.getRx().getValue(), str_pan.selected_cv.oy);
 
         //str_pan.firePropertyChange("prop_along",selected_caster.bb.);
 

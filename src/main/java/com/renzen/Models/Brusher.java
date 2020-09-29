@@ -5,7 +5,8 @@ import lombok.Setter;
 
 import java.awt.*;
 
-@Getter@Setter
+@Getter
+@Setter
 public class Brusher { // used bystroke
 
     public int opacity = 100;

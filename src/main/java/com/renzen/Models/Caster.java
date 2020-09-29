@@ -14,7 +14,8 @@ import java.util.LinkedList;
 // this class creates rays which intersect with the canvas component buffer
 // these intersection points are then used to create guide points for drawing strokes
 
-@Getter@Setter
+@Getter
+@Setter
 public class Caster {
 
     // temp
