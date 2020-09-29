@@ -3,6 +3,9 @@ package io.renzen.ink.Views;
 import io.renzen.ink.CommandObjectsDomain.ActionPanelAccountInfoCO;
 import io.renzen.ink.Controllers.ActionPanelController;
 import io.renzen.ink.InkClass;
+import io.renzen.ink.Links.ActionPanelControllerToCanvasPanelViewLink;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingNode;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -17,6 +20,7 @@ import jfxtras.styles.jmetro.Style;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class JavaFXPanel {
 
@@ -88,6 +92,8 @@ public class JavaFXPanel {
     Stage stage = null;
     int createCasterCounter =0;
 
+    ActionPanelControllerToCanvasPanelViewLink actionPanelControllerToCanvasPanelViewLink = null;
+
 
     public JavaFXPanel(Stage primaryStage, ConfigurableApplicationContext springContext) {
         System.setProperty("prism.lcdtext", "false");
@@ -95,6 +101,9 @@ public class JavaFXPanel {
         this.stage = primaryStage;
         this.springContext = springContext;
         this.controller = springContext.getBean(ActionPanelController.class);
+        this.actionPanelControllerToCanvasPanelViewLink=springContext.getBean(
+                ActionPanelControllerToCanvasPanelViewLink.class
+        );
 
         buildMenu();
         setUpJPanelCanvasInJavaFX();
@@ -107,6 +116,12 @@ public class JavaFXPanel {
     }
 
 
+    final ListView<Button> list = new ListView<>();
+    //final ObservableList<String> items =
+
+//            FXCollections.observableArrayList (
+//            "Single", "Double", "Suite", "Family App");
+//list.setItems(items);
 
     private void linkButtonsToActionController() {
 
@@ -116,6 +131,24 @@ public class JavaFXPanel {
         castThroughCheckbox.selectedProperty().addListener((observableValue, number, t1) -> controller.updateNumberOfStrikes(t1.booleanValue()));
         flipCasterButton.setOnMouseClicked(mouseEvent -> controller.flipSelectedCaster(true));
 
+        uploadOnlineButton.setOnMouseClicked(mouseEvent -> {
+
+            var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToMongoRepository();
+
+            var button = new Button(link);
+            button.setOnMouseClicked(e -> {
+                controller.viewImageOnWeb(link);
+            });
+
+            list.getItems().add(button);
+            //buttonJList.add(button);
+
+
+        });
+
+        createNewCasterButton.setOnMouseClicked(mouseEvent -> {
+
+        });
     }
 
     void buildMenu(){
@@ -173,7 +206,7 @@ public class JavaFXPanel {
                 accountBox,
                 toolSelectionAcc,
                 toolOptionsAcc,
-                brushOptionsPane);
+                brushOptionsPane,list);
 
 
         borderPane.setLeft(menuPane);

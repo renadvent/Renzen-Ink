@@ -108,18 +108,16 @@ public class ActionPanel extends JLayeredPane {
 
         draw_from_caster.addItemListener(actionPanelController::updateDrawFromSelectedCaster);
 
-        upload_button.addActionListener(event -> {
-            var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToMongoRepository(event);
-
-            var button = new JButton(link);
-            button.addActionListener(e -> {
-                actionPanelController.viewImageOnWeb(link);
-            });
-
-            buttonJList.add(button);
-
-
-        });
+//        upload_button.addActionListener(event -> {
+//            var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToMongoRepository(event);
+//
+//            var button = new JButton(link);
+//            button.addActionListener(e -> {
+//                actionPanelController.viewImageOnWeb(link);
+//            });
+//
+//            buttonJList.add(button);
+//        });
 
         login_button.addActionListener(e -> {
             updateAccountSectionWithLogin(actionPanelController.login(username.getText(), password.getPassword()));
@@ -149,7 +147,7 @@ public class ActionPanel extends JLayeredPane {
         password.setMaximumSize(new Dimension(300, 50));
         accountPane.add(password);
         accountPane.add(login_button);
-        accountPane.add(upload_button);
+        //accountPane.add(upload_button);
 
         accountPane.validate();
         accountPane.repaint();

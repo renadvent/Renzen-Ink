@@ -81,7 +81,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 
     //returns link
 
-    public String saveCanvasToMongoRepository(ActionEvent e) {
+    public String saveCanvasToMongoRepository() {
 
         //get canvas and save it to a temporary file as a png
         BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
