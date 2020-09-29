@@ -61,6 +61,16 @@ public class ActionPanelController {
         //return "";
     }
 
+    public ActionPanelAccountInfoCO login(String username, String password) {
+
+
+        return renzenService.getLoginInfo(username, password);
+
+        //return "";
+        //System.out.println(renzenService.getHomeStreamsPlainJSON());
+        //return "";
+    }
+
 //    final ImageRepository imageRepository;
 
 //    public void saveCanvasToMongoRepository(){

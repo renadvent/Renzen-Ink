@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.JMetroStyleClass;
@@ -86,6 +87,7 @@ public class JavaFXPanel {
     final Separator brushSeparator = new Separator();
     final Separator casterToolSeparatorBottom = new Separator();
     final ColorPicker colorPicker = new ColorPicker();
+    final FileChooser fileChooser = new FileChooser();
     final int B_WIDTH = 300;
     ConfigurableApplicationContext springContext = null;
     ActionPanelController controller = null;
@@ -141,9 +143,14 @@ public class JavaFXPanel {
             });
 
             list.getItems().add(button);
-            //buttonJList.add(button);
+        });
 
+        openFileButton.setOnMouseClicked(e->{
+            fileChooser.showOpenDialog(stage);
+        });
 
+        loginButton.setOnMouseClicked(e->{
+            updateAccountSectionWithLogin(controller.login(usernameField.getText(),passwordField.getText()));
         });
 
         createNewCasterButton.setOnMouseClicked(mouseEvent -> {
@@ -154,6 +161,9 @@ public class JavaFXPanel {
     void buildMenu(){
 
         var F_SIZE = "-fx-font-size: 20;";
+
+        fileChooser.setTitle("Open File");
+
 
         toleranceSlider.setMax(255);
         raysSlider.setMax(200);
@@ -234,11 +244,14 @@ public class JavaFXPanel {
 
     private void UpdateActionPanelToSelectedCaster(){
 
+
+
     }
 
 
 
-    private void updateAccountSectionWithLogin(ActionPanelAccountInfoCO infoCO){}
-
+    private void updateAccountSectionWithLogin(ActionPanelAccountInfoCO infoCO) {
+        profileBox.getChildren().add(0, new Label("Welcome " + infoCO.getName()+"!"));
+    }
 
 }

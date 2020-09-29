@@ -158,7 +158,7 @@ public class ActionPanel extends JLayeredPane {
     void createActionPanelGUI() {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-        createAccountPane();
+        //createAccountPane();
 
         //add(new JLabel("Rays"));
         num_of_rays.setMaximum(120);
