@@ -100,7 +100,7 @@ public class ActionPanelController {
         return null;
     }
 
-    public ActionPanelCO createCaster(ActionEvent e, String casterName) {
+    public ActionPanelCO createCaster(Object e, String casterName) {
         //public ActionPanelCO createCaster(int x1,int y1, int x2, int y2){
 
         //TODO testing this call

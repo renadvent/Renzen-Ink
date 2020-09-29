@@ -59,6 +59,7 @@ public class JavaFXPanel {
     final Button loginButton = new Button("Login");
     final Button flipCasterButton = new Button("Flip Caster");
     final Button createNewCasterButton = new Button("Create New Caster");
+    final Button deleteSelectedCasterButton = new Button ("Delete Caster");
     final Accordion uploadAcc = new Accordion(profilePane);
     final Accordion fileAcc = new Accordion(filePane);
     final Accordion loginAcc = new Accordion();
@@ -109,7 +110,7 @@ public class JavaFXPanel {
 
         buildMenu();
         setUpJPanelCanvasInJavaFX();
-        setUpOldToolPanelInJavaFX();
+        //setUpOldToolPanelInJavaFX();
         linkButtonsToActionController();
 
         stage.setTitle("Renzen Ink");
@@ -153,8 +154,18 @@ public class JavaFXPanel {
             updateAccountSectionWithLogin(controller.login(usernameField.getText(),passwordField.getText()));
         });
 
-        createNewCasterButton.setOnMouseClicked(mouseEvent -> {
+        deleteSelectedCasterButton.setOnMouseClicked(e->{
 
+        });
+
+        createNewCasterButton.setOnMouseClicked(e -> {
+            var button = new Button("New Caster " + createCasterCounter++);
+            var actionPanelCO = controller.createCaster(e, button.getText());
+            list.getItems().add(button);
+            button.setOnMouseClicked(x -> {
+                controller.selectCaster(button.getText());
+                UpdateActionPanelToSelectedCaster();
+            });
         });
     }
 
@@ -200,6 +211,8 @@ public class JavaFXPanel {
         casterToolOptionsBox.getChildren().addAll(
                 //casterToolSeparatorTop,
                 createNewCasterButton,
+                deleteSelectedCasterButton,
+                new Separator(),
                 toolOptionsLabel,
                 raysLabel, raysSlider,
                 toleranceLabel, toleranceSlider,
