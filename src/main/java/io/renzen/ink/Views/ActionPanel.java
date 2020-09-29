@@ -90,7 +90,7 @@ public class ActionPanel extends JLayeredPane {
                 actionPanelController.selectCaster(button.getText());
                 UpdateActionPanelToSelectedCaster();
             });
-            //validate();
+            validate();
             repaint();
         });
 
@@ -98,7 +98,7 @@ public class ActionPanel extends JLayeredPane {
         delete_button.addActionListener(actionPanelController::deleteSelectedCaster);
         flip.addActionListener(actionPanelController::flipSelectedCaster);
 
-        num_of_rays.addChangeListener(actionPanelController::updateNumberOfRays);
+        //num_of_rays.addChangeListener(actionPanelController::updateNumberOfRays);
         num_of_strikes.addChangeListener(actionPanelController::updateNumberOfStrikes);
         tolerance.addChangeListener(actionPanelController::updateTolerance);
 
@@ -143,7 +143,7 @@ public class ActionPanel extends JLayeredPane {
     public void createAccountPane() {
         accountPane.setLayout(new BoxLayout(accountPane, BoxLayout.PAGE_AXIS));
         accountPane.add(new JLabel("Account"), 0);
-        accountPane.add(open_renzen);
+        //accountPane.add(open_renzen);
         username.setMaximumSize(new Dimension(300, 50));
         accountPane.add(username);
         password.setMaximumSize(new Dimension(300, 50));
@@ -162,41 +162,41 @@ public class ActionPanel extends JLayeredPane {
 
         createAccountPane();
 
-        add(new JLabel("Rays"));
+        //add(new JLabel("Rays"));
         num_of_rays.setMaximum(120);
         num_of_rays.setMinimum(10);
         num_of_rays.setValue(10);
-        this.add(num_of_rays);
+        //this.add(num_of_rays);
 
-        add(new JLabel("Tolerance"));
+        //add(new JLabel("Tolerance"));
         tolerance.setMinimum(0);
         tolerance.setMaximum(255);
         tolerance.setValue(0);
-        this.add(tolerance);
+        //this.add(tolerance);
 
-        add(new JLabel("Strikes"));
+        //add(new JLabel("Strikes"));
         num_of_strikes.setMinimum(0);
         num_of_strikes.setMaximum(1);//can cause stackoverflow for some reason
         num_of_strikes.setValue(0);
-        this.add(num_of_strikes);
+        //this.add(num_of_strikes);
 
 
-        this.add(new JLabel("VIEW TOGGLES", JLabel.CENTER));
-        this.add(check_base);
-        this.add(check_strokes);
-        this.add(check_tools);
+//        this.add(new JLabel("VIEW TOGGLES", JLabel.CENTER));
+//        this.add(check_base);
+//        this.add(check_strokes);
+//        this.add(check_tools);
 
         this.add(new JLabel("CREATE/DELETE CASTERS", JLabel.CENTER));
         this.add(create_button);
         this.add(delete_button);
 
-        this.add(new JLabel("CASTER TOGGLES", JLabel.CENTER));
-        this.add(draw_from_caster);
-        this.add(cast_shade);
-        this.add(cast_strokes);
+//        this.add(new JLabel("CASTER TOGGLES", JLabel.CENTER));
+//        this.add(draw_from_caster);
+//        this.add(cast_shade);
+//        this.add(cast_strokes);
 
-        this.add(new JLabel("CASTER BUTTONS", JLabel.CENTER));
-        this.add(flip);
+        //this.add(new JLabel("CASTER BUTTONS", JLabel.CENTER));
+        //this.add(flip);
 
         add(new JLabel("CASTERS", JLabel.CENTER));
 

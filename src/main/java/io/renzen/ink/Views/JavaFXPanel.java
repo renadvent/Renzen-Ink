@@ -52,6 +52,8 @@ public class JavaFXPanel {
     final Button openWebsiteButton = new Button("View Profile Online");
     final Button uploadOnlineButton = new Button("Upload Screenshot to Profile");
     final Button loginButton = new Button("Login");
+    final Button flipCasterButton = new Button("Flip Caster");
+    final Button createNewCasterButton = new Button("Create New Caster");
     final Accordion uploadAcc = new Accordion(profilePane);
     final Accordion fileAcc = new Accordion(filePane);
     final Accordion loginAcc = new Accordion();
@@ -72,7 +74,7 @@ public class JavaFXPanel {
     final Slider toleranceSlider = new Slider();
     final Slider brushSizeSlider = new Slider();
     final Slider densitySlider = new Slider();
-    final CheckBox toggleButton = new CheckBox("Cast Through");
+    final CheckBox castThroughCheckbox = new CheckBox("Cast Through");
     final CheckBox showCasterCheckbox = new CheckBox("Show Caster");
     final CheckBox showStrokesCheckbox = new CheckBox("Show Strokes");
     final CheckBox showLoadedImageCheckbox = new CheckBox("Show Loaded Image");
@@ -90,13 +92,38 @@ public class JavaFXPanel {
     public JavaFXPanel(Stage primaryStage, ConfigurableApplicationContext springContext) {
         System.setProperty("prism.lcdtext", "false");
 
-        stage = primaryStage;
+        this.stage = primaryStage;
         this.springContext = springContext;
         this.controller = springContext.getBean(ActionPanelController.class);
-        var F_SIZE = "-fx-font-size: 20;";
 
+        buildMenu();
         setUpJPanelCanvasInJavaFX();
         setUpOldToolPanelInJavaFX();
+        linkButtonsToActionController();
+
+        stage.setTitle("Renzen Ink");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+
+
+    private void linkButtonsToActionController() {
+
+        openWebsiteButton.setOnMouseClicked(mouseEvent -> controller.openRenzen());
+        raysSlider.valueProperty().addListener((observableValue, number, t1) -> controller.updateNumberOfRays(t1.intValue()));//(controller::updateNumberOfRays);
+        toleranceSlider.valueProperty().addListener((observableValue, number, t1) -> controller.updateTolerance(t1.intValue()));
+        castThroughCheckbox.selectedProperty().addListener((observableValue, number, t1) -> controller.updateNumberOfStrikes(t1.booleanValue()));
+        flipCasterButton.setOnMouseClicked(mouseEvent -> controller.flipSelectedCaster(true));
+
+    }
+
+    void buildMenu(){
+
+        var F_SIZE = "-fx-font-size: 20;";
+
+        toleranceSlider.setMax(255);
+        raysSlider.setMax(200);
 
         mainSplitPane.setOrientation(Orientation.VERTICAL);
         mainSplitPane.setDividerPosition(0, 0.7);
@@ -128,14 +155,17 @@ public class JavaFXPanel {
         toolGroup.getToggles().addAll(casterToolButton, brushToolButton);
         toolSelectionBox.getChildren().addAll(casterToolButton, brushToolButton);
         casterToolOptionsBox.getChildren().addAll(
-                casterToolSeparatorTop,
+                //casterToolSeparatorTop,
+                createNewCasterButton,
                 toolOptionsLabel,
                 raysLabel, raysSlider,
                 toleranceLabel, toleranceSlider,
-                toggleButton,
+                castThroughCheckbox,
                 showCasterCheckbox,
                 showStrokesCheckbox,
-                casterToolSeparatorBottom);
+                flipCasterButton
+                //casterToolSeparatorBottom
+        );
         brushBox.getChildren().addAll(brushSizeLabel, brushSizeSlider,
                 densityLabel, densitySlider, brushSeparator, colorPicker);
         menuPane.getChildren().addAll(
@@ -145,17 +175,15 @@ public class JavaFXPanel {
                 toolOptionsAcc,
                 brushOptionsPane);
 
-        openWebsiteButton.setOnMouseClicked(mouseEvent -> controller.openRenzen());
 
         borderPane.setLeft(menuPane);
         root.getStyleClass().add(JMetroStyleClass.BACKGROUND);
 
         new JMetro(scene, STYLE);
-
-        stage.setTitle("Renzen Ink");
-        stage.setScene(scene);
-        stage.show();
     }
+
+
+
 
     private void setUpJPanelCanvasInJavaFX() {
         SwingUtilities.invokeLater(() ->
@@ -175,9 +203,7 @@ public class JavaFXPanel {
 
     }
 
-    private void linkButtonsToActionController() {
 
-    }
 
     private void updateAccountSectionWithLogin(ActionPanelAccountInfoCO infoCO){}
 

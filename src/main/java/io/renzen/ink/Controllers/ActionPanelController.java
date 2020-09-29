@@ -7,6 +7,9 @@ import io.renzen.ink.DomainObjects.Caster;
 import io.renzen.ink.Links.ActionPanelControllerToCanvasPanelViewLink;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenzenService;
+import javafx.scene.control.Slider;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
 import org.springframework.stereotype.Controller;
 
 import javax.swing.*;
@@ -114,6 +117,12 @@ public class ActionPanelController {
         actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
     }
 
+    public void flipSelectedCaster(boolean e) {
+        casterService.getSelectedCaster().setFlip_status(casterService.getSelectedCaster().getFlip_status() * -1);
+        //casterService.getSelectedCaster().setFlip_status(casterService.getSelectedCaster().getFlip_status() * -1);
+        actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
+    }
+
     public Point2D collectCoordinatesOfClickFromCanvas() {
         return null;
     }
@@ -122,8 +131,15 @@ public class ActionPanelController {
         return null;
     }
 
-    public void updateNumberOfRays(ChangeEvent e) {
-        casterService.getSelectedCaster().setRays(((JSlider) e.getSource()).getValue());
+    //old
+//    public void updateNumberOfRays(ChangeEvent e) {
+//        casterService.getSelectedCaster().setRays(((JSlider) e.getSource()).getValue());
+//        actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
+//    }
+
+    public void updateNumberOfRays(int e) {
+        casterService.getSelectedCaster().setRays(e);
+        //casterService.getSelectedCaster().setRays((int)((Slider) e.getSource()).getValue());
         actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
     }
 
@@ -174,12 +190,27 @@ public class ActionPanelController {
 
     public void updateNumberOfStrikes(ChangeEvent changeEvent) {
         casterService.getSelectedCaster().setMax_penetrations(((JSlider) changeEvent.getSource()).getValue());
-
         actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
     }
 
+    public void updateNumberOfStrikes(boolean e) {
+
+
+        int x =  (e) ? 1 : 0;
+        casterService.getSelectedCaster().setMax_penetrations(x);
+        //casterService.getSelectedCaster().setMax_penetrations(((JSlider) changeEvent.getSource()).getValue());
+        actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
+    }
+
+
     public void updateTolerance(ChangeEvent changeEvent) {
         casterService.getSelectedCaster().setTolerance(((JSlider) changeEvent.getSource()).getValue());
+        actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
+    }
+
+    public void updateTolerance(int e) {
+        casterService.getSelectedCaster().setTolerance(e);
+        //casterService.getSelectedCaster().setTolerance(((JSlider) changeEvent.getSource()).getValue());
         actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
     }
 

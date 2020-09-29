@@ -2,13 +2,7 @@ package io.renzen.ink;
 
 import io.renzen.ink.Views.ActionPanel;
 import io.renzen.ink.Views.CanvasPanel;
-import io.renzen.ink.Views.Menu;
-import io.renzen.ink.Views.StrokePanel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.swing.*;
-import java.awt.*;
 
 @Component
 public class InkClass {
@@ -17,12 +11,10 @@ public class InkClass {
 
     public final CanvasPanel canvasPanel;
     public final ActionPanel actionPanel;
-    public final StrokePanel strokePanel;
 
-    @Autowired
-    public InkClass(CanvasPanel canvasPanel, ActionPanel actionPanel, StrokePanel strokePanel) {
+
+    public InkClass(CanvasPanel canvasPanel, ActionPanel actionPanel) {
         this.canvasPanel = canvasPanel;
         this.actionPanel = actionPanel;
-        this.strokePanel = null;
     }
 }
