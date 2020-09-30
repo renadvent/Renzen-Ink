@@ -2,14 +2,13 @@ package io.renzen.ink.Links;
 
 import io.renzen.ink.DomainObjects.Caster;
 import io.renzen.ink.DomainObjects.RenderShape;
-import io.renzen.ink.Repositories.ImageRepository;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenderObjectService;
 import io.renzen.ink.Services.RenzenService;
 import io.renzen.ink.Views.CanvasPanel;
 import io.renzen.ink.Views.JavaFXPanel;
 import lombok.Data;
-import org.bson.types.Binary;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -45,7 +44,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
     final CasterService casterService;
     final RenzenService renzenService;
 
-    final ImageRepository imageRepository;
+
     /**
      * Mongo save to profile
      */
@@ -55,12 +54,13 @@ public class ActionPanelControllerToCanvasPanelViewLink {
     //ActionPanel actionPanel;
 
 
-    public ActionPanelControllerToCanvasPanelViewLink(CanvasPanel canvasPanel, RenderObjectService renderObjectService, CasterService casterService, RenzenService renzenService, ImageRepository imageRepository) {
+    public ActionPanelControllerToCanvasPanelViewLink(CanvasPanel canvasPanel, RenderObjectService renderObjectService,
+                                                      CasterService casterService, RenzenService renzenService) {
         this.canvasPanel = canvasPanel;
         this.renderObjectService = renderObjectService;
         this.casterService = casterService;
         this.renzenService = renzenService;
-        this.imageRepository = imageRepository;
+
     }
 
     public void repaintCanvas() {
@@ -297,14 +297,5 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         }
     }
 
-    @Data
-    public static class imageUpload {
-        String title;
-        Binary file;
 
-        public imageUpload(String title, Binary file) {
-            this.title = title;
-            this.file = file;
-        }
-    }
 }
