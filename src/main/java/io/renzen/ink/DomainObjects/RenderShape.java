@@ -14,7 +14,7 @@ public class RenderShape {
     public RenderShape(String id, Shape shape) {
         this.id = id;
         this.shape = shape;
-        color = new Color(0, 0, 0, 1);
+        color = Color.BLACK;
     }
 
     public RenderShape(String id, Shape shape, Color color) {
