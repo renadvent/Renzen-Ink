@@ -20,6 +20,7 @@ import jfxtras.styles.jmetro.Style;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.swing.*;
+import java.io.File;
 
 public class JavaFXPanel {
 
@@ -154,6 +155,17 @@ public class JavaFXPanel {
             //shouldn't be done here like this
             springContext.getBean(CanvasPanel.class).repaint();
 
+        });
+
+        saveFileButton.setOnMouseClicked(e->{
+            //Show save file dialog
+            File file = fileChooser.showSaveDialog(stage);
+
+            if (file != null) {
+                actionPanelControllerToCanvasPanelViewLink.saveFile(file);
+                //save file
+                //saveTextToFile(sampleText, file);
+            }
         });
 
         loginButton.setOnMouseClicked(e->{

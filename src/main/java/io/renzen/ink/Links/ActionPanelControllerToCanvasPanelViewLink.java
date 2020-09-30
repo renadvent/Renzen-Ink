@@ -100,6 +100,22 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 //
 //    }
 
+    public void saveFile(File file){
+
+        BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = (Graphics2D) bi.getGraphics();
+        canvasPanel.printAll(g2d);
+        g2d.dispose();
+
+        try {
+            //file = File.createTempFile("image", ".png");
+            ImageIO.write(bi, "png", file);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            //return "failed";
+        }
+    }
+
     public String saveCanvasToMongoRepository() {
 
         //get canvas and save it to a temporary file as a png

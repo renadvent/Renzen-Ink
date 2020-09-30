@@ -55,11 +55,6 @@ public class CanvasPanelController {
         canvasPanelCO.setBaseBuffer(loadedImage);
 
         tempBackground = loadedImage;
-
-
-
-
-
     }
 
     public CanvasPanelCO getInit() {
