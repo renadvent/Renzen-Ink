@@ -45,7 +45,7 @@ public class JavaFXPanel {
     final TitledPane profilePane = new TitledPane("Renzen.io Profile", uploadBox);
     final TitledPane canvasPane = new TitledPane("Canvas", canvasBox);
     final TitledPane toolSelectionPane = new TitledPane("Tool Selection", toolSelectionBox);
-    final TitledPane toolOptionsPane = new TitledPane("Tool Options", casterToolOptionsBox);
+    final TitledPane toolOptionsPane = new TitledPane("Caster Options", casterToolOptionsBox);
     final TitledPane brushOptionsPane = new TitledPane("Brush Options", brushBox);
     final Pane fxCanvasPane = new Pane();
     final Pane oldActionPane = new Pane();
@@ -135,6 +135,15 @@ public class JavaFXPanel {
         castThroughCheckbox.selectedProperty().addListener((observableValue, number, t1) -> actionPanelController.updateNumberOfStrikes(t1.booleanValue()));
         flipCasterButton.setOnMouseClicked(mouseEvent -> actionPanelController.flipSelectedCaster(true));
 
+        //TODO working on. need to set in a service
+        colorPicker.valueProperty().addListener((observableValue, number, t1)->{
+            canvasPanelController.setCasterColor(t1);
+        });
+
+        showLoadedImageCheckbox.setOnMouseClicked(e->{
+            actionPanelControllerToCanvasPanelViewLink.toggleShowBackground();
+        });
+
         uploadOnlineButton.setOnMouseClicked(mouseEvent -> {
 
             var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToMongoRepository();
@@ -193,6 +202,8 @@ public class JavaFXPanel {
 
         fileChooser.setTitle("Open File");
 
+
+
         FileChooser.ExtensionFilter extFilter = new FileChooser
                 .ExtensionFilter("Image Files", "*.png","*.jpg","*.jpeg");
         fileChooser.getExtensionFilters().add(extFilter);
@@ -226,6 +237,9 @@ public class JavaFXPanel {
         loginAcc.getPanes().add(loginPane);
         uploadBox.getChildren().addAll(loginAcc, openWebsiteButton, uploadOnlineButton);
         accountBox.getChildren().addAll(uploadAcc);
+
+        showLoadedImageCheckbox.setSelected(true);
+
         canvasBox.getChildren().add(showLoadedImageCheckbox);
         accountBox.getChildren().add(canvasAcc);
         toolGroup.getToggles().addAll(casterToolButton, brushToolButton);
@@ -249,7 +263,7 @@ public class JavaFXPanel {
         menuPane.getChildren().addAll(
                 fileAcc,
                 accountBox,
-                toolSelectionAcc,
+                //toolSelectionAcc,
                 toolOptionsAcc,
                 brushOptionsPane,list);
 
@@ -260,21 +274,11 @@ public class JavaFXPanel {
         new JMetro(scene, STYLE);
     }
 
-
-
-
     private void setUpJPanelCanvasInJavaFX() {
         SwingUtilities.invokeLater(() ->
                 FXCanvasNode.setContent(springContext.getBean(InkClass.class).canvasPanel));
         fxCanvasPane.getChildren().add(FXCanvasNode);
         borderPane.setCenter(fxCanvasPane);
-    }
-
-    private void setUpOldToolPanelInJavaFX() {
-        SwingUtilities.invokeLater(() -> OldToolNode
-                .setContent(springContext.getBean(ActionPanel.class)));
-        oldActionPane.getChildren().add(OldToolNode);
-        borderPane.setRight(oldActionPane);
     }
 
     private void UpdateActionPanelToSelectedCaster(){

@@ -5,13 +5,14 @@ import io.renzen.ink.Controllers.CanvasPanelController;
 import io.renzen.ink.DomainObjects.RenderShape;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenderObjectService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
 
-@Component
+@Component @Data
 public class CanvasPanel extends JPanel {
 
     final CasterService casterService;
@@ -19,6 +20,8 @@ public class CanvasPanel extends JPanel {
 
     final CanvasPanelController canvasPanelController;
     CanvasPanelCO canvasPanelCO;
+
+    boolean showBackground=true;
 
     @Autowired
     public CanvasPanel(CasterService casterService, RenderObjectService renderObjectService, CanvasPanelController canvasPanelController) {
@@ -42,7 +45,10 @@ public class CanvasPanel extends JPanel {
         //g2d.clearRect(0, 0, , 1000);
 
         //draws background image
-        g2d.drawImage(canvasPanelCO.getBaseBuffer(), 0, 0, null);
+
+        if (showBackground) {
+            g2d.drawImage(canvasPanelCO.getBaseBuffer(), 0, 0, null);
+        }
 
         for (var caster : canvasPanelController.getCanvasPanelCOtoRepaint().getCasterCOList()) {
             g2d.drawImage(caster.getStrokeBuffer(), 0, 0, null);

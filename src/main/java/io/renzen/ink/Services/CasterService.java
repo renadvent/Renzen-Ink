@@ -5,12 +5,12 @@ import io.renzen.ink.DomainObjects.Caster;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Data
 public class CasterService {
 
     //int counter=0;
@@ -18,8 +18,44 @@ public class CasterService {
 
     Caster selectedCaster;
 
+    public void setSelectedCaster(Caster caster){
+        selectedCaster=caster;
+    }
+
+    Color awtColor;
+
+    /**takes in a fx color, and converts it to awt for caster
+     *
+     * @param color
+     */
+    public void setCasterColor(javafx.scene.paint.Color color){
+
+        var caster = selectedCaster;
+
+        var r = (int) color.getRed();
+        var g = (int)color.getGreen();
+        var b = (int)color.getBlue();
+        var a =(int) color.getOpacity()*255;
+        float opacity = (float) (a / 255.0) ;
+        java.awt.Color conColor = new java.awt.Color(r, g, b, opacity);
+
+        selectedCaster.color=conColor;
+
+        awtColor=conColor;
+
+        caster.color = conColor;
+    }
+
+    public Color getCasterColor(){
+        return awtColor;
+    }
+
     //TODO use this to store rendered Casters that haven't changed
     List<CasterCO> casterRenderCache = new ArrayList<>();
+
+    public void setCasterRenderCache(List cache){
+        casterRenderCache=cache;
+    }
 
 
     public Optional<CasterCO> findInCache(String id) {

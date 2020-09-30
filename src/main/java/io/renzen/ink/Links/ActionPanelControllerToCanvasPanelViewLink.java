@@ -6,11 +6,8 @@ import io.renzen.ink.Repositories.ImageRepository;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenderObjectService;
 import io.renzen.ink.Services.RenzenService;
-import io.renzen.ink.Views.ActionPanel;
 import io.renzen.ink.Views.CanvasPanel;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.bson.types.Binary;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -21,14 +18,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.util.Base64;
@@ -42,7 +37,6 @@ import java.util.Objects;
  */
 
 @Controller
-@Data
 public class ActionPanelControllerToCanvasPanelViewLink {
 
     final CanvasPanel canvasPanel;
@@ -60,9 +54,8 @@ public class ActionPanelControllerToCanvasPanelViewLink {
     final GridFsTemplate gridFsTemplate;
     final GridFsOperations operations;
     //messy injection
-    @Getter
-    @Setter
-    ActionPanel actionPanel;
+
+    //ActionPanel actionPanel;
 
 
     public ActionPanelControllerToCanvasPanelViewLink(CanvasPanel canvasPanel, RenderObjectService renderObjectService, CasterService casterService, RenzenService renzenService, ImageRepository imageRepository, GridFsTemplate gridFsTemplate, GridFsOperations operations) {
@@ -99,6 +92,11 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 //
 //
 //    }
+
+    public void toggleShowBackground(){
+        canvasPanel.setShowBackground(!canvasPanel.isShowBackground());
+        repaintCanvas();
+    }
 
     public void saveFile(File file){
 
@@ -171,6 +169,12 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         return jacksonResponse;
 
     }
+
+//    Color color = null;
+//    public void setCasterColor(Color color){
+//        this.color = color;
+//    }
+
 
     /**
      * this function will create a click listener
@@ -253,12 +257,17 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                 var firstClick = (Ellipse2D.Double) renderObjectService.findByName("firstClick").getShape();
 
                 //creates caster extending from first click to where mouse was released
-                Caster caster = casterService.save(new Caster(casterName, firstClick.getX(), firstClick.getY(), e.getX(), e.getY()));
 
-                casterService.setSelectedCaster(caster);
+                var temp = new Caster(casterName, firstClick.getX(), firstClick.getY(), e.getX(), e.getY());
+
+                //TODO working on here
+                //temp.setColor(color);
+                Caster caster = casterService.save(temp);
+
+                casterService.setSelectedCaster(temp);
 
                 //canvasPanelControllerToActionPanelViewLink.updateActionPanelWithSelectedCaster();
-                actionPanel.UpdateActionPanelToSelectedCaster();
+                //actionPanel.UpdateActionPanelToSelectedCaster();
 
                 renderObjectService.deleteByName("drag");
                 renderObjectService.deleteByName("firstClick");

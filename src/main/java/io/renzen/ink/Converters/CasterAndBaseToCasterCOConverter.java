@@ -48,7 +48,7 @@ public class CasterAndBaseToCasterCOConverter {
         //brusher.color = new Color(brusher.color.getRed(), brusher.color.getGreen(), brusher.color.getBlue(), brusher.opacity);
 
         g2d.setStroke(new BasicStroke(2));
-        g2d.setColor(Color.BLACK);
+        //g2d.setColor(color);
 
         double[] coordinates1 = new double[6];
         double[] coordinates2 = new double[6];
@@ -111,6 +111,8 @@ public class CasterAndBaseToCasterCOConverter {
 
         g2d.setRenderingHints(rh);
 
+        //drawing curves here
+        g2d.setColor(caster.color);
         draw_curves(g2d, last_rendered_curves);
         //render_list_to_buffer(last_rendered_curves, caster.getStroke_buffer());
 

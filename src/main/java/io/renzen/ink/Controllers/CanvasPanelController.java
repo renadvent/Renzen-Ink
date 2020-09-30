@@ -4,6 +4,7 @@ import io.renzen.ink.CommandObjectsPanel.CanvasPanelCO;
 import io.renzen.ink.Converters.CasterAndBaseToCasterCOConverter;
 import io.renzen.ink.DomainObjects.Caster;
 import io.renzen.ink.Services.CasterService;
+import javafx.scene.paint.Color;
 import lombok.Data;
 import org.springframework.stereotype.Controller;
 
@@ -17,7 +18,7 @@ import java.io.IOException;
  * Canvas view makes requests to this controller
  */
 
-@Controller@Data
+@Controller
 public class CanvasPanelController {
 
     final CasterService casterService;
@@ -39,6 +40,22 @@ public class CanvasPanelController {
     }
 
     CanvasPanelCO canvasPanelCO;
+
+    public void setCasterColor(Color color){
+        casterService.setCasterColor(color);
+
+//        var caster = casterService.getSelectedCaster();
+//
+//        var r = (int) color.getRed();
+//        var g = (int)color.getGreen();
+//        var b = (int)color.getBlue();
+//        var a =(int) color.getOpacity()*255;
+//        float opacity = (float) (a / 255.0) ;
+//        java.awt.Color conColor = new java.awt.Color(r, g, b, opacity);
+//
+//        caster.color = conColor;
+
+    }
 
     public void openFile(File file){
 
@@ -100,11 +117,11 @@ public class CanvasPanelController {
 
                                     if (casterService.getSelectedCaster().getName().equals(caster.getName())) {
 
-                                        var test1 = (Caster) casterCO;
-                                        var test2 = casterService.getSelectedCaster();
-                                        var test3 = (Caster) casterService.getSelectedCaster();
-                                        var test4 = ((Caster) casterCO).equals(casterService.getSelectedCaster());
-                                        var test5 = casterService.getSelectedCaster().equals(casterCO);
+//                                        var test1 = (Caster) casterCO;
+//                                        var test2 = casterService.getSelectedCaster();
+//                                        var test3 = (Caster) casterService.getSelectedCaster();
+//                                        var test4 = ((Caster) casterCO).equals(casterService.getSelectedCaster());
+//                                        var test5 = casterService.getSelectedCaster().equals(casterCO);
 
 
                                         if (((Caster) casterCO).equals(casterService.getSelectedCaster())) {
