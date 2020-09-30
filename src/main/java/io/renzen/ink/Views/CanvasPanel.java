@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import java.awt.*;
 
-@Component @Data
+@Component
+@Data
 public class CanvasPanel extends JPanel {
 
     final CasterService casterService;
@@ -21,7 +22,7 @@ public class CanvasPanel extends JPanel {
     final CanvasPanelController canvasPanelController;
     CanvasPanelCO canvasPanelCO;
 
-    boolean showBackground=true;
+    boolean showBackground = true;
 
     @Autowired
     public CanvasPanel(CasterService casterService, RenderObjectService renderObjectService, CanvasPanelController canvasPanelController) {
@@ -56,6 +57,7 @@ public class CanvasPanel extends JPanel {
 
         //draws RenderShapes on screen
         for (RenderShape renderShape : renderObjectService.getRenderShapeArrayList()) {
+            g2d.setColor(renderShape.getColor());
             g2d.draw(renderShape.getShape());
         }
     }

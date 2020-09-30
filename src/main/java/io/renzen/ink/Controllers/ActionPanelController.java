@@ -72,11 +72,13 @@ public class ActionPanelController {
         //casterService.getSelectedCaster().setRays((int)((Slider) e.getSource()).getValue());
         actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
     }
+
     //?
-    public void setBrushColor(Color color){
+    public void setBrushColor(Color color) {
         brushService.setSelectedColor(color);
     }
-    public java.awt.Color getBrushColor(Color color){
+
+    public java.awt.Color getBrushColor(Color color) {
         return brushService.getSelectedColor();
     }
 
@@ -91,7 +93,7 @@ public class ActionPanelController {
     public void updateNumberOfStrikes(boolean e) {
 
 
-        int x =  (e) ? 1 : 0;
+        int x = (e) ? 1 : 0;
         casterService.getSelectedCaster().setMax_penetrations(x);
         //casterService.getSelectedCaster().setMax_penetrations(((JSlider) changeEvent.getSource()).getValue());
         actionPanelControllerToCanvasPanelViewLink.repaintCanvas();

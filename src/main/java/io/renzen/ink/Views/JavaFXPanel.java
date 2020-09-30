@@ -60,7 +60,7 @@ public class JavaFXPanel {
     final Button loginButton = new Button("Login");
     final Button flipCasterButton = new Button("Flip Caster");
     final Button createNewCasterButton = new Button("Create New Caster");
-    final Button deleteSelectedCasterButton = new Button ("Delete Caster");
+    final Button deleteSelectedCasterButton = new Button("Delete Caster");
     final Accordion uploadAcc = new Accordion(profilePane);
     final Accordion fileAcc = new Accordion(filePane);
     final Accordion loginAcc = new Accordion();
@@ -92,12 +92,12 @@ public class JavaFXPanel {
     final ColorPicker brushColorPicker = new ColorPicker();
     final FileChooser fileChooser = new FileChooser();
     final int B_WIDTH = 300;
+    final ListView<Button> list = new ListView<>();
     ConfigurableApplicationContext springContext = null;
     ActionPanelController actionPanelController = null;
     CanvasPanelController canvasPanelController = null;
     Stage stage = null;
-    int createCasterCounter =0;
-
+    int createCasterCounter = 0;
     ActionPanelControllerToCanvasPanelViewLink actionPanelControllerToCanvasPanelViewLink = null;
 
 
@@ -108,10 +108,10 @@ public class JavaFXPanel {
         this.springContext = springContext;
         this.actionPanelController = springContext.getBean(ActionPanelController.class);
         this.canvasPanelController = springContext.getBean(CanvasPanelController.class);
-        this.actionPanelControllerToCanvasPanelViewLink=springContext.getBean(
+        this.actionPanelControllerToCanvasPanelViewLink = springContext.getBean(
                 ActionPanelControllerToCanvasPanelViewLink.class
         );
-        actionPanelControllerToCanvasPanelViewLink.javaFXPanel=this;
+        actionPanelControllerToCanvasPanelViewLink.javaFXPanel = this;
 
         buildMenu();
         setUpJPanelCanvasInJavaFX();
@@ -122,9 +122,6 @@ public class JavaFXPanel {
         stage.setScene(scene);
         stage.show();
     }
-
-
-    final ListView<Button> list = new ListView<>();
     //final ObservableList<String> items =
 
 //            FXCollections.observableArrayList (
@@ -142,13 +139,18 @@ public class JavaFXPanel {
         flipCasterButton.setOnMouseClicked(mouseEvent -> actionPanelController.flipSelectedCaster(true));
 
         //TODO working on. need to set in a service
-        casterColorPicker.valueProperty().addListener((observableValue, number, t1)->{
+        casterColorPicker.valueProperty().addListener((observableValue, number, t1) -> {
             canvasPanelController.setCasterColor(t1);
             //messy
             springContext.getBean(CanvasPanel.class).repaint();
         });
 
-        showLoadedImageCheckbox.setOnMouseClicked(e->{
+        brushColorPicker.valueProperty().addListener((observableValue, number, t1) -> {
+            actionPanelController.setBrushColor(t1);
+            springContext.getBean(CanvasPanel.class).repaint();
+        });
+
+        showLoadedImageCheckbox.setOnMouseClicked(e -> {
             actionPanelControllerToCanvasPanelViewLink.toggleShowBackground();
         });
 
@@ -164,7 +166,7 @@ public class JavaFXPanel {
             list.getItems().add(button);
         });
 
-        openFileButton.setOnMouseClicked(e->{
+        openFileButton.setOnMouseClicked(e -> {
             var file = fileChooser.showOpenDialog(stage);
 
             canvasPanelController.openFile(file);
@@ -174,7 +176,7 @@ public class JavaFXPanel {
 
         });
 
-        saveFileButton.setOnMouseClicked(e->{
+        saveFileButton.setOnMouseClicked(e -> {
             //Show save file dialog
             File file = fileChooser.showSaveDialog(stage);
 
@@ -185,11 +187,11 @@ public class JavaFXPanel {
             }
         });
 
-        loginButton.setOnMouseClicked(e->{
-            updateAccountSectionWithLogin(actionPanelController.login(usernameField.getText(),passwordField.getText()));
+        loginButton.setOnMouseClicked(e -> {
+            updateAccountSectionWithLogin(actionPanelController.login(usernameField.getText(), passwordField.getText()));
         });
 
-        deleteSelectedCasterButton.setOnMouseClicked(e->{
+        deleteSelectedCasterButton.setOnMouseClicked(e -> {
 
         });
 
@@ -204,19 +206,19 @@ public class JavaFXPanel {
         });
     }
 
-    void buildMenu(){
+    void buildMenu() {
 
         var F_SIZE = "-fx-font-size: 20;";
 
         fileChooser.setTitle("Open File");
-        casterColorPicker.setValue(new Color(0,0,0,1));
-        brushColorPicker.setValue(new Color(0,0,0,1));
+        casterColorPicker.setValue(new Color(0, 0, 0, 1));
+        brushColorPicker.setValue(new Color(0, 0, 0, 1));
         canvasPanelController.setCasterColor(casterColorPicker.getValue());
         actionPanelController.setBrushColor(brushColorPicker.getValue());
 
 
         FileChooser.ExtensionFilter extFilter = new FileChooser
-                .ExtensionFilter("Image Files", "*.png","*.jpg","*.jpeg");
+                .ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
         fileChooser.getExtensionFilters().add(extFilter);
 
 
@@ -270,14 +272,14 @@ public class JavaFXPanel {
                 casterColorPicker
                 //casterToolSeparatorBottom
         );
-        brushBox.getChildren().addAll(useBrush,brushSizeLabel, brushSizeSlider,
+        brushBox.getChildren().addAll(useBrush, brushSizeLabel, brushSizeSlider,
                 densityLabel, densitySlider, brushSeparator, brushColorPicker);
         menuPane.getChildren().addAll(
                 fileAcc,
                 accountBox,
                 //toolSelectionAcc,
                 toolOptionsAcc,
-                brushOptionsPane,list);
+                brushOptionsPane, list);
 
 
         borderPane.setLeft(menuPane);
@@ -293,7 +295,7 @@ public class JavaFXPanel {
         borderPane.setCenter(fxCanvasPane);
     }
 
-    public void UpdateActionPanelToSelectedCaster(){
+    public void UpdateActionPanelToSelectedCaster() {
 
         var caster = actionPanelController.getSelectedCaster();
 
@@ -302,7 +304,7 @@ public class JavaFXPanel {
         int g = awtColor.getGreen();
         int b = awtColor.getBlue();
         int a = awtColor.getAlpha();
-        double opacity = a / 255.0 ;
+        double opacity = a / 255.0;
         javafx.scene.paint.Color fxColor = javafx.scene.paint.Color.rgb(r, g, b, opacity);
 
         casterColorPicker.setValue(fxColor);
@@ -315,9 +317,8 @@ public class JavaFXPanel {
     }
 
 
-
     private void updateAccountSectionWithLogin(ActionPanelAccountInfoCO infoCO) {
-        profileBox.getChildren().add(0, new Label("Welcome " + infoCO.getName()+"!"));
+        profileBox.getChildren().add(0, new Label("Welcome " + infoCO.getName() + "!"));
     }
 
 }

@@ -8,7 +8,6 @@ import io.renzen.ink.Services.RenderObjectService;
 import io.renzen.ink.Services.RenzenService;
 import io.renzen.ink.Views.CanvasPanel;
 import io.renzen.ink.Views.JavaFXPanel;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -38,14 +37,11 @@ import java.util.Objects;
 public class ActionPanelControllerToCanvasPanelViewLink {
 
     final CanvasPanel canvasPanel;
-    public JavaFXPanel javaFXPanel;
-
-
-
     final RenderObjectService renderObjectService;
     final CasterService casterService;
     final RenzenService renzenService;
     final BrushService brushService;
+    public JavaFXPanel javaFXPanel;
 
 
     /**
@@ -55,8 +51,6 @@ public class ActionPanelControllerToCanvasPanelViewLink {
     //messy injection
 
     //ActionPanel actionPanel;
-
-
     public ActionPanelControllerToCanvasPanelViewLink(CanvasPanel canvasPanel, RenderObjectService renderObjectService,
                                                       CasterService casterService, RenzenService renzenService, BrushService brushService) {
         this.canvasPanel = canvasPanel;
@@ -93,37 +87,36 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 //    }
 
 
-    public void paintOnCanvas(){
+    public void paintOnCanvas() {
 
         var brush = brushService.getSelectedBrush();
         //var color = brushService.getSelectedColor();
 
-        var adapter= new MouseAdapter() {
+        var adapter = new MouseAdapter() {
             @Override
-            public void mousePressed(MouseEvent e){
+            public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
 
                 renderObjectService.addRenderShape(
                         new RenderShape("first click from brush",
-                                new Ellipse2D.Double(e.getX()-brush.getSize()/2,e.getY()-brush.getSize()/2,
-                                        brush.getSize(),brush.getSize())));
-
+                                new Ellipse2D.Double(e.getX() - brush.getSize() / 2, e.getY() - brush.getSize() / 2,
+                                        brush.getSize(), brush.getSize()), brush.getColor()));
 
 
                 repaintCanvas();
             }
 
             @Override
-            public  void mouseDragged(MouseEvent e){
+            public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
 
                 renderObjectService.addRenderShape(
                         new RenderShape("while dragging",
-                                new Ellipse2D.Double(e.getX()-brush.getSize()/2,e.getY()-brush.getSize()/2,
-                                        brush.getSize(),brush.getSize())));
+                                new Ellipse2D.Double(e.getX() - brush.getSize() / 2, e.getY() - brush.getSize() / 2,
+                                        brush.getSize(), brush.getSize()), brush.getColor()));
 
 
-repaintCanvas();
+                repaintCanvas();
             }
 
             @Override
@@ -132,7 +125,7 @@ repaintCanvas();
 
 
                 removeCanvasListeners();
-repaintCanvas();
+                repaintCanvas();
             }
 
         };
@@ -142,13 +135,12 @@ repaintCanvas();
     }
 
 
-
-    public void toggleShowBackground(){
+    public void toggleShowBackground() {
         canvasPanel.setShowBackground(!canvasPanel.isShowBackground());
         repaintCanvas();
     }
 
-    public void saveFile(File file){
+    public void saveFile(File file) {
 
         BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = (Graphics2D) bi.getGraphics();

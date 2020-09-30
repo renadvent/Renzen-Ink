@@ -31,18 +31,15 @@ public class CanvasPanelController {
 //    void postConstructInit(CanvasPanel canvasPanel){
 //        this.canvasPanel = canvasPanel;
 //    }
-
+    CanvasPanelCO canvasPanelCO;
 
     public CanvasPanelController(CasterService casterService, CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter) {
         this.casterService = casterService;
         this.casterAndBaseToCasterCOConverter = casterAndBaseToCasterCOConverter;
     }
 
-    CanvasPanelCO canvasPanelCO;
-
-    public void setCasterColor(Color color){
+    public void setCasterColor(Color color) {
         casterService.setCasterColor(color);
-
 
 
 //        var caster = casterService.getSelectedCaster();
@@ -58,17 +55,17 @@ public class CanvasPanelController {
 
     }
 
-    public void openFile(File file){
+    public void openFile(File file) {
 
         BufferedImage loadedImage = null;
 
-            try {
-                //File f = new File("src/main/java/io/renzen/ink/body.jpg");
-                loadedImage = ImageIO.read(file);
-            } catch (IOException exception) {
-                System.out.println(exception.getMessage());
-                System.exit(0);
-            }
+        try {
+            //File f = new File("src/main/java/io/renzen/ink/body.jpg");
+            loadedImage = ImageIO.read(file);
+        } catch (IOException exception) {
+            System.out.println(exception.getMessage());
+            System.exit(0);
+        }
 
         canvasPanelCO.setBaseBuffer(loadedImage);
 

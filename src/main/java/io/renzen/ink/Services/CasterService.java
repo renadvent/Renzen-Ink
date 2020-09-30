@@ -16,49 +16,41 @@ public class CasterService {
     final ArrayList<Caster> casterArrayList = new ArrayList<>();
 
     Caster selectedCaster;
+    Color awtColor;
+    //TODO use this to store rendered Casters that haven't changed
+    List<CasterCO> casterRenderCache = new ArrayList<>();
 
-    public void setSelectedCaster(Caster caster){
-        selectedCaster=caster;
+    public Color getCasterColor() {
+        return awtColor;
     }
 
-    Color awtColor;
-
-
-
-    /**takes in a fx color, and converts it to awt for caster
+    /**
+     * takes in a fx color, and converts it to awt for caster
      *
      * @param color
      */
-    public void setCasterColor(javafx.scene.paint.Color color){
+    public void setCasterColor(javafx.scene.paint.Color color) {
 
 
         var r = (float) color.getRed();
-        var g = (float)color.getGreen();
-        var b = (float)color.getBlue();
-        var a =(float) color.getOpacity();
+        var g = (float) color.getGreen();
+        var b = (float) color.getBlue();
+        var a = (float) color.getOpacity();
         float opacity = a;// (a * 255.0) ;
         //opacity = (opacity>255) ? 255 : opacity;
         java.awt.Color conColor = new java.awt.Color(r, g, b, opacity);
 
-        if (selectedCaster!=null){
-            selectedCaster.color=conColor;
+        if (selectedCaster != null) {
+            selectedCaster.color = conColor;
         }
 
-        awtColor=conColor;
+        awtColor = conColor;
 
     }
 
-    public Color getCasterColor(){
-        return awtColor;
+    public void setCasterRenderCache(List cache) {
+        casterRenderCache = cache;
     }
-
-    //TODO use this to store rendered Casters that haven't changed
-    List<CasterCO> casterRenderCache = new ArrayList<>();
-
-    public void setCasterRenderCache(List cache){
-        casterRenderCache=cache;
-    }
-
 
     public Optional<CasterCO> findInCache(String id) {
         for (var casterCO : casterRenderCache) {
@@ -69,13 +61,16 @@ public class CasterService {
         return Optional.empty();
     }
 
-
     public void selectCaster(String id) {
         selectedCaster = findByName(id);
     }
 
     public Caster getSelectedCaster() {
         return selectedCaster;
+    }
+
+    public void setSelectedCaster(Caster caster) {
+        selectedCaster = caster;
     }
 
     public Caster save(Caster caster) {
