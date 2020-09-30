@@ -129,7 +129,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                 if (last!=null) {
                     renderObjectService.addRenderShape(
                             new RenderShape("line between",
-                                    new Line2D.Double(lastX, lastY, e.getX(), e.getY())));
+                                    new Line2D.Double(lastX, lastY, e.getX(), e.getY()), brush.getColor()));
                 }
 
                 last = temp;
