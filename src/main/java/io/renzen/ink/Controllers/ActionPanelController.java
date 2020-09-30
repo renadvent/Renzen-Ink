@@ -5,8 +5,10 @@ import io.renzen.ink.CommandObjectsPanel.ActionPanelCO;
 import io.renzen.ink.Converters.ModelToActionPanelCOConverter;
 import io.renzen.ink.DomainObjects.Caster;
 import io.renzen.ink.Links.ActionPanelControllerToCanvasPanelViewLink;
+import io.renzen.ink.Services.BrushService;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenzenService;
+import javafx.scene.paint.Color;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -20,13 +22,15 @@ public class ActionPanelController {
     final CasterService casterService;
 
     final RenzenService renzenService;
+    final BrushService brushService;
 
     final ActionPanelControllerToCanvasPanelViewLink actionPanelControllerToCanvasPanelViewLink;
 
-    public ActionPanelController(ModelToActionPanelCOConverter modelToActionPanelCOConverter, CasterService casterService, RenzenService renzenService, ActionPanelControllerToCanvasPanelViewLink actionPanelControllerToCanvasPanelViewLink) {
+    public ActionPanelController(ModelToActionPanelCOConverter modelToActionPanelCOConverter, CasterService casterService, RenzenService renzenService, BrushService brushService, ActionPanelControllerToCanvasPanelViewLink actionPanelControllerToCanvasPanelViewLink) {
         this.modelToActionPanelCOConverter = modelToActionPanelCOConverter;
         this.casterService = casterService;
         this.renzenService = renzenService;
+        this.brushService = brushService;
         this.actionPanelControllerToCanvasPanelViewLink = actionPanelControllerToCanvasPanelViewLink;
     }
 
@@ -67,6 +71,13 @@ public class ActionPanelController {
         casterService.getSelectedCaster().setRays(e);
         //casterService.getSelectedCaster().setRays((int)((Slider) e.getSource()).getValue());
         actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
+    }
+    //?
+    public void setBrushColor(Color color){
+        brushService.setSelectedColor(color);
+    }
+    public java.awt.Color getBrushColor(Color color){
+        return brushService.getSelectedColor();
     }
 
     public void selectCaster(String id) {

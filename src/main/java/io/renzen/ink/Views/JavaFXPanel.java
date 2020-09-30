@@ -52,6 +52,7 @@ public class JavaFXPanel {
     final Pane oldActionPane = new Pane();
     final SwingNode FXCanvasNode = new SwingNode();
     final SwingNode OldToolNode = new SwingNode();
+    final Button useBrush = new Button("Use Brush");
     final Button openFileButton = new Button("Open File");
     final Button saveFileButton = new Button("Save File");
     final Button openWebsiteButton = new Button("View Profile Online");
@@ -87,7 +88,8 @@ public class JavaFXPanel {
     final Separator casterToolSeparatorTop = new Separator();
     final Separator brushSeparator = new Separator();
     final Separator casterToolSeparatorBottom = new Separator();
-    final ColorPicker colorPicker = new ColorPicker();
+    final ColorPicker casterColorPicker = new ColorPicker();
+    final ColorPicker brushColorPicker = new ColorPicker();
     final FileChooser fileChooser = new FileChooser();
     final int B_WIDTH = 300;
     ConfigurableApplicationContext springContext = null;
@@ -131,6 +133,8 @@ public class JavaFXPanel {
 
     private void linkButtonsToActionController() {
 
+        useBrush.setOnMouseClicked(mouseEvent -> actionPanelControllerToCanvasPanelViewLink.paintOnCanvas());
+
         openWebsiteButton.setOnMouseClicked(mouseEvent -> actionPanelController.openRenzen());
         raysSlider.valueProperty().addListener((observableValue, number, t1) -> actionPanelController.updateNumberOfRays(t1.intValue()));//(controller::updateNumberOfRays);
         toleranceSlider.valueProperty().addListener((observableValue, number, t1) -> actionPanelController.updateTolerance(t1.intValue()));
@@ -138,7 +142,7 @@ public class JavaFXPanel {
         flipCasterButton.setOnMouseClicked(mouseEvent -> actionPanelController.flipSelectedCaster(true));
 
         //TODO working on. need to set in a service
-        colorPicker.valueProperty().addListener((observableValue, number, t1)->{
+        casterColorPicker.valueProperty().addListener((observableValue, number, t1)->{
             canvasPanelController.setCasterColor(t1);
             //messy
             springContext.getBean(CanvasPanel.class).repaint();
@@ -205,8 +209,10 @@ public class JavaFXPanel {
         var F_SIZE = "-fx-font-size: 20;";
 
         fileChooser.setTitle("Open File");
-        colorPicker.setValue(new Color(0,0,0,1));
-        canvasPanelController.setCasterColor(colorPicker.getValue());
+        casterColorPicker.setValue(new Color(0,0,0,1));
+        brushColorPicker.setValue(new Color(0,0,0,1));
+        canvasPanelController.setCasterColor(casterColorPicker.getValue());
+        actionPanelController.setBrushColor(brushColorPicker.getValue());
 
 
         FileChooser.ExtensionFilter extFilter = new FileChooser
@@ -260,11 +266,12 @@ public class JavaFXPanel {
                 castThroughCheckbox,
                 //showCasterCheckbox,
                 //showStrokesCheckbox,
-                flipCasterButton
+                flipCasterButton,
+                casterColorPicker
                 //casterToolSeparatorBottom
         );
-        brushBox.getChildren().addAll(brushSizeLabel, brushSizeSlider,
-                densityLabel, densitySlider, brushSeparator, colorPicker);
+        brushBox.getChildren().addAll(useBrush,brushSizeLabel, brushSizeSlider,
+                densityLabel, densitySlider, brushSeparator, brushColorPicker);
         menuPane.getChildren().addAll(
                 fileAcc,
                 accountBox,
@@ -298,7 +305,7 @@ public class JavaFXPanel {
         double opacity = a / 255.0 ;
         javafx.scene.paint.Color fxColor = javafx.scene.paint.Color.rgb(r, g, b, opacity);
 
-        colorPicker.setValue(fxColor);
+        casterColorPicker.setValue(fxColor);
 
         raysSlider.setValue(caster.getRays());
         toleranceSlider.setValue(caster.getTolerance());

@@ -2,12 +2,12 @@ package io.renzen.ink.Links;
 
 import io.renzen.ink.DomainObjects.Caster;
 import io.renzen.ink.DomainObjects.RenderShape;
+import io.renzen.ink.Services.BrushService;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenderObjectService;
 import io.renzen.ink.Services.RenzenService;
 import io.renzen.ink.Views.CanvasPanel;
 import io.renzen.ink.Views.JavaFXPanel;
-import lombok.Data;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -40,9 +40,12 @@ public class ActionPanelControllerToCanvasPanelViewLink {
     final CanvasPanel canvasPanel;
     public JavaFXPanel javaFXPanel;
 
+
+
     final RenderObjectService renderObjectService;
     final CasterService casterService;
     final RenzenService renzenService;
+    final BrushService brushService;
 
 
     /**
@@ -55,12 +58,13 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 
 
     public ActionPanelControllerToCanvasPanelViewLink(CanvasPanel canvasPanel, RenderObjectService renderObjectService,
-                                                      CasterService casterService, RenzenService renzenService) {
+                                                      CasterService casterService, RenzenService renzenService, BrushService brushService) {
         this.canvasPanel = canvasPanel;
         this.renderObjectService = renderObjectService;
         this.casterService = casterService;
         this.renzenService = renzenService;
 
+        this.brushService = brushService;
     }
 
     public void repaintCanvas() {
@@ -87,6 +91,57 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 //
 //
 //    }
+
+
+    public void paintOnCanvas(){
+
+        var brush = brushService.getSelectedBrush();
+        //var color = brushService.getSelectedColor();
+
+        var adapter= new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e){
+                super.mousePressed(e);
+
+                renderObjectService.addRenderShape(
+                        new RenderShape("first click from brush",
+                                new Ellipse2D.Double(e.getX()-brush.getSize()/2,e.getY()-brush.getSize()/2,
+                                        brush.getSize(),brush.getSize())));
+
+
+
+                repaintCanvas();
+            }
+
+            @Override
+            public  void mouseDragged(MouseEvent e){
+                super.mouseDragged(e);
+
+                renderObjectService.addRenderShape(
+                        new RenderShape("while dragging",
+                                new Ellipse2D.Double(e.getX()-brush.getSize()/2,e.getY()-brush.getSize()/2,
+                                        brush.getSize(),brush.getSize())));
+
+
+repaintCanvas();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+
+
+                removeCanvasListeners();
+repaintCanvas();
+            }
+
+        };
+
+        canvasPanel.addMouseListener(adapter);
+        canvasPanel.addMouseMotionListener(adapter);
+    }
+
+
 
     public void toggleShowBackground(){
         canvasPanel.setShowBackground(!canvasPanel.isShowBackground());
