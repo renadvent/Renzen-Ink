@@ -7,17 +7,7 @@ import io.renzen.ink.DomainObjects.Caster;
 import io.renzen.ink.Links.ActionPanelControllerToCanvasPanelViewLink;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenzenService;
-import javafx.scene.control.Slider;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseEvent;
 import org.springframework.stereotype.Controller;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.geom.Point2D;
-import java.util.List;
 
 /**
  * Action Panel makes request to this controller

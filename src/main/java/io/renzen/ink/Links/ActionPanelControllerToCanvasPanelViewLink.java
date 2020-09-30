@@ -10,8 +10,6 @@ import io.renzen.ink.Views.CanvasPanel;
 import io.renzen.ink.Views.JavaFXPanel;
 import lombok.Data;
 import org.bson.types.Binary;
-import org.springframework.data.mongodb.gridfs.GridFsOperations;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -52,23 +50,17 @@ public class ActionPanelControllerToCanvasPanelViewLink {
      * Mongo save to profile
      */
 
-
-    final GridFsTemplate gridFsTemplate;
-    final GridFsOperations operations;
     //messy injection
 
     //ActionPanel actionPanel;
 
 
-    public ActionPanelControllerToCanvasPanelViewLink(CanvasPanel canvasPanel, RenderObjectService renderObjectService, CasterService casterService, RenzenService renzenService, ImageRepository imageRepository, GridFsTemplate gridFsTemplate, GridFsOperations operations) {
+    public ActionPanelControllerToCanvasPanelViewLink(CanvasPanel canvasPanel, RenderObjectService renderObjectService, CasterService casterService, RenzenService renzenService, ImageRepository imageRepository) {
         this.canvasPanel = canvasPanel;
-
         this.renderObjectService = renderObjectService;
         this.casterService = casterService;
         this.renzenService = renzenService;
         this.imageRepository = imageRepository;
-        this.gridFsTemplate = gridFsTemplate;
-        this.operations = operations;
     }
 
     public void repaintCanvas() {

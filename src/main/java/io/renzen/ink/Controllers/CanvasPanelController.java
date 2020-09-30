@@ -5,7 +5,6 @@ import io.renzen.ink.Converters.CasterAndBaseToCasterCOConverter;
 import io.renzen.ink.DomainObjects.Caster;
 import io.renzen.ink.Services.CasterService;
 import javafx.scene.paint.Color;
-import lombok.Data;
 import org.springframework.stereotype.Controller;
 
 import javax.imageio.ImageIO;

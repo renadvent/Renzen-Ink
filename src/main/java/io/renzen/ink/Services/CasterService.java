@@ -2,7 +2,6 @@ package io.renzen.ink.Services;
 
 import io.renzen.ink.CommandObjectsDomain.CasterCO;
 import io.renzen.ink.DomainObjects.Caster;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -37,7 +36,7 @@ public class CasterService {
         var g = (float)color.getGreen();
         var b = (float)color.getBlue();
         var a =(float) color.getOpacity();
-        float opacity = (float)a;// (a * 255.0) ;
+        float opacity = a;// (a * 255.0) ;
         //opacity = (opacity>255) ? 255 : opacity;
         java.awt.Color conColor = new java.awt.Color(r, g, b, opacity);
 
