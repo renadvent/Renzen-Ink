@@ -261,7 +261,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                 var temp = new Caster(casterName, firstClick.getX(), firstClick.getY(), e.getX(), e.getY());
 
                 //TODO working on here
-                //temp.setColor(color);
+                temp.setColor(casterService.getCasterColor());
                 Caster caster = casterService.save(temp);
 
                 casterService.setSelectedCaster(temp);

@@ -47,7 +47,7 @@ public class CasterAndBaseToCasterCOConverter {
 
         //brusher.color = new Color(brusher.color.getRed(), brusher.color.getGreen(), brusher.color.getBlue(), brusher.opacity);
 
-        g2d.setStroke(new BasicStroke(2));
+        //g2d.setStroke(new BasicStroke(2));
         //g2d.setColor(color);
 
         double[] coordinates1 = new double[6];

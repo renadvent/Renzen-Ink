@@ -24,26 +24,29 @@ public class CasterService {
 
     Color awtColor;
 
+
+
     /**takes in a fx color, and converts it to awt for caster
      *
      * @param color
      */
     public void setCasterColor(javafx.scene.paint.Color color){
 
-        var caster = selectedCaster;
 
-        var r = (int) color.getRed();
-        var g = (int)color.getGreen();
-        var b = (int)color.getBlue();
-        var a =(int) color.getOpacity()*255;
-        float opacity = (float) (a / 255.0) ;
+        var r = (float) color.getRed();
+        var g = (float)color.getGreen();
+        var b = (float)color.getBlue();
+        var a =(float) color.getOpacity();
+        float opacity = (float)a;// (a * 255.0) ;
+        //opacity = (opacity>255) ? 255 : opacity;
         java.awt.Color conColor = new java.awt.Color(r, g, b, opacity);
 
-        selectedCaster.color=conColor;
+        if (selectedCaster!=null){
+            selectedCaster.color=conColor;
+        }
 
         awtColor=conColor;
 
-        caster.color = conColor;
     }
 
     public Color getCasterColor(){

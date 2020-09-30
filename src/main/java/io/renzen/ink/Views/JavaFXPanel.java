@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import jfxtras.styles.jmetro.JMetro;
@@ -138,6 +139,8 @@ public class JavaFXPanel {
         //TODO working on. need to set in a service
         colorPicker.valueProperty().addListener((observableValue, number, t1)->{
             canvasPanelController.setCasterColor(t1);
+            //messy
+            springContext.getBean(CanvasPanel.class).repaint();
         });
 
         showLoadedImageCheckbox.setOnMouseClicked(e->{
@@ -201,7 +204,8 @@ public class JavaFXPanel {
         var F_SIZE = "-fx-font-size: 20;";
 
         fileChooser.setTitle("Open File");
-
+        colorPicker.setValue(new Color(0,0,0,1));
+        canvasPanelController.setCasterColor(colorPicker.getValue());
 
 
         FileChooser.ExtensionFilter extFilter = new FileChooser

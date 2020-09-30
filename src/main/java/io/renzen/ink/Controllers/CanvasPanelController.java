@@ -44,6 +44,8 @@ public class CanvasPanelController {
     public void setCasterColor(Color color){
         casterService.setCasterColor(color);
 
+
+
 //        var caster = casterService.getSelectedCaster();
 //
 //        var r = (int) color.getRed();
@@ -114,21 +116,10 @@ public class CanvasPanelController {
 
                                 //if in cache
                                 if (casterService.getSelectedCaster() != null) {
-
                                     if (casterService.getSelectedCaster().getName().equals(caster.getName())) {
-
-//                                        var test1 = (Caster) casterCO;
-//                                        var test2 = casterService.getSelectedCaster();
-//                                        var test3 = (Caster) casterService.getSelectedCaster();
-//                                        var test4 = ((Caster) casterCO).equals(casterService.getSelectedCaster());
-//                                        var test5 = casterService.getSelectedCaster().equals(casterCO);
-
-
                                         if (((Caster) casterCO).equals(casterService.getSelectedCaster())) {
-                                            //System.out.println("CASTERS EQUAL!" + caster.getName());
                                             canvasPanelCO.getCasterCOList().add(casterCO);
                                         } else {
-                                            //System.out.println("CASTERS NOT EQUAL! CHANGED " + caster.getName());
                                             canvasPanelCO.getCasterCOList()
                                                     .add(casterAndBaseToCasterCOConverter.toCasterCO(caster, tempBackground));
                                         }
