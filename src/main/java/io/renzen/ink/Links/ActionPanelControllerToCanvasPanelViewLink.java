@@ -106,15 +106,35 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                 repaintCanvas();
             }
 
+            RenderShape last;
+            double lastX;
+            double lastY;
+
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
 
-                renderObjectService.addRenderShape(
+                var temp = renderObjectService.addRenderShape(
                         new RenderShape("while dragging",
                                 new Ellipse2D.Double(e.getX() - brush.getSize() / 2, e.getY() - brush.getSize() / 2,
                                         brush.getSize(), brush.getSize()), brush.getColor()));
 
+
+                //TODO working on rendering lines
+
+//                var temp = renderObjectService.addRenderShape(
+//                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
+//
+
+                if (last!=null) {
+                    renderObjectService.addRenderShape(
+                            new RenderShape("line between",
+                                    new Line2D.Double(lastX, lastY, e.getX(), e.getY())));
+                }
+
+                last = temp;
+                lastX = e.getX();
+                lastY = e.getY();
 
                 repaintCanvas();
             }
@@ -272,6 +292,10 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                 canvasPanel.repaint();
             }
 
+            RenderShape last =null;
+            double lastX;
+            double lastY;
+
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
@@ -285,8 +309,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 
                 //System.out.println("PRESSED");
 
-                renderObjectService.addRenderShape(
-                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
+
 
                 canvasPanel.validate();
                 canvasPanel.repaint();
