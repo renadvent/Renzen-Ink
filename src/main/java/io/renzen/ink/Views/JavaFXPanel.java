@@ -109,6 +109,7 @@ public class JavaFXPanel {
         this.actionPanelControllerToCanvasPanelViewLink=springContext.getBean(
                 ActionPanelControllerToCanvasPanelViewLink.class
         );
+        actionPanelControllerToCanvasPanelViewLink.javaFXPanel=this;
 
         buildMenu();
         setUpJPanelCanvasInJavaFX();
@@ -257,8 +258,8 @@ public class JavaFXPanel {
                 raysLabel, raysSlider,
                 toleranceLabel, toleranceSlider,
                 castThroughCheckbox,
-                showCasterCheckbox,
-                showStrokesCheckbox,
+                //showCasterCheckbox,
+                //showStrokesCheckbox,
                 flipCasterButton
                 //casterToolSeparatorBottom
         );
@@ -285,8 +286,23 @@ public class JavaFXPanel {
         borderPane.setCenter(fxCanvasPane);
     }
 
-    private void UpdateActionPanelToSelectedCaster(){
+    public void UpdateActionPanelToSelectedCaster(){
 
+        var caster = actionPanelController.getSelectedCaster();
+
+        var awtColor = caster.getColor();
+        int r = awtColor.getRed();
+        int g = awtColor.getGreen();
+        int b = awtColor.getBlue();
+        int a = awtColor.getAlpha();
+        double opacity = a / 255.0 ;
+        javafx.scene.paint.Color fxColor = javafx.scene.paint.Color.rgb(r, g, b, opacity);
+
+        colorPicker.setValue(fxColor);
+
+        raysSlider.setValue(caster.getRays());
+        toleranceSlider.setValue(caster.getTolerance());
+        castThroughCheckbox.setSelected(caster.getMax_penetrations() >= 1);
 
 
     }

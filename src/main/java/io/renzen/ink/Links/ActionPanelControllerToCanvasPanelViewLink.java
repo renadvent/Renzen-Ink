@@ -7,6 +7,7 @@ import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenderObjectService;
 import io.renzen.ink.Services.RenzenService;
 import io.renzen.ink.Views.CanvasPanel;
+import io.renzen.ink.Views.JavaFXPanel;
 import lombok.Data;
 import org.bson.types.Binary;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
@@ -40,6 +41,7 @@ import java.util.Objects;
 public class ActionPanelControllerToCanvasPanelViewLink {
 
     final CanvasPanel canvasPanel;
+    public JavaFXPanel javaFXPanel;
 
     final RenderObjectService renderObjectService;
     final CasterService casterService;
@@ -60,6 +62,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 
     public ActionPanelControllerToCanvasPanelViewLink(CanvasPanel canvasPanel, RenderObjectService renderObjectService, CasterService casterService, RenzenService renzenService, ImageRepository imageRepository, GridFsTemplate gridFsTemplate, GridFsOperations operations) {
         this.canvasPanel = canvasPanel;
+
         this.renderObjectService = renderObjectService;
         this.casterService = casterService;
         this.renzenService = renzenService;
@@ -267,7 +270,9 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                 casterService.setSelectedCaster(temp);
 
                 //canvasPanelControllerToActionPanelViewLink.updateActionPanelWithSelectedCaster();
-                //actionPanel.UpdateActionPanelToSelectedCaster();
+
+
+                javaFXPanel.UpdateActionPanelToSelectedCaster();
 
                 renderObjectService.deleteByName("drag");
                 renderObjectService.deleteByName("firstClick");
