@@ -288,7 +288,11 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                 renderObjectService.addRenderShape(new RenderShape("drag",
                         new Line2D.Double(circle.getCenterX(), circle.getCenterY(), e.getX(), e.getY())));
 
-                canvasPanel.validate();
+                //?????
+//                renderObjectService.addRenderShape(
+//                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
+
+                                canvasPanel.validate();
                 canvasPanel.repaint();
             }
 
@@ -308,6 +312,9 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                  */
 
                 //System.out.println("PRESSED");
+                renderObjectService.addRenderShape(
+                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
+
 
 
 
