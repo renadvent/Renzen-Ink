@@ -272,6 +272,28 @@ public class ActionPanelControllerToCanvasPanelViewLink {
             }
 
             @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+
+                renderObjectService.deleteByName("beforeClick");
+
+                /**
+                 * start tracking mouse and drawing preview
+                 * to current location
+                 */
+
+                //System.out.println("PRESSED");
+                renderObjectService.addRenderShape(
+                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
+
+
+
+
+                canvasPanel.validate();
+                canvasPanel.repaint();
+            }
+
+            @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
 
@@ -293,32 +315,6 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 //                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
 
                                 canvasPanel.validate();
-                canvasPanel.repaint();
-            }
-
-            RenderShape last =null;
-            double lastX;
-            double lastY;
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-
-                renderObjectService.deleteByName("beforeClick");
-
-                /**
-                 * start tracking mouse and drawing preview
-                 * to current location
-                 */
-
-                //System.out.println("PRESSED");
-                renderObjectService.addRenderShape(
-                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
-
-
-
-
-                canvasPanel.validate();
                 canvasPanel.repaint();
             }
 

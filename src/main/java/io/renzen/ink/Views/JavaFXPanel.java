@@ -130,6 +130,8 @@ public class JavaFXPanel {
 
     private void linkButtonsToActionController() {
 
+
+
         useBrush.setOnMouseClicked(mouseEvent -> actionPanelControllerToCanvasPanelViewLink.paintOnCanvas());
 
         openWebsiteButton.setOnMouseClicked(mouseEvent -> actionPanelController.openRenzen());
@@ -204,6 +206,20 @@ public class JavaFXPanel {
                 UpdateActionPanelToSelectedCaster();
             });
         });
+
+
+        deleteSelectedCasterButton.setOnMouseClicked(mouseEvent -> {
+            var toBeDeleted = actionPanelController.getSelectedCaster();
+
+            for (var x : list.getItems()){
+                if (x.getText() == toBeDeleted.getName()){
+                    x.setText("Deleted");
+                }
+            }
+            actionPanelController.deleteSelectedCaster();
+        });
+
+
     }
 
     void buildMenu() {

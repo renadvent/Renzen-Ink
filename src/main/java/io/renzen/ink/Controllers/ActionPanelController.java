@@ -47,6 +47,11 @@ public class ActionPanelController {
         renzenService.viewImageOnWeb(id);
     }
 
+    public void deleteSelectedCaster(){
+        var x = casterService.getAll().remove(casterService.getSelectedCaster());
+        actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
+    }
+
     public ActionPanelCO createCaster(Object e, String casterName) {
         //public ActionPanelCO createCaster(int x1,int y1, int x2, int y2){
 
