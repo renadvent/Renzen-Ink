@@ -2,10 +2,9 @@ package io.renzen.ink.Views;
 
 import io.renzen.ink.CommandObjectsDomain.ActionPanelAccountInfoCO;
 import io.renzen.ink.Controllers.ActionPanelController;
+import io.renzen.ink.Controllers.CanvasPanelController;
 import io.renzen.ink.InkClass;
 import io.renzen.ink.Links.ActionPanelControllerToCanvasPanelViewLink;
-import javafx.collections.ObservableArray;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingNode;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -21,7 +20,6 @@ import jfxtras.styles.jmetro.Style;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public class JavaFXPanel {
 
@@ -91,7 +89,8 @@ public class JavaFXPanel {
     final FileChooser fileChooser = new FileChooser();
     final int B_WIDTH = 300;
     ConfigurableApplicationContext springContext = null;
-    ActionPanelController controller = null;
+    ActionPanelController actionPanelController = null;
+    CanvasPanelController canvasPanelController = null;
     Stage stage = null;
     int createCasterCounter =0;
 
@@ -103,7 +102,8 @@ public class JavaFXPanel {
 
         this.stage = primaryStage;
         this.springContext = springContext;
-        this.controller = springContext.getBean(ActionPanelController.class);
+        this.actionPanelController = springContext.getBean(ActionPanelController.class);
+        this.canvasPanelController = springContext.getBean(CanvasPanelController.class);
         this.actionPanelControllerToCanvasPanelViewLink=springContext.getBean(
                 ActionPanelControllerToCanvasPanelViewLink.class
         );
@@ -128,11 +128,11 @@ public class JavaFXPanel {
 
     private void linkButtonsToActionController() {
 
-        openWebsiteButton.setOnMouseClicked(mouseEvent -> controller.openRenzen());
-        raysSlider.valueProperty().addListener((observableValue, number, t1) -> controller.updateNumberOfRays(t1.intValue()));//(controller::updateNumberOfRays);
-        toleranceSlider.valueProperty().addListener((observableValue, number, t1) -> controller.updateTolerance(t1.intValue()));
-        castThroughCheckbox.selectedProperty().addListener((observableValue, number, t1) -> controller.updateNumberOfStrikes(t1.booleanValue()));
-        flipCasterButton.setOnMouseClicked(mouseEvent -> controller.flipSelectedCaster(true));
+        openWebsiteButton.setOnMouseClicked(mouseEvent -> actionPanelController.openRenzen());
+        raysSlider.valueProperty().addListener((observableValue, number, t1) -> actionPanelController.updateNumberOfRays(t1.intValue()));//(controller::updateNumberOfRays);
+        toleranceSlider.valueProperty().addListener((observableValue, number, t1) -> actionPanelController.updateTolerance(t1.intValue()));
+        castThroughCheckbox.selectedProperty().addListener((observableValue, number, t1) -> actionPanelController.updateNumberOfStrikes(t1.booleanValue()));
+        flipCasterButton.setOnMouseClicked(mouseEvent -> actionPanelController.flipSelectedCaster(true));
 
         uploadOnlineButton.setOnMouseClicked(mouseEvent -> {
 
@@ -140,18 +140,24 @@ public class JavaFXPanel {
 
             var button = new Button(link);
             button.setOnMouseClicked(e -> {
-                controller.viewImageOnWeb(link);
+                actionPanelController.viewImageOnWeb(link);
             });
 
             list.getItems().add(button);
         });
 
         openFileButton.setOnMouseClicked(e->{
-            fileChooser.showOpenDialog(stage);
+            var file = fileChooser.showOpenDialog(stage);
+
+            canvasPanelController.openFile(file);
+
+            //shouldn't be done here like this
+            springContext.getBean(CanvasPanel.class).repaint();
+
         });
 
         loginButton.setOnMouseClicked(e->{
-            updateAccountSectionWithLogin(controller.login(usernameField.getText(),passwordField.getText()));
+            updateAccountSectionWithLogin(actionPanelController.login(usernameField.getText(),passwordField.getText()));
         });
 
         deleteSelectedCasterButton.setOnMouseClicked(e->{
@@ -160,10 +166,10 @@ public class JavaFXPanel {
 
         createNewCasterButton.setOnMouseClicked(e -> {
             var button = new Button("New Caster " + createCasterCounter++);
-            var actionPanelCO = controller.createCaster(e, button.getText());
+            var actionPanelCO = actionPanelController.createCaster(e, button.getText());
             list.getItems().add(button);
             button.setOnMouseClicked(x -> {
-                controller.selectCaster(button.getText());
+                actionPanelController.selectCaster(button.getText());
                 UpdateActionPanelToSelectedCaster();
             });
         });

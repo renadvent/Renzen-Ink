@@ -28,6 +28,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.util.Base64;
@@ -80,6 +81,24 @@ public class ActionPanelControllerToCanvasPanelViewLink {
     }
 
     //returns link
+
+//    public void openFile(File file){
+//
+//        BufferedImage loadedImage = null;
+//
+//        try {
+//            //File f = new File("src/main/java/io/renzen/ink/body.jpg");
+//            loadedImage = ImageIO.read(file);
+//        } catch (IOException exception) {
+//            System.out.println(exception.getMessage());
+//            System.exit(0);
+//        }
+//
+//        canvasPanelC
+//
+//
+//
+//    }
 
     public String saveCanvasToMongoRepository() {
 

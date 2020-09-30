@@ -4,6 +4,7 @@ import io.renzen.ink.CommandObjectsPanel.CanvasPanelCO;
 import io.renzen.ink.Converters.CasterAndBaseToCasterCOConverter;
 import io.renzen.ink.DomainObjects.Caster;
 import io.renzen.ink.Services.CasterService;
+import lombok.Data;
 import org.springframework.stereotype.Controller;
 
 import javax.imageio.ImageIO;
@@ -16,7 +17,7 @@ import java.io.IOException;
  * Canvas view makes requests to this controller
  */
 
-@Controller
+@Controller@Data
 public class CanvasPanelController {
 
     final CasterService casterService;
@@ -37,9 +38,33 @@ public class CanvasPanelController {
         this.casterAndBaseToCasterCOConverter = casterAndBaseToCasterCOConverter;
     }
 
+    CanvasPanelCO canvasPanelCO;
+
+    public void openFile(File file){
+
+        BufferedImage loadedImage = null;
+
+            try {
+                //File f = new File("src/main/java/io/renzen/ink/body.jpg");
+                loadedImage = ImageIO.read(file);
+            } catch (IOException exception) {
+                System.out.println(exception.getMessage());
+                System.exit(0);
+            }
+
+        canvasPanelCO.setBaseBuffer(loadedImage);
+
+        tempBackground = loadedImage;
+
+
+
+
+
+    }
+
     public CanvasPanelCO getInit() {
 
-        CanvasPanelCO canvasPanelCO = new CanvasPanelCO();
+        canvasPanelCO = new CanvasPanelCO();
 
         BufferedImage bufferedImage = new BufferedImage(1280, 1024, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = bufferedImage.createGraphics();
@@ -88,10 +113,10 @@ public class CanvasPanelController {
 
 
                                         if (((Caster) casterCO).equals(casterService.getSelectedCaster())) {
-                                            System.out.println("CASTERS EQUAL!" + caster.getName());
+                                            //System.out.println("CASTERS EQUAL!" + caster.getName());
                                             canvasPanelCO.getCasterCOList().add(casterCO);
                                         } else {
-                                            System.out.println("CASTERS NOT EQUAL! CHANGED " + caster.getName());
+                                            //System.out.println("CASTERS NOT EQUAL! CHANGED " + caster.getName());
                                             canvasPanelCO.getCasterCOList()
                                                     .add(casterAndBaseToCasterCOConverter.toCasterCO(caster, tempBackground));
                                         }
