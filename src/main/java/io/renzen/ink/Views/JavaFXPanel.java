@@ -181,6 +181,10 @@ public class JavaFXPanel {
 
         fileChooser.setTitle("Open File");
 
+        FileChooser.ExtensionFilter extFilter = new FileChooser
+                .ExtensionFilter("Image Files", "*.png","*.jpg","*.jpeg");
+        fileChooser.getExtensionFilters().add(extFilter);
+
 
         toleranceSlider.setMax(255);
         raysSlider.setMax(200);
