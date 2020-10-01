@@ -225,7 +225,8 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         //create request
         var request = webClient
                 .post()
-                .uri(URI.create("http://localhost:8080/addScreenshotToArticle/"+articleId))
+                .uri(URI.create("https://renzen.io/addScreenshotToArticle/"+articleId))
+                //.uri(URI.create("http://localhost:8080/addScreenshotToArticle/"+articleId))
 //                .uri(URI.create("http://renzen.io/addScreenshotToArticle/"+articleId))
 //                .uri(URI.create("http://localhost:8080/addImage"))
                 .bodyValue(fileContent);
