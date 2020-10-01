@@ -159,7 +159,8 @@ public class JavaFXPanel {
 
         uploadOnlineButton.setOnMouseClicked(mouseEvent -> {
 
-            var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToMongoRepository();
+           var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToProfile();
+//            var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToArticle(articleList.getItems().get(0).toString());
 
             var button = new Button(link);
             button.setOnMouseClicked(e -> {
@@ -347,7 +348,31 @@ public class JavaFXPanel {
 
             HBox box = new HBox();
             box.autosize();
-            box.getChildren().addAll(new RadioButton(),new Button(x.getKey()));
+
+            var button = new Button(x.getKey());
+            button.setOnMouseClicked(mouseEvent -> {
+
+                actionPanelControllerToCanvasPanelViewLink.saveCanvasToArticle(x.getValue().get(0));
+
+
+//                System.out.println("Trying to open");
+//
+//                try {
+//
+//                    var check = x.getValue().toString();
+//
+//                    var URI = new java.net.URI(x.getValue().get(0));
+//                    java.awt.Desktop.getDesktop().browse(URI);
+//
+//                } catch (Exception e) {
+//                    System.out.println("could not open");
+//                }
+
+
+
+            });
+
+            box.getChildren().addAll(new RadioButton(),button);
 
             articleList.getItems().add(box);
         }

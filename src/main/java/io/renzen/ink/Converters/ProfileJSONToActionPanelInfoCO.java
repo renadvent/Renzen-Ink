@@ -30,11 +30,16 @@ public class ProfileJSONToActionPanelInfoCO {
 
                 System.out.println(y.at("/name"));
                 var name = y.at("/name").asText();
+                var id = y.at("/_id");
+
+
+                System.out.println(id);
 
                 var link = y.at("/_links/Tab_Version/href");
                 System.out.println(link);
 
-                infoCO.getArticles().add(name, link.asText());
+                infoCO.getArticles().add(name, id.asText());
+
             }
 
 

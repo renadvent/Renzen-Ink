@@ -176,7 +176,94 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         }
     }
 
-    public String saveCanvasToMongoRepository() {
+
+
+
+
+
+
+
+    public String saveCanvasToArticle(String articleId){
+        //get canvas and save it to a temporary file as a png
+        BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = (Graphics2D) bi.getGraphics();
+        canvasPanel.printAll(g2d);
+        g2d.dispose();
+
+        File file = null;
+
+        try {
+            file = File.createTempFile("image", ".png");
+            ImageIO.write(bi, "png", file);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return "failed";
+        }
+
+        String fileContent = "";
+
+        try {
+            fileContent = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
+        } catch (Exception exception) {
+            System.out.println("count get contents");
+            exception.printStackTrace();
+            return "failed";
+        }
+
+        //create webclient
+        WebClient webClient = WebClient.builder()
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+
+//        Map<String, Object> multiValueMap = new HashMap<>();
+//        multiValueMap.put("title", "an image");
+//        multiValueMap.put("file", fileContent);
+//        multiValueMap.put("userId", renzenService.getLoggedInUser().get_id());
+
+
+        //@PostMapping(path="/addScreenshotToArticle/{id}")
+        //create request
+        var request = webClient
+                .post()
+                .uri(URI.create("http://localhost:8080/addScreenshotToArticle/"+articleId))
+//                .uri(URI.create("http://renzen.io/addScreenshotToArticle/"+articleId))
+//                .uri(URI.create("http://localhost:8080/addImage"))
+                .bodyValue(fileContent);
+
+        //send request and get response
+        var jacksonResponse = Objects.requireNonNull(request.exchange().block())
+                .bodyToMono(String.class).block();
+
+        //print response
+        System.out.println(jacksonResponse);
+
+        return jacksonResponse;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public String saveCanvasToProfile() {
 
         //get canvas and save it to a temporary file as a png
         BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
