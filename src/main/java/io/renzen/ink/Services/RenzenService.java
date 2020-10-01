@@ -63,6 +63,8 @@ public class RenzenService {
         var jacksonResponse = Objects.requireNonNull(request.exchange().block()).
                 bodyToMono(String.class).block();
 
+        System.out.println(jacksonResponse);
+
         ProfileJSONToActionPanelInfoCO profileJSONToActionPanelInfoCO = new ProfileJSONToActionPanelInfoCO();
 
         try {

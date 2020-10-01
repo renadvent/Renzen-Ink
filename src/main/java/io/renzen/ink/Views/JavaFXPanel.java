@@ -10,6 +10,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -93,6 +94,7 @@ public class JavaFXPanel {
     final FileChooser fileChooser = new FileChooser();
     final int B_WIDTH = 300;
     final ListView<Button> list = new ListView<>();
+    final ListView<HBox> articleList = new ListView<>();
     ConfigurableApplicationContext springContext = null;
     ActionPanelController actionPanelController = null;
     CanvasPanelController canvasPanelController = null;
@@ -115,7 +117,6 @@ public class JavaFXPanel {
 
         buildMenu();
         setUpJPanelCanvasInJavaFX();
-        //setUpOldToolPanelInJavaFX();
         linkButtonsToActionController();
 
         stage.setTitle("Renzen Ink");
@@ -262,10 +263,10 @@ public class JavaFXPanel {
         casterToolOptionsBox.setSpacing(12);
 
         fileBox.getChildren().addAll(openFileButton, saveFileButton);
-        profileBox.getChildren().addAll(usernameField, passwordField, loginButton);
+        profileBox.getChildren().addAll(usernameField, passwordField, loginButton,new Label("Articles"),articleList);
         loginAcc.getPanes().add(loginPane);
         uploadBox.getChildren().addAll(loginAcc, openWebsiteButton, uploadOnlineButton);
-        accountBox.getChildren().addAll(uploadAcc);
+        accountBox.getChildren().addAll(uploadAcc);//---------------------------
 
         showLoadedImageCheckbox.setSelected(true);
 
@@ -307,8 +308,14 @@ public class JavaFXPanel {
     private void setUpJPanelCanvasInJavaFX() {
         SwingUtilities.invokeLater(() ->
                 FXCanvasNode.setContent(springContext.getBean(InkClass.class).canvasPanel));
+
         fxCanvasPane.getChildren().add(FXCanvasNode);
         borderPane.setCenter(fxCanvasPane);
+
+//        SwingUtilities.invokeLater(() ->{
+//            springContext.getBean(CanvasPanel.class).updateUI();
+//                });
+
     }
 
     public void UpdateActionPanelToSelectedCaster() {
@@ -335,6 +342,20 @@ public class JavaFXPanel {
 
     private void updateAccountSectionWithLogin(ActionPanelAccountInfoCO infoCO) {
         profileBox.getChildren().add(0, new Label("Welcome " + infoCO.getName() + "!"));
+
+        for (var x : infoCO.getArticles().entrySet()){
+
+            HBox box = new HBox();
+            box.autosize();
+            box.getChildren().addAll(new RadioButton(),new Button(x.getKey()));
+
+            articleList.getItems().add(box);
+        }
+
+
+
+
+
     }
 
 }
