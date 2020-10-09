@@ -1,4 +1,4 @@
-# ink-app
+# Renzen Ink
 java drawing application (rewrite complete!)
 
 ## Description
