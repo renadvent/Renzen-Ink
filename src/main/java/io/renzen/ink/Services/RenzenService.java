@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renzen.ink.CommandObjectsDomain.ActionPanelAccountInfoCO;
 import io.renzen.ink.Converters.ProfileJSONToActionPanelInfoCO;
+import io.renzen.ink.KEYS;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -105,7 +106,7 @@ public class RenzenService {
 
             //Jwts.parser().par
 
-            var decoded = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary("tempSecretKeyToGenerateJWTs")).parseClaimsJws(totest).getBody();//set as header
+            var decoded = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(KEYS.SECRET)).parseClaimsJws(totest).getBody();//set as header
 
 
 
