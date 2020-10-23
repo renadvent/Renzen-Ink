@@ -22,7 +22,9 @@ public class ProfileJSONToActionPanelInfoCO {
         try{
 //            var x = node.path("/articleHomePageCOList/_embedded/articleStreamComponentCoes");
 
-            var x = node.at("/articleHomePageCOList/_embedded/articleStreamComponentCoes");
+            //var x = node.at("/articleHomePageCOList/_embedded/articleStreamComponentCoes");
+            //articleInfoComponentCOS._embedded.articleInfoComponentCoes
+            var x = node.at("/articleInfoComponentCOS/_embedded/articleInfoComponentCoes");
 
             for (var y : x){
 
