@@ -35,6 +35,9 @@ public class RenzenService {
     final String live = "https://renzen.io";
     final String local = "http://localhost:8080";
 
+    @Getter@Setter
+    String authToken;
+
     @Getter
     final String root = local;
 
@@ -99,6 +102,8 @@ public class RenzenService {
             var  token = actualObj.path("token");//get token from response
             var stringTest = token.toString();
             var totest =token.toString().substring(8,stringTest.length()-1);
+
+            setAuthToken(token.toString().substring(1,stringTest.length()-1));
 
             //TODO fails here
 

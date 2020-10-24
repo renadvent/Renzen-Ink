@@ -226,6 +226,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         var request = webClient
                 .post()
                 .uri(URI.create(renzenService.getRoot()+"/addScreenshotToArticle/"+articleId))
+                .header("Authorization",renzenService.getAuthToken())
                 //.uri(URI.create("http://localhost:8080/addScreenshotToArticle/"+articleId))
 //                .uri(URI.create("http://renzen.io/addScreenshotToArticle/"+articleId))
 //                .uri(URI.create("http://localhost:8080/addImage"))
@@ -305,7 +306,8 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         //create request
         var request = webClient
                 .post()
-                .uri(URI.create("http://renzen.io/addImage"))
+                .uri(URI.create(renzenService.getRoot()+"/addImage"))
+                .header("Authorization",renzenService.getAuthToken())
 //                .uri(URI.create("http://localhost:8080/addImage"))
                 .bodyValue(multiValueMap);
 
