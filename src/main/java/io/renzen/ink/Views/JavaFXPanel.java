@@ -159,7 +159,13 @@ public class JavaFXPanel {
 
         uploadOnlineButton.setOnMouseClicked(mouseEvent -> {
 
-           var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToProfile();
+
+
+
+            var link = actionPanelControllerToCanvasPanelViewLink.SAVECANVASANDCREATENEWARTICLEONRENZEN();
+
+            //SWAPPEED
+           //var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToProfile();
 //            var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToArticle(articleList.getItems().get(0).toString());
 
             var button = new Button(link);

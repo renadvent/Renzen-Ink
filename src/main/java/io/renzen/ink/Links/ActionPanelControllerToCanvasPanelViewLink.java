@@ -22,6 +22,8 @@ import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Base64;
 import java.util.HashMap;
@@ -126,7 +128,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 //                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
 //
 
-                if (last!=null) {
+                if (last != null) {
                     renderObjectService.addRenderShape(
                             new RenderShape("line between",
                                     new Line2D.Double(lastX, lastY, e.getX(), e.getY()), brush.getColor()));
@@ -177,13 +179,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
     }
 
 
-
-
-
-
-
-
-    public String saveCanvasToArticle(String articleId){
+    public String saveCanvasToArticle(String articleId) {
         //get canvas and save it to a temporary file as a png
         BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = (Graphics2D) bi.getGraphics();
@@ -225,8 +221,8 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         //create request
         var request = webClient
                 .post()
-                .uri(URI.create(renzenService.getRoot()+"/addScreenshotToArticle/"+articleId))
-                .header("Authorization",renzenService.getAuthToken())
+                .uri(URI.create(renzenService.getRoot() + "/addScreenshotToArticle/" + articleId))
+                .header("Authorization", renzenService.getAuthToken())
                 //.uri(URI.create("http://localhost:8080/addScreenshotToArticle/"+articleId))
 //                .uri(URI.create("http://renzen.io/addScreenshotToArticle/"+articleId))
 //                .uri(URI.create("http://localhost:8080/addImage"))
@@ -241,28 +237,6 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 
         return jacksonResponse;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public String saveCanvasToProfile() {
@@ -302,12 +276,13 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         multiValueMap.put("title", "an image");
         multiValueMap.put("file", fileContent);
         multiValueMap.put("userId", renzenService.getLoggedInUser().get_id());
+        //server needs to get userid from auth, not here
 
         //create request
         var request = webClient
                 .post()
-                .uri(URI.create(renzenService.getRoot()+"/addImage"))
-                .header("Authorization",renzenService.getAuthToken())
+                .uri(URI.create(renzenService.getRoot() + "/addImage"))
+                .header("Authorization", renzenService.getAuthToken())
 //                .uri(URI.create("http://localhost:8080/addImage"))
                 .bodyValue(multiValueMap);
 
@@ -321,6 +296,85 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         return jacksonResponse;
 
     }
+
+
+    public String SAVECANVASANDCREATENEWARTICLEONRENZEN() {
+
+        //get canvas and save it to a temporary file as a png
+        BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = (Graphics2D) bi.getGraphics();
+        canvasPanel.printAll(g2d);
+        g2d.dispose();
+
+        File file = null;
+
+        try {
+            file = File.createTempFile("image", ".png");
+            ImageIO.write(bi, "png", file);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return "failed";
+        }
+
+        String fileContent = "";
+
+        try {
+            fileContent = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
+        } catch (Exception exception) {
+            System.out.println("count get contents");
+            exception.printStackTrace();
+            return "failed";
+        }
+
+        //create webclient
+        WebClient webClient = WebClient.builder()
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+
+        Map<String, Object> multiValueMap = new HashMap<>();
+        multiValueMap.put("title", "an image");
+        multiValueMap.put("file", fileContent);
+        multiValueMap.put("userId", renzenService.getLoggedInUser().get_id());
+        //server needs to get userid from auth, not here
+
+        //create request
+        var request = webClient
+                .post()
+                .uri(URI.create(renzenService.getRoot() + "/addImage"))
+                .header("Authorization", renzenService.getAuthToken())
+//                .uri(URI.create("http://localhost:8080/addImage"))
+                .bodyValue(multiValueMap);
+
+        //send request and get response
+        var jacksonResponse = Objects.requireNonNull(request.exchange().block())
+                .bodyToMono(String.class).block();
+
+        //print response
+        System.out.println(jacksonResponse);
+
+
+        System.out.println("Trying to open");
+
+        //TODO trying to open new create article in browser
+
+        try {
+
+            var URL = new java.net.URL(renzenService.getRoot()
+                    + "/newCreateArticle?image="
+                    + URLEncoder.encode(jacksonResponse, StandardCharsets.UTF_8)
+                    + "&token=" 
+                    + URLEncoder.encode(renzenService.getAuthToken(), StandardCharsets.UTF_8));
+
+            java.awt.Desktop.getDesktop().browse(URL.toURI());
+
+        } catch (Exception e) {
+            System.out.println("could not open");
+        }
+
+        return jacksonResponse;
+
+    }
+
 
 //    Color color = null;
 //    public void setCasterColor(Color color){
@@ -377,8 +431,6 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                         new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
 
 
-
-
                 canvasPanel.validate();
                 canvasPanel.repaint();
             }
@@ -404,7 +456,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 //                renderObjectService.addRenderShape(
 //                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
 
-                                canvasPanel.validate();
+                canvasPanel.validate();
                 canvasPanel.repaint();
             }
 
