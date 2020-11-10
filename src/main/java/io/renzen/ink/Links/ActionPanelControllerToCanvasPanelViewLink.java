@@ -346,8 +346,11 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                 .bodyValue(multiValueMap);
 
         //send request and get response
+//        var jacksonResponse = Objects.requireNonNull(request.exchange().block())
+//                .bodyToMono(String.class).block();
+
         var jacksonResponse = Objects.requireNonNull(request.exchange().block())
-                .bodyToMono(String.class).block();
+                .bodyToMono(HashMap.class).block();
 
         //print response
         System.out.println(jacksonResponse);
@@ -361,9 +364,14 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 
             var URL = new java.net.URL(renzenService.getRoot()
                     + "/newCreateArticle?image="
-                    + URLEncoder.encode(jacksonResponse, StandardCharsets.UTF_8)
-                    + "&token=" 
-                    + URLEncoder.encode(renzenService.getAuthToken(), StandardCharsets.UTF_8));
+                    + URLEncoder.encode((String)jacksonResponse.get("SASUrl"), StandardCharsets.UTF_8)
+                    + "&token="
+                    + URLEncoder.encode(renzenService.getAuthToken(), StandardCharsets.UTF_8)
+                    + "&link="
+                    + URLEncoder.encode((String)jacksonResponse.get("absoluteURL"), StandardCharsets.UTF_8))
+                    ;
+            //TODO add absolute URL to pass so that it can be easily saved when creating article
+
 
             java.awt.Desktop.getDesktop().browse(URL.toURI());
 
@@ -371,7 +379,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
             System.out.println("could not open");
         }
 
-        return jacksonResponse;
+        return (String)jacksonResponse.get("SASUrl");
 
     }
 
