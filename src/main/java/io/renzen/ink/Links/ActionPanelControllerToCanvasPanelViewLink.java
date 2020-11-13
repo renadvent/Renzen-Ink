@@ -1,5 +1,7 @@
 package io.renzen.ink.Links;
 
+import io.renzen.ink.CommandObjectsPanel.CanvasPanelCO;
+import io.renzen.ink.Controllers.CanvasPanelController;
 import io.renzen.ink.DomainObjects.Caster;
 import io.renzen.ink.DomainObjects.RenderShape;
 import io.renzen.ink.Services.BrushService;
@@ -45,6 +47,10 @@ public class ActionPanelControllerToCanvasPanelViewLink {
     final BrushService brushService;
     public JavaFXPanel javaFXPanel;
 
+    final CanvasPanelController canvasPanelController;
+
+    //CanvasPanelCO canvasPanelCO;
+
 
     /**
      * Mongo save to profile
@@ -54,13 +60,21 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 
     //ActionPanel actionPanel;
     public ActionPanelControllerToCanvasPanelViewLink(CanvasPanel canvasPanel, RenderObjectService renderObjectService,
-                                                      CasterService casterService, RenzenService renzenService, BrushService brushService) {
+                                                      CasterService casterService, RenzenService renzenService, BrushService brushService
+    //){
+            , CanvasPanelController canvasPanelController) {
         this.canvasPanel = canvasPanel;
         this.renderObjectService = renderObjectService;
         this.casterService = casterService;
         this.renzenService = renzenService;
 
         this.brushService = brushService;
+        this.canvasPanelController = canvasPanelController;
+
+
+        //this.canvasPanelController.getCanvasPanelCOtoRepaint().getBaseBuffer();
+
+
     }
 
     public void repaintCanvas() {
@@ -179,6 +193,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
     }
 
 
+    //TODO remove
     public String saveCanvasToArticle(String articleId) {
         //get canvas and save it to a temporary file as a png
         BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -301,15 +316,46 @@ public class ActionPanelControllerToCanvasPanelViewLink {
     public String SAVECANVASANDCREATENEWARTICLEONRENZEN() {
 
         //get canvas and save it to a temporary file as a png
-        BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        var base = this.canvasPanelController.getCanvasPanelCO().getBaseBuffer();
+        var canvasPanelCO = this.canvasPanelController.getCanvasPanelCO();
+
+        //TODO
+        //for cases for right now, base buffer will be largest buffer
+        //for future, will need to set max canvas size in CanvasPanelCO
+
+        BufferedImage bi = new BufferedImage(base.getWidth(), base.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        //var bi = base.getSubimage(0,0,base.getWidth(),base.getHeight());
+        //BufferedImage bi = new BufferedImage(canvasPanelCO.getBaseBuffer().getWidth(), canvasPanelCO.getBaseBuffer().getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+
         Graphics2D g2d = (Graphics2D) bi.getGraphics();
-        canvasPanel.printAll(g2d);
+        //this.canvasPanelController.getInit().getBaseBuffer().
+
+        //g2d.drawImage(base);
+        //canvasPanel.printAll(g2d);
+
+        //if (showBackground) {
+            g2d.drawImage(canvasPanelCO.getBaseBuffer(), 0, 0, null);
+        //}
+
+        for (var caster : canvasPanelController.getCanvasPanelCOtoRepaint().getCasterCOList()) {
+            g2d.drawImage(caster.getStrokeBuffer(), 0, 0, null);
+        }
+
+        //draws RenderShapes on screen
+        for (RenderShape renderShape : renderObjectService.getRenderShapeArrayList()) {
+            g2d.setColor(renderShape.getColor());
+            g2d.draw(renderShape.getShape());
+        }
+
+
         g2d.dispose();
 
         File file = null;
 
         try {
             file = File.createTempFile("image", ".png");
+//            ImageIO.write(bi, "png", file);
             ImageIO.write(bi, "png", file);
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -358,10 +404,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 
         System.out.println("Trying to open");
 
-        //TODO trying to open new create article in browser
-
         try {
-
             var URL = new java.net.URL(renzenService.getRoot()
                     + "/newCreateArticle?image="
                     + URLEncoder.encode((String)jacksonResponse.get("SASUrl"), StandardCharsets.UTF_8)
@@ -370,9 +413,8 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                     + "&link="
                     + URLEncoder.encode((String)jacksonResponse.get("absoluteURL"), StandardCharsets.UTF_8))
                     ;
-            //TODO add absolute URL to pass so that it can be easily saved when creating article
 
-
+            //opens browser window, logs in, and goes to page to create a post
             java.awt.Desktop.getDesktop().browse(URL.toURI());
 
         } catch (Exception e) {

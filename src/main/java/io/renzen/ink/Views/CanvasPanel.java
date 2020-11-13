@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 @Component
 @Data
@@ -61,6 +62,13 @@ public class CanvasPanel extends JPanel {
             g2d.draw(renderShape.getShape());
         }
     }
+
+//    BufferedImage render(){
+//
+//
+//
+//
+//    }
 
     @Override
     public Dimension getPreferredSize() {

@@ -123,6 +123,8 @@ public class RenzenService {
 //            var id = decoded;
 
 
+            System.out.println("about to request profile");
+
             var profileRequest =  webClient
                     .get()
 

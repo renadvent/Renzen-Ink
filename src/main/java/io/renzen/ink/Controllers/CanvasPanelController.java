@@ -5,6 +5,7 @@ import io.renzen.ink.Converters.CasterAndBaseToCasterCOConverter;
 import io.renzen.ink.DomainObjects.Caster;
 import io.renzen.ink.Services.CasterService;
 import javafx.scene.paint.Color;
+import lombok.Data;
 import org.springframework.stereotype.Controller;
 
 import javax.imageio.ImageIO;
@@ -18,6 +19,7 @@ import java.io.IOException;
  */
 
 @Controller
+@Data
 public class CanvasPanelController {
 
     final CasterService casterService;
@@ -67,7 +69,9 @@ public class CanvasPanelController {
             System.exit(0);
         }
 
+
         canvasPanelCO.setBaseBuffer(loadedImage);
+
 
         tempBackground = loadedImage;
     }
