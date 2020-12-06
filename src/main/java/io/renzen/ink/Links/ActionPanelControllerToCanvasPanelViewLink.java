@@ -254,65 +254,6 @@ public class ActionPanelControllerToCanvasPanelViewLink {
     }
 
 
-    public String saveCanvasToProfile() {
-
-        //get canvas and save it to a temporary file as a png
-        BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = (Graphics2D) bi.getGraphics();
-        canvasPanel.printAll(g2d);
-        g2d.dispose();
-
-        File file = null;
-
-        try {
-            file = File.createTempFile("image", ".png");
-            ImageIO.write(bi, "png", file);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return "failed";
-        }
-
-        String fileContent = "";
-
-        try {
-            fileContent = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
-        } catch (Exception exception) {
-            System.out.println("count get contents");
-            exception.printStackTrace();
-            return "failed";
-        }
-
-        //create webclient
-        WebClient webClient = WebClient.builder()
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
-
-        Map<String, Object> multiValueMap = new HashMap<>();
-        multiValueMap.put("title", "an image");
-        multiValueMap.put("file", fileContent);
-        multiValueMap.put("userId", renzenService.getLoggedInUser().get_id());
-        //server needs to get userid from auth, not here
-
-        //create request
-        var request = webClient
-                .post()
-                .uri(URI.create(renzenService.getRoot() + "/addImage"))
-                .header("Authorization", renzenService.getAuthToken())
-//                .uri(URI.create("http://localhost:8080/addImage"))
-                .bodyValue(multiValueMap);
-
-        //send request and get response
-        var jacksonResponse = Objects.requireNonNull(request.exchange().block())
-                .bodyToMono(String.class).block();
-
-        //print response
-        System.out.println(jacksonResponse);
-
-        return jacksonResponse;
-
-    }
-
-
     public String SAVECANVASANDCREATENEWARTICLEONRENZEN() {
 
         //get canvas and save it to a temporary file as a png
@@ -386,7 +327,9 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         //create request
         var request = webClient
                 .post()
-                .uri(URI.create(renzenService.getRoot() + "/addImage"))
+
+                .uri(URI.create(renzenService.getRoot() + "/CREATE_ARTICLE_DRAFT_FROM_APP"))
+//                .uri(URI.create(renzenService.getRoot() + "/addImage"))
                 .header("Authorization", renzenService.getAuthToken())
 //                .uri(URI.create("http://localhost:8080/addImage"))
                 .bodyValue(multiValueMap);
@@ -404,20 +347,41 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 
         System.out.println("Trying to open");
 
+        //TODO switch from uploading just an image, to uploading an image that creates a draft
+
         try {
+
+
             var URL = new java.net.URL(renzenService.getRoot()
-                    + "/newCreateArticle?image="
-                    + URLEncoder.encode((String)jacksonResponse.get("SASUrl"), StandardCharsets.UTF_8)
+
+
+
+                    + "/OPEN_ARTICLE_DRAFT_FROM_APP?articleID="
+                    //+ "/newCreateArticle?image="
+                    + URLEncoder.encode((String)jacksonResponse.get("articleID"), StandardCharsets.UTF_8)
                     + "&token="
-                    + URLEncoder.encode(renzenService.getAuthToken(), StandardCharsets.UTF_8)
-                    + "&link="
-                    + URLEncoder.encode((String)jacksonResponse.get("absoluteURL"), StandardCharsets.UTF_8))
+                    + URLEncoder.encode(renzenService.getAuthToken(), StandardCharsets.UTF_8));
+
+
+//                    + "&link="
+//                    + URLEncoder.encode((String)jacksonResponse.get("absoluteURL"), StandardCharsets.UTF_8))
                     ;
+
+
+//            var URL = new java.net.URL(renzenService.getRoot()
+//                    + "/newCreateArticle?image="
+//                    + URLEncoder.encode((String)jacksonResponse.get("SASUrl"), StandardCharsets.UTF_8)
+//                    + "&token="
+//                    + URLEncoder.encode(renzenService.getAuthToken(), StandardCharsets.UTF_8)
+//                    + "&link="
+//                    + URLEncoder.encode((String)jacksonResponse.get("absoluteURL"), StandardCharsets.UTF_8))
+//                    ;
 
             //opens browser window, logs in, and goes to page to create a post
             java.awt.Desktop.getDesktop().browse(URL.toURI());
 
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("could not open");
         }
 
