@@ -201,6 +201,7 @@ public class JavaFXPanel {
         });
 
         createNewCasterButton.setOnMouseClicked(e -> {
+            casterService.setSelectedCaster(null);
             var button = new Button("New Caster " + createCasterCounter++);
             var actionPanelCO = actionPanelController.createCaster(e, button.getText());
             list.getItems().add(button);
