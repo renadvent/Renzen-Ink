@@ -1,7 +1,7 @@
 package io.renzen.ink;
 
 
-import io.renzen.ink.Views.JavaFXPanel;
+import io.renzen.ink.ViewPanels.JavaFXPanel;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import jfxtras.styles.jmetro.Style;

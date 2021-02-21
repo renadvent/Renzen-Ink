@@ -1,6 +1,6 @@
 package io.renzen.ink.Services;
 
-import io.renzen.ink.DomainObjects.PaintBrush;
+import io.renzen.ink.ArtObjects.PaintBrush;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -12,6 +12,7 @@ public class BrushService {
     final ArrayList<PaintBrush> brushArrayList = new ArrayList<>();
     PaintBrush selectedBrush;
     Color awtColor;
+
     //set up init default
     BrushService() {
         awtColor = new Color(0, 0, 0, 1);

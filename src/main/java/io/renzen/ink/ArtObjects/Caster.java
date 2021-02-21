@@ -1,4 +1,4 @@
-package io.renzen.ink.DomainObjects;
+package io.renzen.ink.ArtObjects;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

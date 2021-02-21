@@ -1,13 +1,13 @@
 package io.renzen.ink.Controllers;
 
-import io.renzen.ink.CommandObjectsDomain.ActionPanelAccountInfoCO;
-import io.renzen.ink.CommandObjectsPanel.ActionPanelCO;
+import io.renzen.ink.ArtObjects.Caster;
 import io.renzen.ink.Converters.ModelToActionPanelCOConverter;
-import io.renzen.ink.DomainObjects.Caster;
-import io.renzen.ink.Links.ActionPanelControllerToCanvasPanelViewLink;
 import io.renzen.ink.Services.BrushService;
+import io.renzen.ink.Services.CanvasService;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenzenService;
+import io.renzen.ink.ViewObjects.ActionPanelAccountInfoCO;
+import io.renzen.ink.ViewObjects.ActionPanelCO;
 import javafx.scene.paint.Color;
 import org.springframework.stereotype.Controller;
 
@@ -24,14 +24,14 @@ public class ActionPanelController {
     final RenzenService renzenService;
     final BrushService brushService;
 
-    final ActionPanelControllerToCanvasPanelViewLink actionPanelControllerToCanvasPanelViewLink;
+    final CanvasService canvasService;
 
-    public ActionPanelController(ModelToActionPanelCOConverter modelToActionPanelCOConverter, CasterService casterService, RenzenService renzenService, BrushService brushService, ActionPanelControllerToCanvasPanelViewLink actionPanelControllerToCanvasPanelViewLink) {
+    public ActionPanelController(ModelToActionPanelCOConverter modelToActionPanelCOConverter, CasterService casterService, RenzenService renzenService, BrushService brushService, CanvasService canvasService) {
         this.modelToActionPanelCOConverter = modelToActionPanelCOConverter;
         this.casterService = casterService;
         this.renzenService = renzenService;
         this.brushService = brushService;
-        this.actionPanelControllerToCanvasPanelViewLink = actionPanelControllerToCanvasPanelViewLink;
+        this.canvasService = canvasService;
     }
 
 
@@ -47,35 +47,25 @@ public class ActionPanelController {
         renzenService.viewImageOnWeb(id);
     }
 
-    public void deleteSelectedCaster(){
+    public void deleteSelectedCaster() {
         var x = casterService.getAll().remove(casterService.getSelectedCaster());
-        actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
+        canvasService.repaintCanvas();
     }
 
     public ActionPanelCO createCaster(Object e, String casterName) {
-        //public ActionPanelCO createCaster(int x1,int y1, int x2, int y2){
-
-        //TODO testing this call
-        //appears there are no cyclic injections
-        actionPanelControllerToCanvasPanelViewLink.getClicksFromCanvasPanelAndCreateCaster(casterName);
-
-        //TODO working
-        var dummyCO = new ActionPanelCO();
-        //dummyCO.se
-
-        return dummyCO; //caster;
+        canvasService.getClicksFromCanvasPanelAndCreateCaster(casterName);
+        return new ActionPanelCO(); //caster;
     }
 
     public void flipSelectedCaster(boolean e) {
         casterService.getSelectedCaster().setFlip_status(casterService.getSelectedCaster().getFlip_status() * -1);
-        //casterService.getSelectedCaster().setFlip_status(casterService.getSelectedCaster().getFlip_status() * -1);
-        actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
+        canvasService.repaintCanvas();
     }
 
     public void updateNumberOfRays(int e) {
         casterService.getSelectedCaster().setRays(e);
         //casterService.getSelectedCaster().setRays((int)((Slider) e.getSource()).getValue());
-        actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
+        canvasService.repaintCanvas();
     }
 
     //?
@@ -101,13 +91,13 @@ public class ActionPanelController {
         int x = (e) ? 1 : 0;
         casterService.getSelectedCaster().setMax_penetrations(x);
         //casterService.getSelectedCaster().setMax_penetrations(((JSlider) changeEvent.getSource()).getValue());
-        actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
+        canvasService.repaintCanvas();
     }
 
     public void updateTolerance(int e) {
         casterService.getSelectedCaster().setTolerance(e);
         //casterService.getSelectedCaster().setTolerance(((JSlider) changeEvent.getSource()).getValue());
-        actionPanelControllerToCanvasPanelViewLink.repaintCanvas();
+        canvasService.repaintCanvas();
     }
 
 }

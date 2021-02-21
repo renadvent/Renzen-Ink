@@ -1,10 +1,8 @@
 package io.renzen.ink.Converters;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.renzen.ink.CommandObjectsDomain.ActionPanelAccountInfoCO;
+import io.renzen.ink.ViewObjects.ActionPanelAccountInfoCO;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class ProfileJSONToActionPanelInfoCO {
@@ -15,19 +13,11 @@ public class ProfileJSONToActionPanelInfoCO {
         infoCO.setName(node.path("name").asText());
         infoCO.set_id(node.path("_id").asText());
 
-        //infoCO.setArticles(node.path(""));
+        try {
 
-
-
-        try{
-//            var x = node.path("/articleHomePageCOList/_embedded/articleStreamComponentCoes");
-
-            //var x = node.at("/articleHomePageCOList/_embedded/articleStreamComponentCoes");
-            //articleInfoComponentCOS._embedded.articleInfoComponentCoes
             var x = node.at("/articleInfoComponentCOS/_embedded/articleInfoComponentCoes");
 
-            for (var y : x){
-
+            for (var y : x) {
 
 
                 System.out.println(y.at("/name"));
@@ -44,9 +34,7 @@ public class ProfileJSONToActionPanelInfoCO {
 
             }
 
-
-            //infoCO.setArticles((List<JsonNode>) node.path("articleHomePageCOList._embedded.articleStreamComponentCoes"));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

@@ -1,7 +1,7 @@
-package io.renzen.ink.CommandObjectsPanel;
+package io.renzen.ink.ViewObjects;
 
 
-import io.renzen.ink.DomainObjects.Caster;
+import io.renzen.ink.ArtObjects.Caster;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

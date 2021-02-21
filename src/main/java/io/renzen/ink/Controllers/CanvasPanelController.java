@@ -1,9 +1,9 @@
 package io.renzen.ink.Controllers;
 
-import io.renzen.ink.CommandObjectsPanel.CanvasPanelCO;
+import io.renzen.ink.ArtObjects.Caster;
 import io.renzen.ink.Converters.CasterAndBaseToCasterCOConverter;
-import io.renzen.ink.DomainObjects.Caster;
 import io.renzen.ink.Services.CasterService;
+import io.renzen.ink.ViewObjects.CanvasPanelCO;
 import javafx.scene.paint.Color;
 import lombok.Data;
 import org.springframework.stereotype.Controller;
@@ -28,11 +28,6 @@ public class CanvasPanelController {
     final CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter;
     BufferedImage tempBackground;//for collision testing
 
-    //CanvasPanel canvasPanel;
-//    @PostConstruct
-//    void postConstructInit(CanvasPanel canvasPanel){
-//        this.canvasPanel = canvasPanel;
-//    }
     CanvasPanelCO canvasPanelCO;
 
     public CanvasPanelController(CasterService casterService, CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter) {
@@ -42,19 +37,6 @@ public class CanvasPanelController {
 
     public void setCasterColor(Color color) {
         casterService.setCasterColor(color);
-
-
-//        var caster = casterService.getSelectedCaster();
-//
-//        var r = (int) color.getRed();
-//        var g = (int)color.getGreen();
-//        var b = (int)color.getBlue();
-//        var a =(int) color.getOpacity()*255;
-//        float opacity = (float) (a / 255.0) ;
-//        java.awt.Color conColor = new java.awt.Color(r, g, b, opacity);
-//
-//        caster.color = conColor;
-
     }
 
     public void openFile(File file) {
@@ -62,16 +44,13 @@ public class CanvasPanelController {
         BufferedImage loadedImage = null;
 
         try {
-            //File f = new File("src/main/java/io/renzen/ink/body.jpg");
             loadedImage = ImageIO.read(file);
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
             System.exit(0);
         }
 
-
         canvasPanelCO.setBaseBuffer(loadedImage);
-
 
         tempBackground = loadedImage;
     }
@@ -146,10 +125,6 @@ public class CanvasPanelController {
 
 
     CanvasPanelCO updateActionPanelCOtoRepaint() {
-
-        //only rerender selected caster
-
-
         return null;
     }
 

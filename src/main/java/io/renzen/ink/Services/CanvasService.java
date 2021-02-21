@@ -1,19 +1,11 @@
-package io.renzen.ink.Links;
+package io.renzen.ink.Services;
 
-import io.renzen.ink.CommandObjectsPanel.CanvasPanelCO;
+import io.renzen.ink.ArtObjects.Caster;
+import io.renzen.ink.ArtObjects.RenderShape;
 import io.renzen.ink.Controllers.CanvasPanelController;
-import io.renzen.ink.DomainObjects.Caster;
-import io.renzen.ink.DomainObjects.RenderShape;
-import io.renzen.ink.Services.BrushService;
-import io.renzen.ink.Services.CasterService;
-import io.renzen.ink.Services.RenderObjectService;
-import io.renzen.ink.Services.RenzenService;
-import io.renzen.ink.Views.CanvasPanel;
-import io.renzen.ink.Views.JavaFXPanel;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import io.renzen.ink.ViewPanels.CanvasPanel;
+import io.renzen.ink.ViewPanels.JavaFXPanel;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -23,58 +15,41 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.net.URI;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 /**
- * Allows action panel to collect info from canvas panel
- * to then send to ActionPanelController
+ * Gives and set information on the Canvas
+ * Used by ActionPanelController
+ * and CanvasPanelController to interact
  */
 
 @Controller
-public class ActionPanelControllerToCanvasPanelViewLink {
+public class CanvasService {
 
     final CanvasPanel canvasPanel;
-    final RenderObjectService renderObjectService;
+    final RenderShapeService renderShapeService;
     final CasterService casterService;
     final RenzenService renzenService;
     final BrushService brushService;
+    final CanvasPanelController canvasPanelController;
     public JavaFXPanel javaFXPanel;
 
-    final CanvasPanelController canvasPanelController;
-
-    //CanvasPanelCO canvasPanelCO;
-
-
-    /**
-     * Mongo save to profile
-     */
-
-    //messy injection
-
-    //ActionPanel actionPanel;
-    public ActionPanelControllerToCanvasPanelViewLink(CanvasPanel canvasPanel, RenderObjectService renderObjectService,
-                                                      CasterService casterService, RenzenService renzenService, BrushService brushService
-    //){
+    public CanvasService(CanvasPanel canvasPanel, RenderShapeService renderShapeService,
+                         CasterService casterService, RenzenService renzenService, BrushService brushService
             , CanvasPanelController canvasPanelController) {
         this.canvasPanel = canvasPanel;
-        this.renderObjectService = renderObjectService;
+        this.renderShapeService = renderShapeService;
         this.casterService = casterService;
         this.renzenService = renzenService;
 
         this.brushService = brushService;
         this.canvasPanelController = canvasPanelController;
-
-
-        //this.canvasPanelController.getCanvasPanelCOtoRepaint().getBaseBuffer();
-
-
     }
 
     public void repaintCanvas() {
@@ -82,38 +57,22 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         canvasPanel.repaint();
     }
 
-    //returns link
-
-//    public void openFile(File file){
-//
-//        BufferedImage loadedImage = null;
-//
-//        try {
-//            //File f = new File("src/main/java/io/renzen/ink/body.jpg");
-//            loadedImage = ImageIO.read(file);
-//        } catch (IOException exception) {
-//            System.out.println(exception.getMessage());
-//            System.exit(0);
-//        }
-//
-//        canvasPanelC
-//
-//
-//
-//    }
-
-
     public void paintOnCanvas() {
 
+//        canvasPanelController.setCanvasPanelCO();
+
         var brush = brushService.getSelectedBrush();
-        //var color = brushService.getSelectedColor();
 
         var adapter = new MouseAdapter() {
+            RenderShape last;
+            double lastX;
+            double lastY;
+
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
 
-                renderObjectService.addRenderShape(
+                renderShapeService.addRenderShape(
                         new RenderShape("first click from brush",
                                 new Ellipse2D.Double(e.getX() - brush.getSize() / 2, e.getY() - brush.getSize() / 2,
                                         brush.getSize(), brush.getSize()), brush.getColor()));
@@ -122,15 +81,11 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                 repaintCanvas();
             }
 
-            RenderShape last;
-            double lastX;
-            double lastY;
-
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
 
-                var temp = renderObjectService.addRenderShape(
+                var temp = renderShapeService.addRenderShape(
                         new RenderShape("while dragging",
                                 new Ellipse2D.Double(e.getX() - brush.getSize() / 2, e.getY() - brush.getSize() / 2,
                                         brush.getSize(), brush.getSize()), brush.getColor()));
@@ -143,7 +98,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 //
 
                 if (last != null) {
-                    renderObjectService.addRenderShape(
+                    renderShapeService.addRenderShape(
                             new RenderShape("line between",
                                     new Line2D.Double(lastX, lastY, e.getX(), e.getY()), brush.getColor()));
                 }
@@ -184,77 +139,13 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         g2d.dispose();
 
         try {
-            //file = File.createTempFile("image", ".png");
             ImageIO.write(bi, "png", file);
         } catch (Exception exception) {
             exception.printStackTrace();
-            //return "failed";
         }
     }
 
-
-    //TODO remove
-    public String saveCanvasToArticle(String articleId) {
-        //get canvas and save it to a temporary file as a png
-        BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = (Graphics2D) bi.getGraphics();
-        canvasPanel.printAll(g2d);
-        g2d.dispose();
-
-        File file = null;
-
-        try {
-            file = File.createTempFile("image", ".png");
-            ImageIO.write(bi, "png", file);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return "failed";
-        }
-
-        String fileContent = "";
-
-        try {
-            fileContent = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
-        } catch (Exception exception) {
-            System.out.println("count get contents");
-            exception.printStackTrace();
-            return "failed";
-        }
-
-        //create webclient
-        WebClient webClient = WebClient.builder()
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
-
-//        Map<String, Object> multiValueMap = new HashMap<>();
-//        multiValueMap.put("title", "an image");
-//        multiValueMap.put("file", fileContent);
-//        multiValueMap.put("userId", renzenService.getLoggedInUser().get_id());
-
-
-        //@PostMapping(path="/addScreenshotToArticle/{id}")
-        //create request
-        var request = webClient
-                .post()
-                .uri(URI.create(renzenService.getRoot() + "/addScreenshotToArticle/" + articleId))
-                .header("Authorization", renzenService.getAuthToken())
-                //.uri(URI.create("http://localhost:8080/addScreenshotToArticle/"+articleId))
-//                .uri(URI.create("http://renzen.io/addScreenshotToArticle/"+articleId))
-//                .uri(URI.create("http://localhost:8080/addImage"))
-                .bodyValue(fileContent);
-
-        //send request and get response
-        var jacksonResponse = Objects.requireNonNull(request.exchange().block())
-                .bodyToMono(String.class).block();
-
-        //print response
-        System.out.println(jacksonResponse);
-
-        return jacksonResponse;
-    }
-
-
-    public String SAVECANVASANDCREATENEWARTICLEONRENZEN() {
+    public String SAVE_CANVAS_AND_CREATE_NEW_ARTICLE_ON_RENZEN() {
 
         //get canvas and save it to a temporary file as a png
         var base = this.canvasPanelController.getCanvasPanelCO().getBaseBuffer();
@@ -276,7 +167,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         //canvasPanel.printAll(g2d);
 
         //if (showBackground) {
-            g2d.drawImage(canvasPanelCO.getBaseBuffer(), 0, 0, null);
+        g2d.drawImage(canvasPanelCO.getBaseBuffer(), 0, 0, null);
         //}
 
         for (var caster : canvasPanelController.getCanvasPanelCOtoRepaint().getCasterCOList()) {
@@ -284,7 +175,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         }
 
         //draws RenderShapes on screen
-        for (RenderShape renderShape : renderObjectService.getRenderShapeArrayList()) {
+        for (RenderShape renderShape : renderShapeService.getRenderShapeArrayList()) {
             g2d.setColor(renderShape.getColor());
             g2d.draw(renderShape.getShape());
         }
@@ -313,36 +204,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
             return "failed";
         }
 
-        //create webclient
-        WebClient webClient = WebClient.builder()
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
-
-        Map<String, Object> multiValueMap = new HashMap<>();
-        multiValueMap.put("title", "an image");
-        multiValueMap.put("file", fileContent);
-        multiValueMap.put("userId", renzenService.getLoggedInUser().get_id());
-        //server needs to get userid from auth, not here
-
-        //create request
-        var request = webClient
-                .post()
-
-                .uri(URI.create(renzenService.getRoot() + "/CREATE_ARTICLE_DRAFT_FROM_APP"))
-//                .uri(URI.create(renzenService.getRoot() + "/addImage"))
-                .header("Authorization", renzenService.getAuthToken())
-//                .uri(URI.create("http://localhost:8080/addImage"))
-                .bodyValue(multiValueMap);
-
-        //send request and get response
-//        var jacksonResponse = Objects.requireNonNull(request.exchange().block())
-//                .bodyToMono(String.class).block();
-
-        var jacksonResponse = Objects.requireNonNull(request.exchange().block())
-                .bodyToMono(HashMap.class).block();
-
-        //print response
-        System.out.println(jacksonResponse);
+        var jacksonResponse = renzenService.UploadArticle(fileContent);
 
 
         System.out.println("Trying to open");
@@ -350,51 +212,29 @@ public class ActionPanelControllerToCanvasPanelViewLink {
         //TODO switch from uploading just an image, to uploading an image that creates a draft
 
         try {
-
-
-            var URL = new java.net.URL(renzenService.getRoot()
-
-
-
-                    + "/OPEN_ARTICLE_DRAFT_FROM_APP?articleID="
-                    //+ "/newCreateArticle?image="
-                    + URLEncoder.encode((String)jacksonResponse.get("articleID"), StandardCharsets.UTF_8)
-                    + "&token="
-                    + URLEncoder.encode(renzenService.getAuthToken(), StandardCharsets.UTF_8));
-
-
-//                    + "&link="
-//                    + URLEncoder.encode((String)jacksonResponse.get("absoluteURL"), StandardCharsets.UTF_8))
-                    ;
-
-
-//            var URL = new java.net.URL(renzenService.getRoot()
-//                    + "/newCreateArticle?image="
-//                    + URLEncoder.encode((String)jacksonResponse.get("SASUrl"), StandardCharsets.UTF_8)
-//                    + "&token="
-//                    + URLEncoder.encode(renzenService.getAuthToken(), StandardCharsets.UTF_8)
-//                    + "&link="
-//                    + URLEncoder.encode((String)jacksonResponse.get("absoluteURL"), StandardCharsets.UTF_8))
-//                    ;
-
-            //opens browser window, logs in, and goes to page to create a post
-            java.awt.Desktop.getDesktop().browse(URL.toURI());
-
+            OpenArticleInBrowser(jacksonResponse);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("could not open");
         }
 
-        return (String)jacksonResponse.get("SASUrl");
+        return (String) jacksonResponse.get("SASUrl");
 
     }
 
+    private void OpenArticleInBrowser(HashMap<?, ?> jacksonResponse) throws IOException, URISyntaxException {
+        var URL = new java.net.URL(renzenService.getRoot()
 
-//    Color color = null;
-//    public void setCasterColor(Color color){
-//        this.color = color;
-//    }
 
+                + "/OPEN_ARTICLE_DRAFT_FROM_APP?articleID="
+                //+ "/newCreateArticle?image="
+                + URLEncoder.encode((String) jacksonResponse.get("articleID"), StandardCharsets.UTF_8)
+                + "&token="
+                + URLEncoder.encode(renzenService.getAuthToken(), StandardCharsets.UTF_8));
+
+        //opens browser window, logs in, and goes to page to create a post
+        Desktop.getDesktop().browse(URL.toURI());
+    }
 
     /**
      * this function will create a click listener
@@ -418,10 +258,10 @@ public class ActionPanelControllerToCanvasPanelViewLink {
             public void mouseMoved(MouseEvent e) {
                 super.mouseMoved(e);
 
-                if (renderObjectService.findByName("firstClick") == null) {
-                    renderObjectService.deleteByName("beforeClick");
+                if (renderShapeService.findByName("firstClick") == null) {
+                    renderShapeService.deleteByName("beforeClick");
 
-                    renderObjectService.addRenderShape(new RenderShape("beforeClick",
+                    renderShapeService.addRenderShape(new RenderShape("beforeClick",
                             new Ellipse2D.Double(e.getX() - 25, e.getY() - 25, 50, 50)));
 
                     canvasPanel.validate();
@@ -433,7 +273,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
 
-                renderObjectService.deleteByName("beforeClick");
+                renderShapeService.deleteByName("beforeClick");
 
                 /**
                  * start tracking mouse and drawing preview
@@ -441,7 +281,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
                  */
 
                 //System.out.println("PRESSED");
-                renderObjectService.addRenderShape(
+                renderShapeService.addRenderShape(
                         new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
 
 
@@ -453,17 +293,17 @@ public class ActionPanelControllerToCanvasPanelViewLink {
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
 
-                renderObjectService.deleteByName("drag");
+                renderShapeService.deleteByName("drag");
 
-                RenderShape renderShape = renderObjectService.findByName("firstClick");
+                RenderShape renderShape = renderShapeService.findByName("firstClick");
 
                 Shape shape = renderShape.getShape();
                 Ellipse2D.Double circle = (Ellipse2D.Double) shape;
 
-                renderObjectService.addRenderShape(new RenderShape("drag",
+                renderShapeService.addRenderShape(new RenderShape("drag",
                         new Ellipse2D.Double(e.getX() - 25, e.getY() - 25, 50, 50)));
 
-                renderObjectService.addRenderShape(new RenderShape("drag",
+                renderShapeService.addRenderShape(new RenderShape("drag",
                         new Line2D.Double(circle.getCenterX(), circle.getCenterY(), e.getX(), e.getY())));
 
                 //?????
@@ -478,7 +318,7 @@ public class ActionPanelControllerToCanvasPanelViewLink {
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
 
-                var firstClick = (Ellipse2D.Double) renderObjectService.findByName("firstClick").getShape();
+                var firstClick = (Ellipse2D.Double) renderShapeService.findByName("firstClick").getShape();
 
                 //creates caster extending from first click to where mouse was released
 
@@ -495,8 +335,8 @@ public class ActionPanelControllerToCanvasPanelViewLink {
 
                 javaFXPanel.UpdateActionPanelToSelectedCaster();
 
-                renderObjectService.deleteByName("drag");
-                renderObjectService.deleteByName("firstClick");
+                renderShapeService.deleteByName("drag");
+                renderShapeService.deleteByName("firstClick");
 
                 canvasPanel.validate();
                 canvasPanel.repaint();

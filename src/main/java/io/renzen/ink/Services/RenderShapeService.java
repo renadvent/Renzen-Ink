@@ -1,30 +1,14 @@
 package io.renzen.ink.Services;
 
-import io.renzen.ink.DomainObjects.RenderShape;
+import io.renzen.ink.ArtObjects.RenderShape;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
-//@Service
-//public class RenderObjectService {
-//
-//    final RenderObjectRepository renderObjectRepository;
-//
-//    public RenderObjectService(RenderObjectRepository renderObjectRepository) {
-//        this.renderObjectRepository = renderObjectRepository;
-//    }
-//
-//    public void addRenderShape(Shape shape) {
-//        renderObjectRepository.save(shape);
-//    }
-//
-//}
-
-
 @Service
 @Getter
-public class RenderObjectService {
+public class RenderShapeService {
 
     final ArrayList<RenderShape> renderShapeArrayList = new ArrayList<>();
 
@@ -39,20 +23,11 @@ public class RenderObjectService {
                 return renderShape;
             }
         }
-
         return null;
     }
 
     public void deleteByName(String name) {
-
         renderShapeArrayList.removeIf(renderShape -> renderShape.getId().equals(name));
-
-//        for (RenderShape renderShape : renderShapeArrayList){
-//            if (renderShape.getId().equals(name)){
-//                renderShapeArrayList.remove(renderShape);
-//            }
-//        }
-
     }
 
 }

@@ -1,6 +1,6 @@
 package io.renzen.ink;
 
-import io.renzen.ink.Views.CanvasPanel;
+import io.renzen.ink.ViewPanels.CanvasPanel;
 import org.springframework.stereotype.Component;
 
 @Component

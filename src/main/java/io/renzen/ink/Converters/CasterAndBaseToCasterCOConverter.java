@@ -1,8 +1,8 @@
 package io.renzen.ink.Converters;
 
-import io.renzen.ink.CommandObjectsDomain.CasterCO;
-import io.renzen.ink.DomainObjects.Caster;
-import io.renzen.ink.DomainObjects.Point;
+import io.renzen.ink.ArtObjects.Caster;
+import io.renzen.ink.ArtObjects.Point;
+import io.renzen.ink.ViewObjects.CasterCO;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -326,8 +326,8 @@ public class CasterAndBaseToCasterCOConverter {
                     }
 
                     if ((last_pixel != null) && (last_pen != null)) {
-                        if ((color_similiar(this_pixel, last_pixel, c)
-                                && (color_similiar(this_pixel, last_pen.get_color(), c)))) {
+                        if ((color_similar(this_pixel, last_pixel, c)
+                                && (color_similar(this_pixel, last_pen.get_color(), c)))) {
                             continue;
                         }
                     }
@@ -335,7 +335,7 @@ public class CasterAndBaseToCasterCOConverter {
                     last_pixel = this_pixel;
 
                     // test if color is similiar to canvaas
-                    if (!color_similiar(this_pixel, canvas_color, c)) {
+                    if (!color_similar(this_pixel, canvas_color, c)) {
 
                         if (c.max_penetrations == penetration_count) {
 
@@ -358,7 +358,7 @@ public class CasterAndBaseToCasterCOConverter {
 
     }
 
-    private boolean color_similiar(Color color_this_loop, Color color_last_loop, Caster c) {
+    private boolean color_similar(Color color_this_loop, Color color_last_loop, Caster c) {
 
         int r = color_this_loop.getRed() - color_last_loop.getRed();
         int g = color_this_loop.getGreen() - color_last_loop.getGreen();

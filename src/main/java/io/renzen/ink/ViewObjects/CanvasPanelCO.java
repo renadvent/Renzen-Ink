@@ -1,6 +1,5 @@
-package io.renzen.ink.CommandObjectsPanel;
+package io.renzen.ink.ViewObjects;
 
-import io.renzen.ink.CommandObjectsDomain.CasterCO;
 import lombok.Data;
 
 import java.awt.image.BufferedImage;

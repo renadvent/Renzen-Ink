@@ -1,7 +1,7 @@
 package io.renzen.ink.Services;
 
-import io.renzen.ink.CommandObjectsDomain.CasterCO;
-import io.renzen.ink.DomainObjects.Caster;
+import io.renzen.ink.ArtObjects.Caster;
+import io.renzen.ink.ViewObjects.CasterCO;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -12,7 +12,6 @@ import java.util.Optional;
 @Service
 public class CasterService {
 
-    //int counter=0;
     final ArrayList<Caster> casterArrayList = new ArrayList<>();
 
     Caster selectedCaster;
@@ -76,9 +75,6 @@ public class CasterService {
     public Caster save(Caster caster) {
 
         casterArrayList.add(caster);
-
-//        counter++;
-//        caster.setName("caster " + counter);
 
         return caster;
 

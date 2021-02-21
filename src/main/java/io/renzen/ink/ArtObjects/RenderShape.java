@@ -1,10 +1,11 @@
-package io.renzen.ink.DomainObjects;
+package io.renzen.ink.ArtObjects;
 
+import lombok.Data;
 import lombok.Getter;
 
 import java.awt.*;
 
-@Getter
+@Data
 public class RenderShape {
 
     String id;
@@ -22,7 +23,5 @@ public class RenderShape {
         this.shape = shape;
         this.color = color;
     }
-//
-//    @Embedded
-//    Shape shape;
+
 }

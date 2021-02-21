@@ -1,10 +1,11 @@
-package io.renzen.ink.Views;
+package io.renzen.ink.ViewPanels;
 
-import io.renzen.ink.CommandObjectsDomain.ActionPanelAccountInfoCO;
 import io.renzen.ink.Controllers.ActionPanelController;
 import io.renzen.ink.Controllers.CanvasPanelController;
 import io.renzen.ink.InkClass;
-import io.renzen.ink.Links.ActionPanelControllerToCanvasPanelViewLink;
+import io.renzen.ink.Services.CanvasService;
+import io.renzen.ink.Services.CasterService;
+import io.renzen.ink.ViewObjects.ActionPanelAccountInfoCO;
 import javafx.embed.swing.SwingNode;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -100,7 +101,8 @@ public class JavaFXPanel {
     CanvasPanelController canvasPanelController = null;
     Stage stage = null;
     int createCasterCounter = 0;
-    ActionPanelControllerToCanvasPanelViewLink actionPanelControllerToCanvasPanelViewLink = null;
+    CanvasService canvasService = null;
+    CasterService casterService;
 
 
     public JavaFXPanel(Stage primaryStage, ConfigurableApplicationContext springContext) {
@@ -110,10 +112,11 @@ public class JavaFXPanel {
         this.springContext = springContext;
         this.actionPanelController = springContext.getBean(ActionPanelController.class);
         this.canvasPanelController = springContext.getBean(CanvasPanelController.class);
-        this.actionPanelControllerToCanvasPanelViewLink = springContext.getBean(
-                ActionPanelControllerToCanvasPanelViewLink.class
+        this.casterService = springContext.getBean(CasterService.class);
+        this.canvasService = springContext.getBean(
+                CanvasService.class
         );
-        actionPanelControllerToCanvasPanelViewLink.javaFXPanel = this;
+        canvasService.javaFXPanel = this;
 
         buildMenu();
         setUpJPanelCanvasInJavaFX();
@@ -123,17 +126,15 @@ public class JavaFXPanel {
         stage.setScene(scene);
         stage.show();
     }
-    //final ObservableList<String> items =
-
-//            FXCollections.observableArrayList (
-//            "Single", "Double", "Suite", "Family App");
-//list.setItems(items);
 
     private void linkButtonsToActionController() {
 
 
-
-        useBrush.setOnMouseClicked(mouseEvent -> actionPanelControllerToCanvasPanelViewLink.paintOnCanvas());
+        useBrush.setOnMouseClicked(mouseEvent -> {
+            //fixed rerender issue
+            casterService.setSelectedCaster(null);
+            canvasService.paintOnCanvas();
+        });
 
         openWebsiteButton.setOnMouseClicked(mouseEvent -> actionPanelController.openRenzen());
         raysSlider.valueProperty().addListener((observableValue, number, t1) -> actionPanelController.updateNumberOfRays(t1.intValue()));//(controller::updateNumberOfRays);
@@ -154,19 +155,13 @@ public class JavaFXPanel {
         });
 
         showLoadedImageCheckbox.setOnMouseClicked(e -> {
-            actionPanelControllerToCanvasPanelViewLink.toggleShowBackground();
+            canvasService.toggleShowBackground();
         });
 
         uploadOnlineButton.setOnMouseClicked(mouseEvent -> {
 
 
-
-
-            var link = actionPanelControllerToCanvasPanelViewLink.SAVECANVASANDCREATENEWARTICLEONRENZEN();
-
-            //SWAPPEED
-           //var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToProfile();
-//            var link = actionPanelControllerToCanvasPanelViewLink.saveCanvasToArticle(articleList.getItems().get(0).toString());
+            var link = canvasService.SAVE_CANVAS_AND_CREATE_NEW_ARTICLE_ON_RENZEN();
 
             var button = new Button(link);
             button.setOnMouseClicked(e -> {
@@ -191,7 +186,7 @@ public class JavaFXPanel {
             File file = fileChooser.showSaveDialog(stage);
 
             if (file != null) {
-                actionPanelControllerToCanvasPanelViewLink.saveFile(file);
+                canvasService.saveFile(file);
                 //save file
                 //saveTextToFile(sampleText, file);
             }
@@ -219,8 +214,8 @@ public class JavaFXPanel {
         deleteSelectedCasterButton.setOnMouseClicked(mouseEvent -> {
             var toBeDeleted = actionPanelController.getSelectedCaster();
 
-            for (var x : list.getItems()){
-                if (x.getText() == toBeDeleted.getName()){
+            for (var x : list.getItems()) {
+                if (x.getText() == toBeDeleted.getName()) {
                     x.setText("Deleted");
                 }
             }
@@ -270,7 +265,7 @@ public class JavaFXPanel {
         casterToolOptionsBox.setSpacing(12);
 
         fileBox.getChildren().addAll(openFileButton, saveFileButton);
-        profileBox.getChildren().addAll(usernameField, passwordField, loginButton,new Label("Articles"),articleList);
+        profileBox.getChildren().addAll(usernameField, passwordField, loginButton, new Label("Articles"), articleList);
         loginAcc.getPanes().add(loginPane);
         uploadBox.getChildren().addAll(loginAcc, openWebsiteButton, uploadOnlineButton);
         accountBox.getChildren().addAll(uploadAcc);//---------------------------
@@ -319,10 +314,6 @@ public class JavaFXPanel {
         fxCanvasPane.getChildren().add(FXCanvasNode);
         borderPane.setCenter(fxCanvasPane);
 
-//        SwingUtilities.invokeLater(() ->{
-//            springContext.getBean(CanvasPanel.class).updateUI();
-//                });
-
     }
 
     public void UpdateActionPanelToSelectedCaster() {
@@ -343,14 +334,13 @@ public class JavaFXPanel {
         toleranceSlider.setValue(caster.getTolerance());
         castThroughCheckbox.setSelected(caster.getMax_penetrations() >= 1);
 
-
     }
 
 
     private void updateAccountSectionWithLogin(ActionPanelAccountInfoCO infoCO) {
         profileBox.getChildren().add(0, new Label("Welcome " + infoCO.getName() + "!"));
 
-        for (var x : infoCO.getArticles().entrySet()){
+        for (var x : infoCO.getArticles().entrySet()) {
 
             HBox box = new HBox();
             box.autosize();
@@ -358,9 +348,7 @@ public class JavaFXPanel {
             var button = new Button(x.getKey());
             button.setOnMouseClicked(mouseEvent -> {
 
-                actionPanelControllerToCanvasPanelViewLink.saveCanvasToArticle(x.getValue().get(0));
-
-
+//                actionPanelControllerToCanvasPanelViewLink.saveCanvasToArticle(x.getValue().get(0));
 //                System.out.println("Trying to open");
 //
 //                try {
@@ -375,16 +363,12 @@ public class JavaFXPanel {
 //                }
 
 
-
             });
 
-            box.getChildren().addAll(new RadioButton(),button);
+            box.getChildren().addAll(new RadioButton(), button);
 
             articleList.getItems().add(box);
         }
-
-
-
 
 
     }

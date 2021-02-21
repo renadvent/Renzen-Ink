@@ -1,24 +1,23 @@
-package io.renzen.ink.Views;
+package io.renzen.ink.ViewPanels;
 
-import io.renzen.ink.CommandObjectsPanel.CanvasPanelCO;
+import io.renzen.ink.ArtObjects.RenderShape;
 import io.renzen.ink.Controllers.CanvasPanelController;
-import io.renzen.ink.DomainObjects.RenderShape;
 import io.renzen.ink.Services.CasterService;
-import io.renzen.ink.Services.RenderObjectService;
+import io.renzen.ink.Services.RenderShapeService;
+import io.renzen.ink.ViewObjects.CanvasPanelCO;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 @Component
 @Data
 public class CanvasPanel extends JPanel {
 
     final CasterService casterService;
-    final RenderObjectService renderObjectService;
+    final RenderShapeService renderShapeService;
 
     final CanvasPanelController canvasPanelController;
     CanvasPanelCO canvasPanelCO;
@@ -26,9 +25,9 @@ public class CanvasPanel extends JPanel {
     boolean showBackground = true;
 
     @Autowired
-    public CanvasPanel(CasterService casterService, RenderObjectService renderObjectService, CanvasPanelController canvasPanelController) {
+    public CanvasPanel(CasterService casterService, RenderShapeService renderShapeService, CanvasPanelController canvasPanelController) {
         this.casterService = casterService;
-        this.renderObjectService = renderObjectService;
+        this.renderShapeService = renderShapeService;
         this.canvasPanelController = canvasPanelController;
         canvasPanelCO = canvasPanelController.getInit();
     }
@@ -43,9 +42,6 @@ public class CanvasPanel extends JPanel {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
 
-        //clears buffer
-        //g2d.clearRect(0, 0, , 1000);
-
         //draws background image
 
         if (showBackground) {
@@ -57,18 +53,11 @@ public class CanvasPanel extends JPanel {
         }
 
         //draws RenderShapes on screen
-        for (RenderShape renderShape : renderObjectService.getRenderShapeArrayList()) {
+        for (RenderShape renderShape : renderShapeService.getRenderShapeArrayList()) {
             g2d.setColor(renderShape.getColor());
             g2d.draw(renderShape.getShape());
         }
     }
-
-//    BufferedImage render(){
-//
-//
-//
-//
-//    }
 
     @Override
     public Dimension getPreferredSize() {
