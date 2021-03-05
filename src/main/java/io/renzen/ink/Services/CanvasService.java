@@ -1,18 +1,15 @@
 package io.renzen.ink.Services;
 
-import io.renzen.ink.ArtObjects.Caster;
 import io.renzen.ink.ArtObjects.RenderShape;
 import io.renzen.ink.Controllers.CanvasPanelController;
+import io.renzen.ink.MouseInputAdaptors.CasterAdaptor;
+import io.renzen.ink.MouseInputAdaptors.PaintAdaptor;
 import io.renzen.ink.ViewPanels.CanvasPanel;
 import io.renzen.ink.ViewPanels.JavaFXPanel;
 import org.springframework.stereotype.Controller;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -32,12 +29,12 @@ import java.util.HashMap;
 @Controller
 public class CanvasService {
 
-    final CanvasPanel canvasPanel;
-    final RenderShapeService renderShapeService;
-    final CasterService casterService;
-    final RenzenService renzenService;
-    final BrushService brushService;
-    final CanvasPanelController canvasPanelController;
+    public final CanvasPanel canvasPanel;
+    public final RenderShapeService renderShapeService;
+    public final CasterService casterService;
+    public final RenzenService renzenService;
+    public final BrushService brushService;
+    public final CanvasPanelController canvasPanelController;
     public JavaFXPanel javaFXPanel;
 
     public CanvasService(CanvasPanel canvasPanel, RenderShapeService renderShapeService,
@@ -52,83 +49,29 @@ public class CanvasService {
         this.canvasPanelController = canvasPanelController;
     }
 
-    public void repaintCanvas() {
-        canvasPanel.validate();
-        canvasPanel.repaint();
-    }
-
     public void paintOnCanvas() {
-
-//        canvasPanelController.setCanvasPanelCO();
-
-        var brush = brushService.getSelectedBrush();
-
-        var adapter = new MouseAdapter() {
-            RenderShape last;
-            double lastX;
-            double lastY;
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-
-                renderShapeService.addRenderShape(
-                        new RenderShape("first click from brush",
-                                new Ellipse2D.Double(e.getX() - brush.getSize() / 2, e.getY() - brush.getSize() / 2,
-                                        brush.getSize(), brush.getSize()), brush.getColor()));
-
-
-                repaintCanvas();
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                super.mouseDragged(e);
-
-                var temp = renderShapeService.addRenderShape(
-                        new RenderShape("while dragging",
-                                new Ellipse2D.Double(e.getX() - brush.getSize() / 2, e.getY() - brush.getSize() / 2,
-                                        brush.getSize(), brush.getSize()), brush.getColor()));
-
-
-                //TODO working on rendering lines
-
-//                var temp = renderObjectService.addRenderShape(
-//                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
-//
-
-                if (last != null) {
-                    renderShapeService.addRenderShape(
-                            new RenderShape("line between",
-                                    new Line2D.Double(lastX, lastY, e.getX(), e.getY()), brush.getColor()));
-                }
-
-                last = temp;
-                lastX = e.getX();
-                lastY = e.getY();
-
-                repaintCanvas();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-
-
-                removeCanvasListeners();
-                repaintCanvas();
-            }
-
-        };
-
-        canvasPanel.addMouseListener(adapter);
-        canvasPanel.addMouseMotionListener(adapter);
+        new PaintAdaptor(this);
     }
 
+    public void removeCanvasListeners() {
+
+        for (var listener : canvasPanel.getMouseListeners()) {
+            canvasPanel.removeMouseListener(listener);
+        }
+
+        for (var listener : canvasPanel.getMouseMotionListeners()) {
+            canvasPanel.removeMouseMotionListener(listener);
+        }
+    }
 
     public void toggleShowBackground() {
         canvasPanel.setShowBackground(!canvasPanel.isShowBackground());
         repaintCanvas();
+    }
+
+    public void repaintCanvas() {
+        canvasPanel.validate();
+        canvasPanel.repaint();
     }
 
     public void saveFile(File file) {
@@ -248,123 +191,7 @@ public class CanvasService {
          * "click and drag"
          */
 
-        var adapter = new MouseAdapter() {
-
-            /**
-             * shows user it is active
-             * @param e
-             */
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                super.mouseMoved(e);
-
-                if (renderShapeService.findByName("firstClick") == null) {
-                    renderShapeService.deleteByName("beforeClick");
-
-                    renderShapeService.addRenderShape(new RenderShape("beforeClick",
-                            new Ellipse2D.Double(e.getX() - 25, e.getY() - 25, 50, 50)));
-
-                    canvasPanel.validate();
-                    canvasPanel.repaint();
-                }
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-
-                renderShapeService.deleteByName("beforeClick");
-
-                /**
-                 * start tracking mouse and drawing preview
-                 * to current location
-                 */
-
-                //System.out.println("PRESSED");
-                renderShapeService.addRenderShape(
-                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
-
-
-                canvasPanel.validate();
-                canvasPanel.repaint();
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                super.mouseDragged(e);
-
-                renderShapeService.deleteByName("drag");
-
-                RenderShape renderShape = renderShapeService.findByName("firstClick");
-
-                Shape shape = renderShape.getShape();
-                Ellipse2D.Double circle = (Ellipse2D.Double) shape;
-
-                renderShapeService.addRenderShape(new RenderShape("drag",
-                        new Ellipse2D.Double(e.getX() - 25, e.getY() - 25, 50, 50)));
-
-                renderShapeService.addRenderShape(new RenderShape("drag",
-                        new Line2D.Double(circle.getCenterX(), circle.getCenterY(), e.getX(), e.getY())));
-
-                //?????
-//                renderObjectService.addRenderShape(
-//                        new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
-
-                canvasPanel.validate();
-                canvasPanel.repaint();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-
-                var firstClick = (Ellipse2D.Double) renderShapeService.findByName("firstClick").getShape();
-
-                //creates caster extending from first click to where mouse was released
-
-                var temp = new Caster(casterName, firstClick.getX(), firstClick.getY(), e.getX(), e.getY());
-
-                //TODO working on here
-                temp.setColor(casterService.getCasterColor());
-                Caster caster = casterService.save(temp);
-
-                casterService.setSelectedCaster(temp);
-
-                //canvasPanelControllerToActionPanelViewLink.updateActionPanelWithSelectedCaster();
-
-
-                javaFXPanel.UpdateActionPanelToSelectedCaster();
-
-                renderShapeService.deleteByName("drag");
-                renderShapeService.deleteByName("firstClick");
-
-                canvasPanel.validate();
-                canvasPanel.repaint();
-
-
-                removeCanvasListeners();
-
-                /**
-                 * end tracking and delete listener
-                 * and create new Caster
-                 */
-            }
-        };
-
-        canvasPanel.addMouseListener(adapter);
-        canvasPanel.addMouseMotionListener(adapter);
+        new CasterAdaptor(this, casterName);
     }
-
-    public void removeCanvasListeners() {
-
-        for (var listener : canvasPanel.getMouseListeners()) {
-            canvasPanel.removeMouseListener(listener);
-        }
-
-        for (var listener : canvasPanel.getMouseMotionListeners()) {
-            canvasPanel.removeMouseMotionListener(listener);
-        }
-    }
-
 
 }

@@ -20,6 +20,11 @@ public class Point {
         set_location(x, y);
     }
 
+    public void set_location(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public Color get_color() {
         return intersection_color;
     }
@@ -28,25 +33,20 @@ public class Point {
         intersection_color = rgb;
     }
 
-    public void set_location(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public double get_ray_x() {
+        return origin_ray.get_x();
     }
 
     public double get_x() {
         return x;
     }
 
-    public double get_y() {
-        return y;
-    }
-
-    public double get_ray_x() {
-        return origin_ray.get_x();
-    }
-
     public double get_ray_y() {
         return origin_ray.get_y();
+    }
+
+    public double get_y() {
+        return y;
     }
 
     public void set_origin_ray(Point x) {

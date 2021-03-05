@@ -1,5 +1,6 @@
 package io.renzen.ink.Services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
@@ -45,10 +46,6 @@ public class RenzenService {
     String authToken;
     Optional<ActionPanelAccountInfoCO> userInfo;
 
-    public ActionPanelAccountInfoCO getLoggedInUser() {
-        return userInfo.orElse(null);
-    }
-
     public ActionPanelAccountInfoCO getLoginInfo(String username, String password) {
 
         var tokenRequest = webClient
@@ -73,43 +70,48 @@ public class RenzenService {
         ProfileJSONToActionPanelInfoCO profileJSONToActionPanelInfoCO = new ProfileJSONToActionPanelInfoCO();
 
         try {
-            JsonNode actualObj = mapper.readTree(tokenResponse);
-
-            var token = actualObj.path("token");//get token from response
-            var stringTest = token.toString();
-            var totest = token.toString().substring(8, stringTest.length() - 1);
-
-            setAuthToken(token.toString().substring(1, stringTest.length() - 1));
-
-            //TODO fails here
-
-            var decoded = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(KEYS.SECRET)).parseClaimsJws(totest).getBody();//set as header
-
-            var id = decoded.get("id");
-
-            System.out.println("about to request profile");
-
-            var profileRequest = webClient
-                    .get()
-                    .uri(URI.create(root + "/getProfileTabComponentCO/" + id))
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).header("Authorization: " + token.asText())
-                    .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML);
-
-            var profileResponse = Objects.requireNonNull(profileRequest.exchange().block()).
-                    bodyToMono(String.class).block();
-
-            System.out.println(profileResponse);
-
-            JsonNode actualObj2 = mapper.readTree(profileResponse);
-
-            System.out.println("loaded profile for " + actualObj2.path("name").asText());
-            userInfo = (Optional.of(profileJSONToActionPanelInfoCO.toActionPanelProfileInfoCO(actualObj2)));
-            return (userInfo.get());//actualObj;
+            return ProcessLoginJSON(mapper, tokenResponse, profileJSONToActionPanelInfoCO);
         } catch (Exception e) {
             System.out.println("Couldn't convert login failed" + e.getMessage());
             return null;
         }
 
+    }
+
+    //@org.jetbrains.annotations.NotNull
+    private ActionPanelAccountInfoCO ProcessLoginJSON(ObjectMapper mapper, String tokenResponse, ProfileJSONToActionPanelInfoCO profileJSONToActionPanelInfoCO) throws JsonProcessingException {
+        JsonNode actualObj = mapper.readTree(tokenResponse);
+
+        var token = actualObj.path("token");//get token from response
+        var stringTest = token.toString();
+        var totest = token.toString().substring(8, stringTest.length() - 1);
+
+        setAuthToken(token.toString().substring(1, stringTest.length() - 1));
+
+        //TODO fails here
+
+        var decoded = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(KEYS.SECRET)).parseClaimsJws(totest).getBody();//set as header
+
+        var id = decoded.get("id");
+
+        System.out.println("about to request profile");
+
+        var profileRequest = webClient
+                .get()
+                .uri(URI.create(root + "/getProfileTabComponentCO/" + id))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).header("Authorization: " + token.asText())
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML);
+
+        var profileResponse = Objects.requireNonNull(profileRequest.exchange().block()).
+                bodyToMono(String.class).block();
+
+        System.out.println(profileResponse);
+
+        JsonNode actualObj2 = mapper.readTree(profileResponse);
+
+        System.out.println("loaded profile for " + actualObj2.path("name").asText());
+        userInfo = (Optional.of(profileJSONToActionPanelInfoCO.toActionPanelProfileInfoCO(actualObj2)));
+        return (userInfo.get());//actualObj;
     }
 
     public void viewImageOnWeb(String id) {
@@ -140,7 +142,6 @@ public class RenzenService {
 
     }
 
-
     public HashMap<?, ?> UploadArticle(String fileContent) {
         //create webclient
         WebClient webClient = WebClient.builder()
@@ -169,6 +170,9 @@ public class RenzenService {
         return jacksonResponse;
     }
 
+    public ActionPanelAccountInfoCO getLoggedInUser() {
+        return userInfo.orElse(null);
+    }
 
     @Data
     @NoArgsConstructor

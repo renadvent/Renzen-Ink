@@ -1,7 +1,6 @@
 package io.renzen.ink.ArtObjects;
 
 import lombok.Data;
-import lombok.Getter;
 
 import java.awt.*;
 
