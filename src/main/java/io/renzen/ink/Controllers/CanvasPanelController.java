@@ -16,6 +16,7 @@ import java.io.IOException;
 
 /**
  * Canvas Panel makes requests to this controller
+ * Change to Service?
  */
 
 @Controller

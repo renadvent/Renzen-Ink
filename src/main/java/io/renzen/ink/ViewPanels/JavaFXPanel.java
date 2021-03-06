@@ -92,7 +92,7 @@ public class JavaFXPanel {
     //TODO adding functionality
 
     final VBox selectionBox = new VBox();
-    final TitledPane selectionPane = new TitledPane("Selection", selectionBox);
+    final TitledPane selectionPane = new TitledPane("Selection (not functional)", selectionBox);
     final Accordion selectionAcc = new Accordion(selectionPane);
 
     final Button showControlVertices = new Button("Toggle Show Control Vertices");
