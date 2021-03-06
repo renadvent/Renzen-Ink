@@ -79,6 +79,8 @@ public class CasterAndBaseToCasterCOConverter {
 
         casterCO.setStrokeBuffer(getStroke_buffer());
 
+        casterCO.setRay_path(ray_path);
+
         casterCO.setOpacity(caster.getOpacity());
         casterCO.setColor(caster.getColor());
         casterCO.setThickness(caster.getThickness());
@@ -203,7 +205,7 @@ public class CasterAndBaseToCasterCOConverter {
             return;
         }
 
-        System.out.println("pather: " + c.getConnect_at().length);
+        //System.out.println("pather: " + c.getConnect_at().length);
 
         for (int element : c.getConnect_at()) {
 

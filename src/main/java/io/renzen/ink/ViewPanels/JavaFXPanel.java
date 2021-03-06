@@ -63,6 +63,9 @@ public class JavaFXPanel {
     final Button flipCasterButton = new Button("Flip Caster");
     final Button createNewCasterButton = new Button("Create New Caster");
     final Button deleteSelectedCasterButton = new Button("Delete Caster");
+
+    final Button renderRayPath = new Button("Render Ray Paths");
+
     final Accordion uploadAcc = new Accordion(profilePane);
     final Accordion fileAcc = new Accordion(filePane);
     final Accordion loginAcc = new Accordion();
@@ -83,6 +86,11 @@ public class JavaFXPanel {
     final Slider toleranceSlider = new Slider();
     final Slider brushSizeSlider = new Slider();
     final Slider densitySlider = new Slider();
+
+
+    //final Slider
+
+
     final CheckBox castThroughCheckbox = new CheckBox("Cast Through");
     final CheckBox showCasterCheckbox = new CheckBox("Show Caster");
     final CheckBox showStrokesCheckbox = new CheckBox("Show Strokes");
@@ -180,6 +188,9 @@ public class JavaFXPanel {
         toolSelectionBox.getChildren().addAll(casterToolButton, brushToolButton);
         casterToolOptionsBox.getChildren().addAll(
                 //casterToolSeparatorTop,
+
+                renderRayPath,
+
                 createNewCasterButton,
                 deleteSelectedCasterButton,
                 new Separator(),
@@ -215,10 +226,11 @@ public class JavaFXPanel {
 
         fxCanvasPane.getChildren().add(FXCanvasNode);
         borderPane.setCenter(fxCanvasPane);
-
     }
 
     private void linkButtonsToActionController() {
+
+        renderRayPath.setOnMouseClicked(mouseEvent -> canvasService.toggleShowRayPath() );
 
 
         useBrush.setOnMouseClicked(mouseEvent -> {
@@ -277,7 +289,7 @@ public class JavaFXPanel {
             File file = fileChooser.showSaveDialog(stage);
 
             if (file != null) {
-                canvasService.saveFile(file);
+                canvasService.saveCanvasAsFile(file);
                 //save file
                 //saveTextToFile(sampleText, file);
             }
@@ -307,7 +319,7 @@ public class JavaFXPanel {
             var toBeDeleted = actionPanelController.getSelectedCaster();
 
             for (var x : list.getItems()) {
-                if (x.getText() == toBeDeleted.getName()) {
+                if (x.getText().equals(toBeDeleted.getName())) {
                     x.setText("Deleted");
                 }
             }

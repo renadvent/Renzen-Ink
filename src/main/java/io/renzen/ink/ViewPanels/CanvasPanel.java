@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 
 @Component
 @Data
@@ -23,6 +25,7 @@ public class CanvasPanel extends JPanel {
     CanvasPanelCO canvasPanelCO;
 
     boolean showBackground = true;
+    boolean showRayPath = true;
 
     @Autowired
     public CanvasPanel(CasterService casterService, RenderShapeService renderShapeService, CanvasPanelController canvasPanelController) {
@@ -50,13 +53,43 @@ public class CanvasPanel extends JPanel {
 
         for (var caster : canvasPanelController.getCanvasPanelCOtoRepaint().getCasterCOList()) {
             g2d.drawImage(caster.getStrokeBuffer(), 0, 0, null);
+
+//            if (showRayPath){
+//                for (var x : caster.getRay_path()){
+//                    g2d.draw(new Ellipse2D.Double(x.get_x(),x.get_y(),15,15));
+//                }
+//            }
+
         }
+
+
+        for (var caster : canvasPanelController.getCanvasPanelCOtoRepaint().getCasterCOList()) {
+//            g2d.drawImage(caster.getStrokeBuffer(), 0, 0, null);
+
+            if (showRayPath){
+                for (var x : caster.getRay_path()){
+                    g2d.draw(new Line2D.Double(x.getOrigin_ray().get_x(),x.getOrigin_ray().get_y(),
+                            x.get_x(),x.get_y()));
+                }
+            }
+
+        }
+
+
 
         //draws RenderShapes on screen
         for (RenderShape renderShape : renderShapeService.getRenderShapeArrayList()) {
             g2d.setColor(renderShape.getColor());
             g2d.draw(renderShape.getShape());
         }
+
+
+//        if (showRayPath){
+//
+//            for
+//
+//        }
+
     }
 
     @Override

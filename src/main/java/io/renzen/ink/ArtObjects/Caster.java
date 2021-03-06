@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -46,6 +47,10 @@ public class Caster {
     public double rey;
 
     public String name;
+
+
+    java.util.List<Point> ray_path;// = new ArrayList<>();
+
 
     public Caster(String casterName, double x1, double y1, double x2, double y2) {
 

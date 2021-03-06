@@ -12,7 +12,8 @@ import javafx.scene.paint.Color;
 import org.springframework.stereotype.Controller;
 
 /**
- * Action Panel makes request to this controller
+ * Action Panel makes direct requests to this controller
+ * Action Panel Function Definitions
  */
 
 @Controller
@@ -20,10 +21,8 @@ public class ActionPanelController {
 
     final ModelToActionPanelCOConverter modelToActionPanelCOConverter;
     final CasterService casterService;
-
     final RenzenService renzenService;
     final BrushService brushService;
-
     final CanvasService canvasService;
 
     public ActionPanelController(ModelToActionPanelCOConverter modelToActionPanelCOConverter, CasterService casterService, RenzenService renzenService, BrushService brushService, CanvasService canvasService) {
@@ -33,7 +32,6 @@ public class ActionPanelController {
         this.brushService = brushService;
         this.canvasService = canvasService;
     }
-
 
     public ActionPanelAccountInfoCO login(String username, String password) {
         return renzenService.getLoginInfo(username, password);
@@ -54,7 +52,7 @@ public class ActionPanelController {
 
     public ActionPanelCO createCaster(Object e, String casterName) {
         canvasService.getClicksFromCanvasPanelAndCreateCaster(casterName);
-        return new ActionPanelCO(); //caster;
+        return new ActionPanelCO();
     }
 
     public void flipSelectedCaster(boolean e) {
@@ -64,11 +62,9 @@ public class ActionPanelController {
 
     public void updateNumberOfRays(int e) {
         casterService.getSelectedCaster().setRays(e);
-        //casterService.getSelectedCaster().setRays((int)((Slider) e.getSource()).getValue());
         canvasService.repaintCanvas();
     }
 
-    //?
     public void setBrushColor(Color color) {
         brushService.setSelectedColor(color);
     }
@@ -86,17 +82,13 @@ public class ActionPanelController {
     }
 
     public void updateNumberOfStrikes(boolean e) {
-
-
         int x = (e) ? 1 : 0;
         casterService.getSelectedCaster().setMax_penetrations(x);
-        //casterService.getSelectedCaster().setMax_penetrations(((JSlider) changeEvent.getSource()).getValue());
         canvasService.repaintCanvas();
     }
 
     public void updateTolerance(int e) {
         casterService.getSelectedCaster().setTolerance(e);
-        //casterService.getSelectedCaster().setTolerance(((JSlider) changeEvent.getSource()).getValue());
         canvasService.repaintCanvas();
     }
 

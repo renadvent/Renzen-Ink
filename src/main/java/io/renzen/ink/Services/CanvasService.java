@@ -69,12 +69,17 @@ public class CanvasService {
         repaintCanvas();
     }
 
+    public void toggleShowRayPath() {
+        canvasPanel.setShowRayPath(!canvasPanel.isShowRayPath());
+        repaintCanvas();
+    }
+
     public void repaintCanvas() {
         canvasPanel.validate();
         canvasPanel.repaint();
     }
 
-    public void saveFile(File file) {
+    public void saveCanvasAsFile(File file) {
 
         BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = (Graphics2D) bi.getGraphics();
@@ -185,12 +190,6 @@ public class CanvasService {
      * and then
      */
     public void getClicksFromCanvasPanelAndCreateCaster(String casterName) {
-
-        /**
-         * begins events to create a caster
-         * "click and drag"
-         */
-
         new CasterAdaptor(this, casterName);
     }
 

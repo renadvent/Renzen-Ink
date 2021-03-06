@@ -25,14 +25,10 @@ public class CasterAdaptor extends Abstract_CanvasInputAdaptor {
         super.mousePressed(e);
 
         renderShapeService.deleteByName("beforeClick");
-
-
-         //start tracking mouse and drawing preview
-         //to current location
+        //start tracking mouse and drawing preview to current location
 
         renderShapeService.addRenderShape(
                 new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
-
 
         canvasPanel.validate();
         canvasPanel.repaint();
