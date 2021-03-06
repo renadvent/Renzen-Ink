@@ -87,8 +87,36 @@ public class JavaFXPanel {
     final Slider brushSizeSlider = new Slider();
     final Slider densitySlider = new Slider();
 
+    //------------------------------------------------------------
 
-    //final Slider
+    //TODO adding functionality
+
+    final VBox selectionBox = new VBox();
+    final TitledPane selectionPane = new TitledPane("Selection", selectionBox);
+    final Accordion selectionAcc = new Accordion(selectionPane);
+
+    final Button showControlVertices = new Button("Toggle Show Control Vertices");
+    final Button selectCVs = new Button ("Select Control Vertices");
+
+    final Label propAlongLabel = new Label("Prop Along");
+    final Slider propAlong = new Slider();
+
+    final Label casterRandXLabel = new Label("Random X");
+    final Slider casterRandX = new Slider();
+
+    final Label casterRandYLabel = new Label("Random Y");
+    final Slider casterRandY = new Slider();
+
+    final Label casterOffsetXLabel = new Label("Offset X");
+    final Slider casterOffsetX = new Slider();
+
+    final Label casterOffsetYLabel = new Label("Offset Y");
+    final Slider casterOffsetY = new Slider();
+
+
+
+
+    //-------------------------------------------------------------
 
 
     final CheckBox castThroughCheckbox = new CheckBox("Cast Through");
@@ -174,6 +202,14 @@ public class JavaFXPanel {
 
         casterToolOptionsBox.setSpacing(12);
 
+
+        selectionBox.getChildren().addAll(showControlVertices, selectCVs,
+                propAlongLabel,propAlong,casterRandXLabel,casterRandX,
+                casterRandYLabel,casterRandY,
+                casterOffsetXLabel,casterOffsetX,
+                casterOffsetYLabel,casterOffsetY);
+        //selectionAcc.getPanes().add(showControlVertices)
+
         fileBox.getChildren().addAll(openFileButton, saveFileButton);
         profileBox.getChildren().addAll(usernameField, passwordField, loginButton, new Label("Articles"), articleList);
         loginAcc.getPanes().add(loginPane);
@@ -211,7 +247,9 @@ public class JavaFXPanel {
                 accountBox,
                 //toolSelectionAcc,
                 toolOptionsAcc,
-                brushOptionsPane, list);
+                brushOptionsPane,
+                selectionAcc,
+                list);
 
 
         borderPane.setLeft(menuPane);
