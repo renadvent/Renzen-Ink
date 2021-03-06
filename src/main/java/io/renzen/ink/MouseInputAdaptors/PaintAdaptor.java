@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 
-public class PaintAdaptor extends CanvasInputAdaptor {
+public class PaintAdaptor extends Abstract_CanvasInputAdaptor {
 
     RenderShape last;
     double lastX;
@@ -20,6 +20,7 @@ public class PaintAdaptor extends CanvasInputAdaptor {
         super(canvasService);
         canvasPanel.addMouseListener(this);
         canvasPanel.addMouseMotionListener(this);
+        brush = brushService.getSelectedBrush();
     }
 
     @Override

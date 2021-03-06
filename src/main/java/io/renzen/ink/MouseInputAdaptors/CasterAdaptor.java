@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 
-public class CasterAdaptor extends CanvasInputAdaptor {
+public class CasterAdaptor extends Abstract_CanvasInputAdaptor {
 
     String casterName;
 
@@ -19,9 +19,6 @@ public class CasterAdaptor extends CanvasInputAdaptor {
         canvasPanel.addMouseMotionListener(this);
         this.casterName = casterName;
     }
-//        CasterAdaptor(String casterName){
-//            this.casterName=casterName;
-//        }
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -29,12 +26,10 @@ public class CasterAdaptor extends CanvasInputAdaptor {
 
         renderShapeService.deleteByName("beforeClick");
 
-        /**
-         * start tracking mouse and drawing preview
-         * to current location
-         */
 
-        //System.out.println("PRESSED");
+         //start tracking mouse and drawing preview
+         //to current location
+
         renderShapeService.addRenderShape(
                 new RenderShape("firstClick", new Ellipse2D.Double(e.getX() - 50, e.getY() - 50, 100, 100)));
 
@@ -50,7 +45,6 @@ public class CasterAdaptor extends CanvasInputAdaptor {
         var firstClick = (Ellipse2D.Double) renderShapeService.findByName("firstClick").getShape();
 
         //creates caster extending from first click to where mouse was released
-
         var temp = new Caster(casterName, firstClick.getX(), firstClick.getY(), e.getX(), e.getY());
 
         //TODO working on here
@@ -58,9 +52,6 @@ public class CasterAdaptor extends CanvasInputAdaptor {
         Caster caster = casterService.save(temp);
 
         casterService.setSelectedCaster(temp);
-
-        //canvasPanelControllerToActionPanelViewLink.updateActionPanelWithSelectedCaster();
-
 
         canvasService.javaFXPanel.UpdateActionPanelToSelectedCaster();
 
@@ -73,10 +64,9 @@ public class CasterAdaptor extends CanvasInputAdaptor {
 
         canvasService.removeCanvasListeners();
 
-        /**
-         * end tracking and delete listener
-         * and create new Caster
-         */
+        //end tracking and delete listener and create new Caster
+
+
     }
 
     @Override

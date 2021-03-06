@@ -6,7 +6,11 @@ import io.renzen.ink.ViewPanels.CanvasPanel;
 
 import java.awt.event.MouseAdapter;
 
-public abstract class CanvasInputAdaptor extends MouseAdapter {
+/**
+ * Extend this class to create MouseAdapters
+ * that can draw to canvas, create shapes, etc
+ */
+public abstract class Abstract_CanvasInputAdaptor extends MouseAdapter {
 
     final CanvasPanel canvasPanel;
     final RenderShapeService renderShapeService;
@@ -16,7 +20,7 @@ public abstract class CanvasInputAdaptor extends MouseAdapter {
     final CanvasPanelController canvasPanelController;
     final CanvasService canvasService;
 
-    public CanvasInputAdaptor(CanvasService canvasService) {
+    public Abstract_CanvasInputAdaptor(CanvasService canvasService) {
         super();
         this.canvasPanel = canvasService.canvasPanel;
         this.renderShapeService = canvasService.renderShapeService;
