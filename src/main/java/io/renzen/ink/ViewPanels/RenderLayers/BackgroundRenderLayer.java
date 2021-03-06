@@ -4,7 +4,7 @@ import io.renzen.ink.ViewPanels.CanvasPanel;
 
 import java.awt.*;
 
-public class BackgroundRenderLayer extends CustomRenderLayer {
+public class BackgroundRenderLayer extends AbstractCustomRenderLayer {
     public BackgroundRenderLayer(CanvasPanel canvasPanel) {
         super(canvasPanel);
     }

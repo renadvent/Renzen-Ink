@@ -5,7 +5,7 @@ import io.renzen.ink.ViewPanels.CanvasPanel;
 
 import java.awt.*;
 
-public class ShapeRenderLayer extends CustomRenderLayer {
+public class ShapeRenderLayer extends AbstractCustomRenderLayer {
     public ShapeRenderLayer(CanvasPanel canvasPanel) {
         super(canvasPanel);
     }

@@ -1,22 +1,16 @@
 package io.renzen.ink.ViewPanels;
 
-import io.renzen.ink.ArtObjects.RenderShape;
 import io.renzen.ink.Controllers.CanvasPanelController;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenderShapeService;
 import io.renzen.ink.ViewObjects.CanvasPanelCO;
-import io.renzen.ink.ViewPanels.RenderLayers.BackgroundRenderLayer;
-import io.renzen.ink.ViewPanels.RenderLayers.CasterRenderLayer;
-import io.renzen.ink.ViewPanels.RenderLayers.CustomRenderLayer;
-import io.renzen.ink.ViewPanels.RenderLayers.ShapeRenderLayer;
+import io.renzen.ink.ViewPanels.RenderLayers.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 @Component
@@ -43,6 +37,7 @@ public class CanvasPanel extends JPanel {
         addRenderLayer(new BackgroundRenderLayer(this));
         addRenderLayer(new CasterRenderLayer(this));
         addRenderLayer(new ShapeRenderLayer(this));
+        addRenderLayer(new RayPathRenderLayer(this));
 
     }
 
@@ -53,16 +48,14 @@ public class CanvasPanel extends JPanel {
         return g2d;
     }
 
-    ArrayList<CustomRenderLayer> renderLayerArrayList = new ArrayList<>();
+    ArrayList<AbstractCustomRenderLayer> renderLayerArrayList = new ArrayList<>();
 
-    public void addRenderLayer(CustomRenderLayer rl){
+    public void addRenderLayer(AbstractCustomRenderLayer rl){
         renderLayerArrayList.add(rl);
     }
 
     public void renderLayers(Graphics g){
-        for (var rl : renderLayerArrayList){
-            rl.render(g);
-        }
+        renderLayerArrayList.forEach(rl->rl.render(g));
     }
 
 

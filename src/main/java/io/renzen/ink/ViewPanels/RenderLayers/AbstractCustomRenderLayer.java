@@ -8,7 +8,7 @@ import io.renzen.ink.ViewPanels.CanvasPanel;
 
 import java.awt.*;
 
-public abstract class CustomRenderLayer {
+public abstract class AbstractCustomRenderLayer {
 
     final CasterService casterService;
     final RenderShapeService renderShapeService;
@@ -17,7 +17,9 @@ public abstract class CustomRenderLayer {
 
     final CanvasPanel canvasPanel;
 
-    CustomRenderLayer(CanvasPanel canvasPanel){
+//    Graphics2D g2d;
+
+    AbstractCustomRenderLayer(CanvasPanel canvasPanel){
         this.canvasPanel=canvasPanel;
         this.casterService = canvasPanel.casterService;
         this.renderShapeService = canvasPanel.renderShapeService;
