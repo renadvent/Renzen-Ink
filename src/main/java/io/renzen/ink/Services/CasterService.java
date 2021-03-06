@@ -64,6 +64,16 @@ public class CasterService {
         selectedCaster = findByName(id);
     }
 
+    public Caster findByName(String name) {
+        for (Caster caster : casterArrayList) {
+            if (caster.getName().equals(name)) {
+                return caster;
+            }
+        }
+
+        return null;
+    }
+
     public Caster getSelectedCaster() {
         return selectedCaster;
     }
@@ -79,17 +89,6 @@ public class CasterService {
         return caster;
 
     }
-
-    public Caster findByName(String name) {
-        for (Caster caster : casterArrayList) {
-            if (caster.getName().equals(name)) {
-                return caster;
-            }
-        }
-
-        return null;
-    }
-
 
     public List<Caster> getAll() {
         return casterArrayList;

@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -47,6 +48,10 @@ public class Caster {
 
     public String name;
 
+
+    java.util.List<Point> ray_path;// = new ArrayList<>();
+
+
     public Caster(String casterName, double x1, double y1, double x2, double y2) {
 
         setFrom_x(x1);
@@ -71,36 +76,6 @@ public class Caster {
         setRex(5);
         setRey(5);
         name = casterName;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Caster)) return false;
-
-        Caster caster = (Caster) o;
-
-        if (opacity != caster.opacity) return false;
-        if (thickness != caster.thickness) return false;
-        if (layers != caster.layers) return false;
-        if (cast_from_source != caster.cast_from_source) return false;
-        if (min_penetrations != caster.min_penetrations) return false;
-        if (max_penetrations != caster.max_penetrations) return false;
-        if (Double.compare(caster.max_ray_length, max_ray_length) != 0) return false;
-        if (tolerance != caster.tolerance) return false;
-        if (rays != caster.rays) return false;
-        if (Double.compare(caster.from_x, from_x) != 0) return false;
-        if (Double.compare(caster.from_y, from_y) != 0) return false;
-        if (Double.compare(caster.to_x, to_x) != 0) return false;
-        if (Double.compare(caster.to_y, to_y) != 0) return false;
-        if (highlighted != caster.highlighted) return false;
-        if (flip_status != caster.flip_status) return false;
-        if (Double.compare(caster.max_dist_between_points, max_dist_between_points) != 0) return false;
-        if (Double.compare(caster.rex, rex) != 0) return false;
-        if (Double.compare(caster.rey, rey) != 0) return false;
-        if (color != null ? !color.equals(caster.color) : caster.color != null) return false;
-        if (!Arrays.equals(connect_at, caster.connect_at)) return false;
-        return name != null ? name.equals(caster.name) : caster.name == null;
     }
 
     @Override
@@ -137,5 +112,35 @@ public class Caster {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Caster)) return false;
+
+        Caster caster = (Caster) o;
+
+        if (opacity != caster.opacity) return false;
+        if (thickness != caster.thickness) return false;
+        if (layers != caster.layers) return false;
+        if (cast_from_source != caster.cast_from_source) return false;
+        if (min_penetrations != caster.min_penetrations) return false;
+        if (max_penetrations != caster.max_penetrations) return false;
+        if (Double.compare(caster.max_ray_length, max_ray_length) != 0) return false;
+        if (tolerance != caster.tolerance) return false;
+        if (rays != caster.rays) return false;
+        if (Double.compare(caster.from_x, from_x) != 0) return false;
+        if (Double.compare(caster.from_y, from_y) != 0) return false;
+        if (Double.compare(caster.to_x, to_x) != 0) return false;
+        if (Double.compare(caster.to_y, to_y) != 0) return false;
+        if (highlighted != caster.highlighted) return false;
+        if (flip_status != caster.flip_status) return false;
+        if (Double.compare(caster.max_dist_between_points, max_dist_between_points) != 0) return false;
+        if (Double.compare(caster.rex, rex) != 0) return false;
+        if (Double.compare(caster.rey, rey) != 0) return false;
+        if (color != null ? !color.equals(caster.color) : caster.color != null) return false;
+        if (!Arrays.equals(connect_at, caster.connect_at)) return false;
+        return name != null ? name.equals(caster.name) : caster.name == null;
     }
 }

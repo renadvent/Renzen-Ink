@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Canvas view makes requests to this controller
+ * Canvas Panel makes requests to this controller
  */
 
 @Controller
@@ -23,9 +23,8 @@ import java.io.IOException;
 public class CanvasPanelController {
 
     final CasterService casterService;
-
-
     final CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter;
+
     BufferedImage tempBackground;//for collision testing
 
     CanvasPanelCO canvasPanelCO;

@@ -63,6 +63,9 @@ public class JavaFXPanel {
     final Button flipCasterButton = new Button("Flip Caster");
     final Button createNewCasterButton = new Button("Create New Caster");
     final Button deleteSelectedCasterButton = new Button("Delete Caster");
+
+    final Button renderRayPath = new Button("Render Ray Paths");
+
     final Accordion uploadAcc = new Accordion(profilePane);
     final Accordion fileAcc = new Accordion(filePane);
     final Accordion loginAcc = new Accordion();
@@ -83,6 +86,11 @@ public class JavaFXPanel {
     final Slider toleranceSlider = new Slider();
     final Slider brushSizeSlider = new Slider();
     final Slider densitySlider = new Slider();
+
+
+    //final Slider
+
+
     final CheckBox castThroughCheckbox = new CheckBox("Cast Through");
     final CheckBox showCasterCheckbox = new CheckBox("Show Caster");
     final CheckBox showStrokesCheckbox = new CheckBox("Show Strokes");
@@ -127,7 +135,102 @@ public class JavaFXPanel {
         stage.show();
     }
 
+    void buildMenu() {
+
+        var F_SIZE = "-fx-font-size: 20;";
+
+        fileChooser.setTitle("Open File");
+        casterColorPicker.setValue(new Color(0, 0, 0, 1));
+        brushColorPicker.setValue(new Color(0, 0, 0, 1));
+        canvasPanelController.setCasterColor(casterColorPicker.getValue());
+        actionPanelController.setBrushColor(brushColorPicker.getValue());
+
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser
+                .ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+
+        toleranceSlider.setMax(255);
+        raysSlider.setMax(200);
+
+        mainSplitPane.setOrientation(Orientation.VERTICAL);
+        mainSplitPane.setDividerPosition(0, 0.7);
+
+        //horizontalSplitPane.setDividerPosition(0, 0.3);
+
+        borderPane.getStyleClass().add(JMetroStyleClass.BACKGROUND);
+
+        openFileButton.setStyle(F_SIZE);
+        saveFileButton.setStyle(F_SIZE);
+
+        loginButton.setPrefWidth(B_WIDTH);
+        openWebsiteButton.setPrefWidth(B_WIDTH);
+        openFileButton.setPrefWidth(B_WIDTH);
+        saveFileButton.setPrefWidth(B_WIDTH);
+        uploadOnlineButton.setPrefWidth(B_WIDTH);
+        casterToolButton.setPrefWidth(B_WIDTH);
+        brushToolButton.setPrefWidth(B_WIDTH);
+
+        casterToolOptionsBox.setSpacing(12);
+
+        fileBox.getChildren().addAll(openFileButton, saveFileButton);
+        profileBox.getChildren().addAll(usernameField, passwordField, loginButton, new Label("Articles"), articleList);
+        loginAcc.getPanes().add(loginPane);
+        uploadBox.getChildren().addAll(loginAcc, openWebsiteButton, uploadOnlineButton);
+        accountBox.getChildren().addAll(uploadAcc);//---------------------------
+
+        showLoadedImageCheckbox.setSelected(true);
+
+        canvasBox.getChildren().add(showLoadedImageCheckbox);
+        accountBox.getChildren().add(canvasAcc);
+        toolGroup.getToggles().addAll(casterToolButton, brushToolButton);
+        toolSelectionBox.getChildren().addAll(casterToolButton, brushToolButton);
+        casterToolOptionsBox.getChildren().addAll(
+                //casterToolSeparatorTop,
+
+                renderRayPath,
+
+                createNewCasterButton,
+                deleteSelectedCasterButton,
+                new Separator(),
+                toolOptionsLabel,
+                raysLabel, raysSlider,
+                toleranceLabel, toleranceSlider,
+                castThroughCheckbox,
+                //showCasterCheckbox,
+                //showStrokesCheckbox,
+                flipCasterButton,
+                casterColorPicker
+                //casterToolSeparatorBottom
+        );
+        brushBox.getChildren().addAll(useBrush, brushSizeLabel, brushSizeSlider,
+                densityLabel, densitySlider, brushSeparator, brushColorPicker);
+        menuPane.getChildren().addAll(
+                fileAcc,
+                accountBox,
+                //toolSelectionAcc,
+                toolOptionsAcc,
+                brushOptionsPane, list);
+
+
+        borderPane.setLeft(menuPane);
+        root.getStyleClass().add(JMetroStyleClass.BACKGROUND);
+
+        new JMetro(scene, STYLE);
+    }
+
+    private void setUpJPanelCanvasInJavaFX() {
+        SwingUtilities.invokeLater(() ->
+                FXCanvasNode.setContent(springContext.getBean(InkClass.class).canvasPanel));
+
+        fxCanvasPane.getChildren().add(FXCanvasNode);
+        borderPane.setCenter(fxCanvasPane);
+    }
+
     private void linkButtonsToActionController() {
+
+        renderRayPath.setOnMouseClicked(mouseEvent -> canvasService.toggleShowRayPath() );
 
 
         useBrush.setOnMouseClicked(mouseEvent -> {
@@ -186,7 +289,7 @@ public class JavaFXPanel {
             File file = fileChooser.showSaveDialog(stage);
 
             if (file != null) {
-                canvasService.saveFile(file);
+                canvasService.saveCanvasAsFile(file);
                 //save file
                 //saveTextToFile(sampleText, file);
             }
@@ -216,7 +319,7 @@ public class JavaFXPanel {
             var toBeDeleted = actionPanelController.getSelectedCaster();
 
             for (var x : list.getItems()) {
-                if (x.getText() == toBeDeleted.getName()) {
+                if (x.getText().equals(toBeDeleted.getName())) {
                     x.setText("Deleted");
                 }
             }
@@ -225,118 +328,6 @@ public class JavaFXPanel {
 
 
     }
-
-    void buildMenu() {
-
-        var F_SIZE = "-fx-font-size: 20;";
-
-        fileChooser.setTitle("Open File");
-        casterColorPicker.setValue(new Color(0, 0, 0, 1));
-        brushColorPicker.setValue(new Color(0, 0, 0, 1));
-        canvasPanelController.setCasterColor(casterColorPicker.getValue());
-        actionPanelController.setBrushColor(brushColorPicker.getValue());
-
-
-        FileChooser.ExtensionFilter extFilter = new FileChooser
-                .ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-
-        toleranceSlider.setMax(255);
-        raysSlider.setMax(200);
-
-        mainSplitPane.setOrientation(Orientation.VERTICAL);
-        mainSplitPane.setDividerPosition(0, 0.7);
-
-        //horizontalSplitPane.setDividerPosition(0, 0.3);
-
-        borderPane.getStyleClass().add(JMetroStyleClass.BACKGROUND);
-
-        openFileButton.setStyle(F_SIZE);
-        saveFileButton.setStyle(F_SIZE);
-
-        loginButton.setPrefWidth(B_WIDTH);
-        openWebsiteButton.setPrefWidth(B_WIDTH);
-        openFileButton.setPrefWidth(B_WIDTH);
-        saveFileButton.setPrefWidth(B_WIDTH);
-        uploadOnlineButton.setPrefWidth(B_WIDTH);
-        casterToolButton.setPrefWidth(B_WIDTH);
-        brushToolButton.setPrefWidth(B_WIDTH);
-
-        casterToolOptionsBox.setSpacing(12);
-
-        fileBox.getChildren().addAll(openFileButton, saveFileButton);
-        profileBox.getChildren().addAll(usernameField, passwordField, loginButton, new Label("Articles"), articleList);
-        loginAcc.getPanes().add(loginPane);
-        uploadBox.getChildren().addAll(loginAcc, openWebsiteButton, uploadOnlineButton);
-        accountBox.getChildren().addAll(uploadAcc);//---------------------------
-
-        showLoadedImageCheckbox.setSelected(true);
-
-        canvasBox.getChildren().add(showLoadedImageCheckbox);
-        accountBox.getChildren().add(canvasAcc);
-        toolGroup.getToggles().addAll(casterToolButton, brushToolButton);
-        toolSelectionBox.getChildren().addAll(casterToolButton, brushToolButton);
-        casterToolOptionsBox.getChildren().addAll(
-                //casterToolSeparatorTop,
-                createNewCasterButton,
-                deleteSelectedCasterButton,
-                new Separator(),
-                toolOptionsLabel,
-                raysLabel, raysSlider,
-                toleranceLabel, toleranceSlider,
-                castThroughCheckbox,
-                //showCasterCheckbox,
-                //showStrokesCheckbox,
-                flipCasterButton,
-                casterColorPicker
-                //casterToolSeparatorBottom
-        );
-        brushBox.getChildren().addAll(useBrush, brushSizeLabel, brushSizeSlider,
-                densityLabel, densitySlider, brushSeparator, brushColorPicker);
-        menuPane.getChildren().addAll(
-                fileAcc,
-                accountBox,
-                //toolSelectionAcc,
-                toolOptionsAcc,
-                brushOptionsPane, list);
-
-
-        borderPane.setLeft(menuPane);
-        root.getStyleClass().add(JMetroStyleClass.BACKGROUND);
-
-        new JMetro(scene, STYLE);
-    }
-
-    private void setUpJPanelCanvasInJavaFX() {
-        SwingUtilities.invokeLater(() ->
-                FXCanvasNode.setContent(springContext.getBean(InkClass.class).canvasPanel));
-
-        fxCanvasPane.getChildren().add(FXCanvasNode);
-        borderPane.setCenter(fxCanvasPane);
-
-    }
-
-    public void UpdateActionPanelToSelectedCaster() {
-
-        var caster = actionPanelController.getSelectedCaster();
-
-        var awtColor = caster.getColor();
-        int r = awtColor.getRed();
-        int g = awtColor.getGreen();
-        int b = awtColor.getBlue();
-        int a = awtColor.getAlpha();
-        double opacity = a / 255.0;
-        javafx.scene.paint.Color fxColor = javafx.scene.paint.Color.rgb(r, g, b, opacity);
-
-        casterColorPicker.setValue(fxColor);
-
-        raysSlider.setValue(caster.getRays());
-        toleranceSlider.setValue(caster.getTolerance());
-        castThroughCheckbox.setSelected(caster.getMax_penetrations() >= 1);
-
-    }
-
 
     private void updateAccountSectionWithLogin(ActionPanelAccountInfoCO infoCO) {
         profileBox.getChildren().add(0, new Label("Welcome " + infoCO.getName() + "!"));
@@ -371,6 +362,26 @@ public class JavaFXPanel {
             articleList.getItems().add(box);
         }
 
+
+    }
+
+    public void UpdateActionPanelToSelectedCaster() {
+
+        var caster = actionPanelController.getSelectedCaster();
+
+        var awtColor = caster.getColor();
+        int r = awtColor.getRed();
+        int g = awtColor.getGreen();
+        int b = awtColor.getBlue();
+        int a = awtColor.getAlpha();
+        double opacity = a / 255.0;
+        javafx.scene.paint.Color fxColor = javafx.scene.paint.Color.rgb(r, g, b, opacity);
+
+        casterColorPicker.setValue(fxColor);
+
+        raysSlider.setValue(caster.getRays());
+        toleranceSlider.setValue(caster.getTolerance());
+        castThroughCheckbox.setSelected(caster.getMax_penetrations() >= 1);
 
     }
 

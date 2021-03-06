@@ -40,47 +40,6 @@ public class CasterAndBaseToCasterCOConverter {
     List<Point> draw_from_caster = new ArrayList<>();
 
     /**
-     * Render-to-Buffer Functions
-     */
-
-    public static void draw_curves(Graphics2D g2d, LinkedList<Path2D.Double> lc) {
-
-        //brusher.color = new Color(brusher.color.getRed(), brusher.color.getGreen(), brusher.color.getBlue(), brusher.opacity);
-
-        //g2d.setStroke(new BasicStroke(2));
-        //g2d.setColor(color);
-
-        double[] coordinates1 = new double[6];
-        double[] coordinates2 = new double[6];
-        for (Path2D.Double p : lc) {
-
-            //skips short lines within a tolerance
-            PathIterator pi = p.getPathIterator(null);
-
-            pi.next();
-            pi.currentSegment(coordinates1);
-            pi.next();
-            pi.currentSegment(coordinates2);
-
-            double distance = Math.hypot(coordinates1[0] - coordinates1[2], coordinates1[1] - coordinates2[3]);
-
-            int distTol = 50;
-            if (distance <= distTol) {
-                continue;
-            }
-
-            g2d.draw(p);
-        }
-
-    }
-
-    private void wipe_buffer(Graphics2D g2d) {
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
-        g2d.fillRect(0, 0, 1280, 1024); // HARD CODED
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-    }
-
-    /**
      * Conversion function to be called
      */
     public CasterCO toCasterCO(Caster caster, BufferedImage image) {
@@ -120,6 +79,8 @@ public class CasterAndBaseToCasterCOConverter {
 
         casterCO.setStrokeBuffer(getStroke_buffer());
 
+        casterCO.setRay_path(ray_path);
+
         casterCO.setOpacity(caster.getOpacity());
         casterCO.setColor(caster.getColor());
         casterCO.setThickness(caster.getThickness());
@@ -150,134 +111,7 @@ public class CasterAndBaseToCasterCOConverter {
 
     }
 
-    void render_list_to_buffer(LinkedList<Path2D.Double> ll, BufferedImage b) {
-
-        Graphics2D g2d = b.createGraphics();
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHints(rh);
-        g2d.setStroke(new BasicStroke(2));
-        g2d.setColor(Color.BLACK);
-        for (Path2D.Double p : ll) {
-            g2d.draw(p);
-        }
-    }
-
-    public void create_curves_across_points(LinkedList<Point> intersection_points, boolean reset, Caster c) {
-
-        if (reset) {
-            last_rendered_curves = new LinkedList<Path2D.Double>();
-        }
-
-        Point last_point = null;
-
-        if (c.getConnect_at().length == 0) {
-            System.out.println("0 size");
-            return;
-        }
-
-        System.out.println("pather: " + c.getConnect_at().length);
-
-        for (int element : c.getConnect_at()) {
-
-            ListIterator<Point> li = intersection_points.listIterator();
-
-            if (!li.hasNext()) {
-                continue;
-            } // if nothting strikes
-
-            Point i = li.next();
-
-            // EACH PASS THROUGH LIST
-            while (true) {
-
-                if (last_point != null) {
-
-                    double x_width = i.get_x() - last_point.get_x();
-                    double y_height = i.get_y() - last_point.get_y();
-
-                    for (int j = 0; j < c.getLayers(); j++) { // number of times to repeat stroke
-
-                        double theta = Math.atan2(y_height, x_width); // angle between current and last stroke
-
-                        Path2D.Double path = new Path2D.Double();
-                        path.moveTo(last_point.get_x() + r(c.getRex()), last_point.get_y() + r(c.getRey()));
-
-                        //stroke.sections) {
-                        for (Curve.Section sect : stroke.sections) { // get path for each section
-
-                            Curve.Section.CV a = sect.cvs.get(0);
-                            Curve.Section.CV b = sect.cvs.get(1);
-
-                            path.curveTo(
-                                    last_point.get_x() + Math.cos(theta) * (a.prop * x_width) + r(a.rx) + a.ox,
-                                    last_point.get_y() + Math.sin(theta) * (a.prop * y_height) + r(a.ry) + a.oy,
-
-                                    last_point.get_x() + Math.cos(theta) * ((b.prop) * x_width) + r(b.rx) + b.ox,
-                                    last_point.get_y() + Math.sin(theta) * ((b.prop) * y_height) + r(b.ry) + b.oy,
-
-                                    i.get_x() + r(c.getRex()), i.get_y() + r(c.getRey()));
-
-                            last_rendered_curves.add(path);
-
-                        }
-
-                    }
-                }
-                int in = intersection_points.indexOf(i);
-
-                if (i == intersection_points.getLast()) {
-                    i = null;
-                    last_point = null;
-                    break;
-                } else if ((in + element >= intersection_points.size()) && (i == intersection_points.getLast())
-                        && (in != -1)) {
-                    i = null;
-                    last_point = null;
-                    break;
-                } else if ((in + element >= intersection_points.size()) && (i != intersection_points.getLast())
-                        && (in != -1)) {
-                    last_point = i;
-                    i = intersection_points.getLast();
-                } else {
-                    last_point = i;
-                    for (int q = 0; q < element; q++) {
-                        i = li.next();
-                    }
-                }
-                // code to check that skip_array doesn't go out of index when skipping through
-                // intersection_points
-                // and if it does, just grab the last element of the intersection_points
-            }
-        }
-    }
-
-    public double r(double range) {
-
-        if (range == 0) {
-            return 0;
-        }
-
-        Random r = new Random();
-        double x = r.nextInt((int) range);
-
-        Random f = new Random();
-
-        if (f.nextBoolean() == true) {
-            return (x * (-1));
-        }
-
-        return x;
-    }
-
-    /**
-     * Path-Tracing Functions to get collisions etc
-     */
-
-    private void add_intersection_point(Point a, Caster c) {
-        getIntersection_points().add(a);
-    }
-
-    public void get_intersection_points(Caster c, BufferedImage image) {
+    private void get_intersection_points(Caster c, BufferedImage image) {
 
         double viewer_width = c.from_x - c.to_x;
         double viewer_height = c.from_y - c.to_y;
@@ -358,6 +192,141 @@ public class CasterAndBaseToCasterCOConverter {
 
     }
 
+    private void create_curves_across_points(LinkedList<Point> intersection_points, boolean reset, Caster c) {
+
+        if (reset) {
+            last_rendered_curves = new LinkedList<Path2D.Double>();
+        }
+
+        Point last_point = null;
+
+        if (c.getConnect_at().length == 0) {
+            System.out.println("0 size");
+            return;
+        }
+
+        //System.out.println("pather: " + c.getConnect_at().length);
+
+        for (int element : c.getConnect_at()) {
+
+            ListIterator<Point> li = intersection_points.listIterator();
+
+            if (!li.hasNext()) {
+                continue;
+            } // if nothting strikes
+
+            Point i = li.next();
+
+            // EACH PASS THROUGH LIST
+            while (true) {
+
+                if (last_point != null) {
+
+                    double x_width = i.get_x() - last_point.get_x();
+                    double y_height = i.get_y() - last_point.get_y();
+
+                    for (int j = 0; j < c.getLayers(); j++) { // number of times to repeat stroke
+
+                        double theta = Math.atan2(y_height, x_width); // angle between current and last stroke
+
+                        Path2D.Double path = new Path2D.Double();
+                        path.moveTo(last_point.get_x() + r(c.getRex()), last_point.get_y() + r(c.getRey()));
+
+                        //stroke.sections) {
+                        for (Curve.Section sect : stroke.sections) { // get path for each section
+
+                            Curve.Section.CV a = sect.cvs.get(0);
+                            Curve.Section.CV b = sect.cvs.get(1);
+
+                            path.curveTo(
+                                    last_point.get_x() + Math.cos(theta) * (a.prop * x_width) + r(a.rx) + a.ox,
+                                    last_point.get_y() + Math.sin(theta) * (a.prop * y_height) + r(a.ry) + a.oy,
+
+                                    last_point.get_x() + Math.cos(theta) * ((b.prop) * x_width) + r(b.rx) + b.ox,
+                                    last_point.get_y() + Math.sin(theta) * ((b.prop) * y_height) + r(b.ry) + b.oy,
+
+                                    i.get_x() + r(c.getRex()), i.get_y() + r(c.getRey()));
+
+                            last_rendered_curves.add(path);
+
+                        }
+
+                    }
+                }
+                int in = intersection_points.indexOf(i);
+
+                if (i == intersection_points.getLast()) {
+                    i = null;
+                    last_point = null;
+                    break;
+                } else if ((in + element >= intersection_points.size()) && (i == intersection_points.getLast())
+                        && (in != -1)) {
+                    i = null;
+                    last_point = null;
+                    break;
+                } else if ((in + element >= intersection_points.size()) && (i != intersection_points.getLast())
+                        && (in != -1)) {
+                    last_point = i;
+                    i = intersection_points.getLast();
+                } else {
+                    last_point = i;
+                    for (int q = 0; q < element; q++) {
+                        i = li.next();
+                    }
+                }
+                // code to check that skip_array doesn't go out of index when skipping through
+                // intersection_points
+                // and if it does, just grab the last element of the intersection_points
+            }
+        }
+    }
+
+    private void wipe_buffer(Graphics2D g2d) {
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
+        g2d.fillRect(0, 0, 1280, 1024); // HARD CODED
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+    }
+
+    /**
+     * Render-to-Buffer Functions
+     */
+
+    public static void draw_curves(Graphics2D g2d, LinkedList<Path2D.Double> lc) {
+
+        //brusher.color = new Color(brusher.color.getRed(), brusher.color.getGreen(), brusher.color.getBlue(), brusher.opacity);
+
+        //g2d.setStroke(new BasicStroke(2));
+        //g2d.setColor(color);
+
+        double[] coordinates1 = new double[6];
+        double[] coordinates2 = new double[6];
+        for (Path2D.Double p : lc) {
+
+            //skips short lines within a tolerance
+            PathIterator pi = p.getPathIterator(null);
+
+            pi.next();
+            pi.currentSegment(coordinates1);
+            pi.next();
+            pi.currentSegment(coordinates2);
+
+            double distance = Math.hypot(coordinates1[0] - coordinates1[2], coordinates1[1] - coordinates2[3]);
+
+            int distTol = 50;
+            if (distance <= distTol) {
+                continue;
+            }
+
+            g2d.draw(p);
+        }
+
+    }
+
+    private boolean on_canvas(int canvas_width, int canvas_height, double ray_path_x, double ray_path_y) {
+        return ((int) ray_path_x < canvas_width) && ((int) ray_path_y < canvas_height) && ((int) ray_path_x > 0)
+                && ((int) ray_path_y > 0);
+    }
+
     private boolean color_similar(Color color_this_loop, Color color_last_loop, Caster c) {
 
         int r = color_this_loop.getRed() - color_last_loop.getRed();
@@ -369,6 +338,37 @@ public class CasterAndBaseToCasterCOConverter {
         b = Math.abs(b);
 
         return ((r < c.tolerance) && (g < c.tolerance) && (b < c.tolerance));
+    }
+
+    private void add_collision(double ray_path_x, double ray_path_y, double rx, double ry, Point last_pen,
+                               Color found_color, Caster c) {
+
+        Point new_intersection_point;
+        new_intersection_point = new Point((int) ray_path_x, (int) ray_path_y);
+        new_intersection_point.set_origin_ray(new Point((int) rx, (int) ry));
+        new_intersection_point.set_color(found_color);
+
+        if (last_pen != null) {
+            new_intersection_point.setPenetration_points((LinkedList<Point>) last_pen.getPenetration_points().clone());
+
+            new_intersection_point.getPenetration_points().add(last_pen);
+            last_pen = new_intersection_point;
+        }
+
+        add_intersection_point(new_intersection_point, c); // these are rendered
+        last_pen = null;
+    }
+
+    private void store_to_ray_path(double current_ray_x, double current_ray_y, double current_viewer_x,
+                                   double current_viewer_y, Caster c) {
+        Point p = new Point((int) current_ray_x, (int) current_ray_y);
+        Point q = new Point((int) current_viewer_x, (int) current_viewer_y);
+        p.set_origin_ray(q);
+        getRay_path().add(p);
+
+        // temp
+        getDraw_from_caster().add(q);
+        getDraw_from_caster().add(p);
     }
 
     private Point add_penetration(double ray_path_x, double ray_path_y, double rx, double ry, Point last_pen,
@@ -397,43 +397,45 @@ public class CasterAndBaseToCasterCOConverter {
         return new_pen;
     }
 
-    private void add_collision(double ray_path_x, double ray_path_y, double rx, double ry, Point last_pen,
-                               Color found_color, Caster c) {
+    public double r(double range) {
 
-        Point new_intersection_point;
-        new_intersection_point = new Point((int) ray_path_x, (int) ray_path_y);
-        new_intersection_point.set_origin_ray(new Point((int) rx, (int) ry));
-        new_intersection_point.set_color(found_color);
-
-        if (last_pen != null) {
-            new_intersection_point.setPenetration_points((LinkedList<Point>) last_pen.getPenetration_points().clone());
-
-            new_intersection_point.getPenetration_points().add(last_pen);
-            last_pen = new_intersection_point;
+        if (range == 0) {
+            return 0;
         }
 
-        add_intersection_point(new_intersection_point, c); // these are rendered
-        last_pen = null;
+        Random r = new Random();
+        double x = r.nextInt((int) range);
+
+        Random f = new Random();
+
+        if (f.nextBoolean() == true) {
+            return (x * (-1));
+        }
+
+        return x;
     }
 
-    private boolean on_canvas(int canvas_width, int canvas_height, double ray_path_x, double ray_path_y) {
-        return ((int) ray_path_x < canvas_width) && ((int) ray_path_y < canvas_height) && ((int) ray_path_x > 0)
-                && ((int) ray_path_y > 0);
+    /**
+     * Path-Tracing Functions to get collisions etc
+     */
+
+    private void add_intersection_point(Point a, Caster c) {
+        getIntersection_points().add(a);
     }
 
-    private void store_to_ray_path(double current_ray_x, double current_ray_y, double current_viewer_x,
-                                   double current_viewer_y, Caster c) {
-        Point p = new Point((int) current_ray_x, (int) current_ray_y);
-        Point q = new Point((int) current_viewer_x, (int) current_viewer_y);
-        p.set_origin_ray(q);
-        getRay_path().add(p);
+    void render_list_to_buffer(LinkedList<Path2D.Double> ll, BufferedImage b) {
 
-        // temp
-        getDraw_from_caster().add(q);
-        getDraw_from_caster().add(p);
+        Graphics2D g2d = b.createGraphics();
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHints(rh);
+        g2d.setStroke(new BasicStroke(2));
+        g2d.setColor(Color.BLACK);
+        for (Path2D.Double p : ll) {
+            g2d.draw(p);
+        }
     }
 
-    public class Curve {
+    public static class Curve {
 
         public LinkedList<Section> sections = new LinkedList<Section>();
 
@@ -445,7 +447,7 @@ public class CasterAndBaseToCasterCOConverter {
             //sections.getLast().cvs.get(0).prop=(7/4);
         }
 
-        public class Section {
+        public static class Section {
             public boolean render = true;
 
             // need to order LinkedList
@@ -453,11 +455,11 @@ public class CasterAndBaseToCasterCOConverter {
 
             Section() {
                 // default
-                cvs.add(new CV(1 / 4, 30, 30, 0, 30));
-                cvs.add(new CV(3 / 4, 30, 30, 0, -30));
+                cvs.add(new CV(1.0 / 4.0, 30, 30, 0, 30));
+                cvs.add(new CV(3.0 / 4.0, 30, 30, 0, -30));
             }
 
-            public class CV {
+            public static class CV {
 
                 public double prop;
 
