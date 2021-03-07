@@ -148,9 +148,9 @@ public class ActionPanelController {
             System.exit(0);
         }
 
-        canvasService.getCanvasPanelCO().setBaseBuffer(loadedImage);
+        canvasService.getLayerCO().setBaseBuffer(loadedImage);
 
-        canvasService.setTempBackground(loadedImage);
+        //canvasService.setTempBackground(loadedImage);
 
         canvasService.getCanvasPanel().repaint();
 

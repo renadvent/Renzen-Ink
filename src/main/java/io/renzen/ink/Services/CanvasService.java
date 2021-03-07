@@ -1,7 +1,7 @@
 package io.renzen.ink.Services;
 
 import io.renzen.ink.Converters.CasterAndBaseToCasterCOConverter;
-import io.renzen.ink.ViewObjects.CanvasPanelCO;
+import io.renzen.ink.ViewObjects.layerCO;
 import io.renzen.ink.ViewPanels.CanvasPanel;
 import io.renzen.ink.ViewPanels.JavaFXPanel;
 import io.renzen.ink.ViewPanels.RenderLayers.BackgroundRenderLayer;
@@ -36,8 +36,8 @@ public class CanvasService {
     final ShapeRenderLayer shapeRenderLayer;
     final RayPathRenderLayer rayPathRenderLayer;
     public JavaFXPanel javaFXPanel;
-    public CanvasPanelCO canvasPanelCO;
-    public BufferedImage tempBackground;
+    final public layerCO layerCO;
+    //public BufferedImage tempBackground;
 
 
     public CanvasService(CanvasPanel canvasPanel,
@@ -49,6 +49,8 @@ public class CanvasService {
                          RayPathRenderLayer rayPathRenderLayer) {
 
         this.canvasPanel = canvasPanel;
+        this.layerCO = canvasPanel.layerCO;
+
         this.backgroundRenderLayer = backgroundRenderLayer;
         this.casterRenderLayer = casterRenderLayer;
         this.shapeRenderLayer = shapeRenderLayer;
@@ -101,7 +103,7 @@ public class CanvasService {
     }
 
     public BufferedImage getCanvasBufferedImage(){
-        var base = getCanvasPanelCO().getBaseBuffer();
+        var base = getLayerCO().getBaseBuffer();
 
         //TODO
         //for cases for right now, base buffer will be largest buffer

@@ -1,6 +1,6 @@
 package io.renzen.ink.ViewPanels;
 
-import io.renzen.ink.ViewObjects.CanvasPanelCO;
+import io.renzen.ink.ViewObjects.layerCO;
 import io.renzen.ink.ViewPanels.RenderLayers.AbstractCustomRenderLayer;
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,9 @@ import java.util.ArrayList;
 @Data
 public class CanvasPanel extends JPanel {
 
-    public CanvasPanelCO canvasPanelCO;
+     ArrayList<layerCO> layers = new ArrayList<>();
+
+    public layerCO layerCO;
     boolean showBackground = true;
     boolean showRayPath = true;
     ArrayList<AbstractCustomRenderLayer> renderLayerArrayList = new ArrayList<>();
@@ -28,7 +30,7 @@ public class CanvasPanel extends JPanel {
 
     public void getInit() {
 
-        setCanvasPanelCO(new CanvasPanelCO());
+        setLayerCO(new layerCO());
 
 
         BufferedImage bufferedImage = new BufferedImage(1280, 1024, BufferedImage.TYPE_INT_ARGB);
@@ -48,7 +50,7 @@ public class CanvasPanel extends JPanel {
 
         g2d.drawImage(loadedImage, 0, 0, null);
 
-        getCanvasPanelCO().setBaseBuffer(bufferedImage);
+        getLayerCO().setBaseBuffer(bufferedImage);
 //
 //        tempBackground = bufferedImage;
 //        setTempBackground(tempBackground);
@@ -74,7 +76,7 @@ public class CanvasPanel extends JPanel {
 
     public void renderLayers(Graphics g) {
 
-        if (canvasPanelCO != null) {
+        if (layerCO != null) {
             renderLayerArrayList.forEach(rl -> {
                 rl.render(g);
             });

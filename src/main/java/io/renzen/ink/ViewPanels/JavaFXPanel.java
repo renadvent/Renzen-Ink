@@ -86,10 +86,10 @@ public class JavaFXPanel {
 
     //------------------------------------------------------------
 
-    //TODO adding functionality
+    //TODO CV SELECT/MANIPULATION adding functionality
 
     final VBox selectionBox = new VBox();
-    final TitledPane selectionPane = new TitledPane("Selection (not functional)", selectionBox);
+    final TitledPane selectionPane = new TitledPane("Selection (NF)", selectionBox);
     final Accordion selectionAcc = new Accordion(selectionPane);
 
     final Button showControlVertices = new Button("Toggle Show Control Vertices");
@@ -109,6 +109,14 @@ public class JavaFXPanel {
 
     final Label casterOffsetYLabel = new Label("Offset Y");
     final Slider casterOffsetY = new Slider();
+
+    //TODO CANVAS MANIPULATION functionality
+
+    final Button panCanvas = new Button("Pan Canvas [NF]");
+    final Button zoomCanvas = new Button("Zoom Canvas [NF]");
+    final Button resizeCanvas = new Button("Resize Canvas [NF]");
+    final Label canvasHeight = new Label("Canvas Height: ");
+    final Label canvasWidth = new Label ("Canvas Width: ");
 
 
     //-------------------------------------------------------------
@@ -209,7 +217,9 @@ public class JavaFXPanel {
 
         showLoadedImageCheckbox.setSelected(true);
 
-        canvasBox.getChildren().add(showLoadedImageCheckbox);
+        canvasBox.getChildren().addAll(showLoadedImageCheckbox,zoomCanvas,panCanvas,resizeCanvas,
+                canvasWidth,canvasHeight);
+
         accountBox.getChildren().add(canvasAcc);
         toolGroup.getToggles().addAll(casterToolButton, brushToolButton);
         toolSelectionBox.getChildren().addAll(casterToolButton, brushToolButton);

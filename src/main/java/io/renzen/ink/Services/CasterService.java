@@ -2,7 +2,7 @@ package io.renzen.ink.Services;
 
 import io.renzen.ink.ArtObjects.Caster;
 import io.renzen.ink.Converters.CasterAndBaseToCasterCOConverter;
-import io.renzen.ink.ViewObjects.CanvasPanelCO;
+import io.renzen.ink.ViewObjects.layerCO;
 import io.renzen.ink.ViewObjects.CasterCO;
 import org.springframework.stereotype.Service;
 
@@ -78,9 +78,9 @@ public class CasterService {
 
     }
 
-    public CanvasPanelCO getCanvasPanelCOtoRepaint(BufferedImage tempBackground) {
+    public layerCO getCanvasPanelCOtoRepaint(BufferedImage tempBackground) {
 
-        var canvasPanelCO = new CanvasPanelCO();
+        var canvasPanelCO = new layerCO();
 
         for (var caster : getAll()) {
 

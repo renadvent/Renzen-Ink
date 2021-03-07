@@ -3,12 +3,15 @@ package io.renzen.ink.ViewPanels.RenderLayers;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenderShapeService;
 import io.renzen.ink.ViewPanels.CanvasPanel;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
 
 @Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RayPathRenderLayer extends AbstractCustomRenderLayer {
 
 
@@ -21,7 +24,7 @@ public class RayPathRenderLayer extends AbstractCustomRenderLayer {
 
         var g2d = CanvasPanel.resetHints(g);
 
-        for (var caster : casterService.getCanvasPanelCOtoRepaint(canvasPanelCO.getBaseBuffer()).getCasterCOList()) {
+        for (var caster : casterService.getCanvasPanelCOtoRepaint(layerCO.getBaseBuffer()).getCasterCOList()) {
 //            g2d.drawImage(caster.getStrokeBuffer(), 0, 0, null);
 
             //draws ray bath on canvas
