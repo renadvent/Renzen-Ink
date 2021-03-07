@@ -17,55 +17,18 @@ import java.util.ArrayList;
 @Data
 public class CanvasPanel extends JPanel {
 
-    public CanvasPanel(){
-        getInit();
-    }
-
     public CanvasPanelCO canvasPanelCO;
-
     boolean showBackground = true;
     boolean showRayPath = true;
-
     ArrayList<AbstractCustomRenderLayer> renderLayerArrayList = new ArrayList<>();
 
-    public static Graphics2D resetHints(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHints(rh);
-        return g2d;
+    public CanvasPanel() {
+        getInit();
     }
-
-    public void addRenderLayer(AbstractCustomRenderLayer rl) {
-        renderLayerArrayList.add(rl);
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        renderLayers(g);
-    }
-
-    public void renderLayers(Graphics g) {
-
-        if (canvasPanelCO!=null){
-            renderLayerArrayList.forEach(rl -> {
-                rl.render(g);
-            });
-        }
-
-
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(1000, 1000);
-    }
-
 
     public void getInit() {
 
         setCanvasPanelCO(new CanvasPanelCO());
-
 
 
         BufferedImage bufferedImage = new BufferedImage(1280, 1024, BufferedImage.TYPE_INT_ARGB);
@@ -90,6 +53,39 @@ public class CanvasPanel extends JPanel {
 //        tempBackground = bufferedImage;
 //        setTempBackground(tempBackground);
 
+    }
+
+    public static Graphics2D resetHints(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHints(rh);
+        return g2d;
+    }
+
+    public void addRenderLayer(AbstractCustomRenderLayer rl) {
+        renderLayerArrayList.add(rl);
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        renderLayers(g);
+    }
+
+    public void renderLayers(Graphics g) {
+
+        if (canvasPanelCO != null) {
+            renderLayerArrayList.forEach(rl -> {
+                rl.render(g);
+            });
+        }
+
+
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(1000, 1000);
     }
 
 }

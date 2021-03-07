@@ -52,21 +52,21 @@ public class ActionPanelController {
     }
 
     //Not needed?
-    public void setJavaFXPanelForCanvasService(JavaFXPanel javaFXPanel){
-        this.canvasService.javaFXPanel=javaFXPanel;
+    public void setJavaFXPanelForCanvasService(JavaFXPanel javaFXPanel) {
+        this.canvasService.javaFXPanel = javaFXPanel;
     }
 
-    public void useBrush(){
+    public void useBrush() {
         casterService.setSelectedCaster(null);
         paintAdaptor.activate();
         //canvasService.paintOnCanvas();
     }
 
-    public void toggleShowRayPath(){
+    public void toggleShowRayPath() {
         canvasService.toggleShowRayPath();
     }
 
-    public void toggleShowBackground(){
+    public void toggleShowBackground() {
         canvasService.toggleShowBackground();
     }
 
@@ -164,7 +164,7 @@ public class ActionPanelController {
 
     }
 
-    public String uploadOnline(){
+    public String uploadOnline() {
         var jacksonResponse = renzenService.UploadArticle(canvasService.getCanvasContents());
 
         //TODO switch from uploading just an image, to uploading an image that creates a draft
@@ -194,7 +194,7 @@ public class ActionPanelController {
         Desktop.getDesktop().browse(URL.toURI());
     }
 
-    public void saveCanvasAsFile(File file){
+    public void saveCanvasAsFile(File file) {
         canvasService.saveCanvasToFile(file);
     }
 

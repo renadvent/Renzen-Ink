@@ -1,6 +1,5 @@
 package io.renzen.ink.ViewPanels.RenderLayers;
 
-import io.renzen.ink.Services.CanvasService;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenderShapeService;
 import io.renzen.ink.ViewObjects.CanvasPanelCO;
@@ -14,9 +13,9 @@ public abstract class AbstractCustomRenderLayer {
 
     final CasterService casterService;
     final RenderShapeService renderShapeService;
-    CanvasPanelCO canvasPanelCO;
-//    final CanvasService canvasService;
+    //    final CanvasService canvasService;
     final CanvasPanel canvasPanel;
+    CanvasPanelCO canvasPanelCO;
 
     protected AbstractCustomRenderLayer(CasterService casterService, RenderShapeService renderShapeService, CanvasPanel canvasPanel) {
         this.casterService = casterService;

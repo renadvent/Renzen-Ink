@@ -1,6 +1,9 @@
 package io.renzen.ink.MouseInputAdaptors;
 
-import io.renzen.ink.Services.*;
+import io.renzen.ink.Services.BrushService;
+import io.renzen.ink.Services.CanvasService;
+import io.renzen.ink.Services.CasterService;
+import io.renzen.ink.Services.RenderShapeService;
 import io.renzen.ink.ViewPanels.CanvasPanel;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +16,11 @@ import java.awt.event.MouseAdapter;
 @Component
 public abstract class Abstract_CanvasInputAdaptor extends MouseAdapter {
 
+    final CanvasService canvasService;
+    final BrushService brushService;
+    final RenderShapeService renderShapeService;
+    final CanvasPanel canvasPanel;
+    final CasterService casterService;
     protected Abstract_CanvasInputAdaptor(CanvasService canvasService, BrushService brushService, RenderShapeService renderShapeService, CanvasPanel canvasPanel, CasterService casterService) {
         this.canvasService = canvasService;
         this.brushService = brushService;
@@ -22,11 +30,5 @@ public abstract class Abstract_CanvasInputAdaptor extends MouseAdapter {
     }
 
     public abstract void activate();
-
-    final CanvasService canvasService;
-    final BrushService brushService;
-    final RenderShapeService renderShapeService;
-    final CanvasPanel canvasPanel;
-    final CasterService casterService;
 
 }
