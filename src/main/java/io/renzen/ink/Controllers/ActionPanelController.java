@@ -13,9 +13,14 @@ import javafx.scene.paint.Color;
 import org.springframework.stereotype.Controller;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 /**
  * Action Panel makes direct requests to this controller
@@ -149,7 +154,33 @@ public class ActionPanelController {
     }
 
     public String uploadOnline(){
-        return canvasService.SAVE_CANVAS_AND_CREATE_NEW_ARTICLE_ON_RENZEN();
+        var jacksonResponse = renzenService.UploadArticle(canvasService.SAVE_CANVAS());
+
+        //TODO switch from uploading just an image, to uploading an image that creates a draft
+
+        try {
+            OpenArticleInBrowser(jacksonResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("could not open");
+        }
+
+        return (String) jacksonResponse.get("SASUrl");
+
+    }
+
+    private void OpenArticleInBrowser(HashMap<?, ?> jacksonResponse) throws IOException, URISyntaxException {
+        var URL = new java.net.URL(renzenService.getRoot()
+
+
+                + "/OPEN_ARTICLE_DRAFT_FROM_APP?articleID="
+                //+ "/newCreateArticle?image="
+                + URLEncoder.encode((String) jacksonResponse.get("articleID"), StandardCharsets.UTF_8)
+                + "&token="
+                + URLEncoder.encode(renzenService.getAuthToken(), StandardCharsets.UTF_8));
+
+        //opens browser window, logs in, and goes to page to create a post
+        Desktop.getDesktop().browse(URL.toURI());
     }
 
     public void saveCanvasAsFile(File file){

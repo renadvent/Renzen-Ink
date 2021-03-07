@@ -41,7 +41,7 @@ public class CanvasService {
     public final CanvasPanel canvasPanel;
     public final RenderShapeService renderShapeService;
     public final CasterService casterService;
-    public final RenzenService renzenService;
+
     public final BrushService brushService;
     final CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter;
     //public final CanvasPanelController canvasPanelController;
@@ -51,7 +51,7 @@ public class CanvasService {
 
 
     public CanvasService(CanvasPanel canvasPanel, RenderShapeService renderShapeService,
-                         CasterService casterService, RenzenService renzenService, BrushService brushService,
+                         CasterService casterService, BrushService brushService,
                          CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter) {
 
         this.canvasPanel = canvasPanel;
@@ -60,7 +60,6 @@ public class CanvasService {
 
         this.renderShapeService = renderShapeService;
         this.casterService = casterService;
-        this.renzenService = renzenService;
 
         this.brushService = brushService;
         //this.canvasPanelController = canvasPanelController;
@@ -149,7 +148,7 @@ public class CanvasService {
         }
     }
 
-    public String SAVE_CANVAS_AND_CREATE_NEW_ARTICLE_ON_RENZEN() {
+    public String SAVE_CANVAS() {
 
         //get canvas and save it to a temporary file as a png
         var base = getCanvasPanelCO().getBaseBuffer();
@@ -208,21 +207,23 @@ public class CanvasService {
             return "failed";
         }
 
-        var jacksonResponse = renzenService.UploadArticle(fileContent);
+        return fileContent;
 
-
-        System.out.println("Trying to open");
-
-        //TODO switch from uploading just an image, to uploading an image that creates a draft
-
-        try {
-            OpenArticleInBrowser(jacksonResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("could not open");
-        }
-
-        return (String) jacksonResponse.get("SASUrl");
+//        var jacksonResponse = renzenService.UploadArticle(fileContent);
+//
+//
+//        //System.out.println("Trying to open");
+//
+//        //TODO switch from uploading just an image, to uploading an image that creates a draft
+//
+//        try {
+//            OpenArticleInBrowser(jacksonResponse);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.out.println("could not open");
+//        }
+//
+//        return (String) jacksonResponse.get("SASUrl");
 
     }
 
@@ -264,22 +265,6 @@ public class CanvasService {
         casterService.setCasterRenderCache(canvasPanelCO.getCasterCOList());
         return canvasPanelCO;
     }
-
-    private void OpenArticleInBrowser(HashMap<?, ?> jacksonResponse) throws IOException, URISyntaxException {
-        var URL = new java.net.URL(renzenService.getRoot()
-
-
-                + "/OPEN_ARTICLE_DRAFT_FROM_APP?articleID="
-                //+ "/newCreateArticle?image="
-                + URLEncoder.encode((String) jacksonResponse.get("articleID"), StandardCharsets.UTF_8)
-                + "&token="
-                + URLEncoder.encode(renzenService.getAuthToken(), StandardCharsets.UTF_8));
-
-        //opens browser window, logs in, and goes to page to create a post
-        Desktop.getDesktop().browse(URL.toURI());
-    }
-
-//    CanvasPanelCO canvasPanelCO;
 
     /**
      * this function will create a click listener
