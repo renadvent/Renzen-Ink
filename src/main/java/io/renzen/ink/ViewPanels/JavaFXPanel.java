@@ -2,8 +2,6 @@ package io.renzen.ink.ViewPanels;
 
 import io.renzen.ink.Controllers.ActionPanelController;
 import io.renzen.ink.InkClass;
-import io.renzen.ink.Services.CanvasService;
-import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.ViewObjects.ActionPanelAccountInfoCO;
 import javafx.embed.swing.SwingNode;
 import javafx.geometry.Orientation;
@@ -134,8 +132,8 @@ public class JavaFXPanel {
     //CanvasPanelController canvasPanelController = null;
     Stage stage = null;
     int createCasterCounter = 0;
-    CanvasService canvasService = null;
-    CasterService casterService;
+//    CanvasService canvasService = null;
+//    CasterService casterService;
 
 
     public JavaFXPanel(Stage primaryStage, ConfigurableApplicationContext springContext) {
@@ -144,12 +142,8 @@ public class JavaFXPanel {
         this.stage = primaryStage;
         this.springContext = springContext;
         this.actionPanelController = springContext.getBean(ActionPanelController.class);
-        //this.canvasPanelController = springContext.getBean(actionPanelController.class);
-        this.casterService = springContext.getBean(CasterService.class);
-        this.canvasService = springContext.getBean(
-                CanvasService.class
-        );
-        canvasService.javaFXPanel = this;
+
+        actionPanelController.setJavaFXPanelForCanvasService(this);
 
         buildMenu();
         setUpJPanelCanvasInJavaFX();
@@ -265,7 +259,7 @@ public class JavaFXPanel {
 
     private void linkButtonsToActionController() {
 
-        renderRayPath.setOnMouseClicked(mouseEvent -> canvasService.toggleShowRayPath());
+        renderRayPath.setOnMouseClicked(mouseEvent -> actionPanelController.toggleShowRayPath());
 
 
         useBrush.setOnMouseClicked(mouseEvent -> actionPanelController.useBrush());
@@ -286,7 +280,7 @@ public class JavaFXPanel {
         });
 
         showLoadedImageCheckbox.setOnMouseClicked(e -> {
-            canvasService.toggleShowBackground();
+            actionPanelController.toggleShowBackground();
         });
 
         uploadOnlineButton.setOnMouseClicked(mouseEvent -> {
@@ -310,7 +304,7 @@ public class JavaFXPanel {
             File file = fileChooser.showSaveDialog(stage);
 
             if (file != null) {
-                canvasService.saveCanvasAsFile(file);
+                actionPanelController.saveCanvasAsFile(file);
                 //save file
                 //saveTextToFile(sampleText, file);
             }
@@ -325,12 +319,12 @@ public class JavaFXPanel {
         });
 
         createNewCasterButton.setOnMouseClicked(e -> {
-            casterService.setSelectedCaster(null);
+            actionPanelController.setSelectedCaster(null);
             var button = new Button("New Caster " + createCasterCounter++);
             var actionPanelCO = actionPanelController.createCaster(e, button.getText());
             list.getItems().add(button);
             button.setOnMouseClicked(x -> {
-                actionPanelController.selectCaster(button.getText());
+                actionPanelController.selectCasterById(button.getText());
                 UpdateActionPanelToSelectedCaster();
             });
         });

@@ -8,6 +8,7 @@ import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenzenService;
 import io.renzen.ink.ViewObjects.ActionPanelAccountInfoCO;
 import io.renzen.ink.ViewObjects.ActionPanelCO;
+import io.renzen.ink.ViewPanels.JavaFXPanel;
 import javafx.scene.paint.Color;
 import org.springframework.stereotype.Controller;
 
@@ -38,9 +39,21 @@ public class ActionPanelController {
         this.canvasService = canvasService;
     }
 
+    public void setJavaFXPanelForCanvasService(JavaFXPanel javaFXPanel){
+        this.canvasService.javaFXPanel=javaFXPanel;
+    }
+
     public void useBrush(){
         casterService.setSelectedCaster(null);
         canvasService.paintOnCanvas();
+    }
+
+    public void toggleShowRayPath(){
+        canvasService.toggleShowRayPath();
+    }
+
+    public void toggleShowBackground(){
+        canvasService.toggleShowBackground();
     }
 
     public ActionPanelAccountInfoCO login(String username, String password) {
@@ -85,12 +98,16 @@ public class ActionPanelController {
         return brushService.getSelectedColor();
     }
 
-    public void selectCaster(String id) {
+    public void selectCasterById(String id) {
         casterService.selectCaster(id);
     }
 
     public Caster getSelectedCaster() {
         return casterService.getSelectedCaster();
+    }
+
+    public void setSelectedCaster(Caster caster) {
+        casterService.setSelectedCaster(caster);
     }
 
     public void updateNumberOfStrikes(boolean e) {
@@ -134,5 +151,13 @@ public class ActionPanelController {
     public String uploadOnline(){
         return canvasService.SAVE_CANVAS_AND_CREATE_NEW_ARTICLE_ON_RENZEN();
     }
+
+    public void saveCanvasAsFile(File file){
+        canvasService.saveCanvasAsFile(file);
+    }
+
+//    public void createNewCaster(){
+//
+//    }
 
 }
