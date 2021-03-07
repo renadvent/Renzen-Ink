@@ -1,63 +1,70 @@
 package io.renzen.ink.ViewPanels;
 
-import io.renzen.ink.Controllers.CanvasPanelController;
-import io.renzen.ink.Services.CasterService;
-import io.renzen.ink.Services.RenderShapeService;
 import io.renzen.ink.ViewObjects.CanvasPanelCO;
-import io.renzen.ink.ViewPanels.RenderLayers.*;
+import io.renzen.ink.ViewPanels.RenderLayers.AbstractCustomRenderLayer;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 @Component
 @Data
 public class CanvasPanel extends JPanel {
 
-    public final CasterService casterService;
-    public final RenderShapeService renderShapeService;
-
-    public final CanvasPanelController canvasPanelController;
     public CanvasPanelCO canvasPanelCO;
-
     boolean showBackground = true;
     boolean showRayPath = true;
+    ArrayList<AbstractCustomRenderLayer> renderLayerArrayList = new ArrayList<>();
 
-    @Autowired
-    public CanvasPanel(CasterService casterService, RenderShapeService renderShapeService, CanvasPanelController canvasPanelController) {
-        super();
-        this.casterService = casterService;
-        this.renderShapeService = renderShapeService;
-        this.canvasPanelController = canvasPanelController;
-        canvasPanelCO = canvasPanelController.getInit();
+    public CanvasPanel() {
+        getInit();
+    }
 
-        addRenderLayer(new BackgroundRenderLayer(this));
-        addRenderLayer(new CasterRenderLayer(this));
-        addRenderLayer(new ShapeRenderLayer(this));
-        addRenderLayer(new RayPathRenderLayer(this));
+    public void getInit() {
+
+        setCanvasPanelCO(new CanvasPanelCO());
+
+
+        BufferedImage bufferedImage = new BufferedImage(1280, 1024, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = bufferedImage.createGraphics();
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHints(rh);
+
+        BufferedImage loadedImage = null;
+
+        try {
+            File f = new File("src/main/java/io/renzen/ink/body.jpg");
+            loadedImage = ImageIO.read(f);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            System.exit(0);
+        }
+
+        g2d.drawImage(loadedImage, 0, 0, null);
+
+        getCanvasPanelCO().setBaseBuffer(bufferedImage);
+//
+//        tempBackground = bufferedImage;
+//        setTempBackground(tempBackground);
 
     }
 
-    public static Graphics2D resetHints(Graphics g){
+    public static Graphics2D resetHints(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
         return g2d;
     }
 
-    ArrayList<AbstractCustomRenderLayer> renderLayerArrayList = new ArrayList<>();
-
-    public void addRenderLayer(AbstractCustomRenderLayer rl){
+    public void addRenderLayer(AbstractCustomRenderLayer rl) {
         renderLayerArrayList.add(rl);
     }
-
-    public void renderLayers(Graphics g){
-        renderLayerArrayList.forEach(rl->rl.render(g));
-    }
-
 
     @Override
     public void paintComponent(Graphics g) {
@@ -65,8 +72,20 @@ public class CanvasPanel extends JPanel {
         renderLayers(g);
     }
 
+    public void renderLayers(Graphics g) {
+
+        if (canvasPanelCO != null) {
+            renderLayerArrayList.forEach(rl -> {
+                rl.render(g);
+            });
+        }
+
+
+    }
+
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(1000, 1000);
     }
+
 }

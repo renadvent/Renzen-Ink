@@ -2,23 +2,39 @@ package io.renzen.ink.MouseInputAdaptors;
 
 import io.renzen.ink.ArtObjects.Caster;
 import io.renzen.ink.ArtObjects.RenderShape;
+import io.renzen.ink.Services.BrushService;
 import io.renzen.ink.Services.CanvasService;
+import io.renzen.ink.Services.CasterService;
+import io.renzen.ink.Services.RenderShapeService;
+import io.renzen.ink.ViewPanels.CanvasPanel;
+import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 
+@Component
 public class CasterAdaptor extends Abstract_CanvasInputAdaptor {
 
     String casterName;
 
-    public CasterAdaptor(CanvasService canvasService, String casterName) {
-        super(canvasService);
+    protected CasterAdaptor(CanvasService canvasService, BrushService brushService, RenderShapeService renderShapeService, CanvasPanel canvasPanel,
+                            CasterService casterService) {
+        super(canvasService, brushService, renderShapeService, canvasPanel, casterService);
+    }
+
+
+    @Override
+    public void activate() {
         canvasPanel.addMouseListener(this);
         canvasPanel.addMouseMotionListener(this);
-        this.casterName = casterName;
     }
+
+    public void setCasterName(String name) {
+        this.casterName = name;
+    }
+
 
     @Override
     public void mousePressed(MouseEvent e) {

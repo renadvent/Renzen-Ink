@@ -1,8 +1,11 @@
 package io.renzen.ink.MouseInputAdaptors;
 
-import io.renzen.ink.Controllers.CanvasPanelController;
-import io.renzen.ink.Services.*;
+import io.renzen.ink.Services.BrushService;
+import io.renzen.ink.Services.CanvasService;
+import io.renzen.ink.Services.CasterService;
+import io.renzen.ink.Services.RenderShapeService;
 import io.renzen.ink.ViewPanels.CanvasPanel;
+import org.springframework.stereotype.Component;
 
 import java.awt.event.MouseAdapter;
 
@@ -10,26 +13,22 @@ import java.awt.event.MouseAdapter;
  * Extend this class to create MouseAdapters
  * that can draw to canvas, create shapes, etc
  */
+@Component
 public abstract class Abstract_CanvasInputAdaptor extends MouseAdapter {
 
-    final CanvasPanel canvasPanel;
-    final RenderShapeService renderShapeService;
-    final CasterService casterService;
-    final RenzenService renzenService;
-    final BrushService brushService;
-    final CanvasPanelController canvasPanelController;
     final CanvasService canvasService;
-
-    public Abstract_CanvasInputAdaptor(CanvasService canvasService) {
-        super();
-        this.canvasPanel = canvasService.canvasPanel;
-        this.renderShapeService = canvasService.renderShapeService;
-        this.casterService = canvasService.casterService;
-        this.renzenService = canvasService.renzenService;
-        this.brushService = canvasService.brushService;
-        this.canvasPanelController = canvasService.canvasPanelController;
-//            this.brush=canvasService.brushService.getSelectedBrush();
+    final BrushService brushService;
+    final RenderShapeService renderShapeService;
+    final CanvasPanel canvasPanel;
+    final CasterService casterService;
+    protected Abstract_CanvasInputAdaptor(CanvasService canvasService, BrushService brushService, RenderShapeService renderShapeService, CanvasPanel canvasPanel, CasterService casterService) {
         this.canvasService = canvasService;
+        this.brushService = brushService;
+        this.renderShapeService = renderShapeService;
+        this.canvasPanel = canvasPanel;
+        this.casterService = casterService;
     }
+
+    public abstract void activate();
 
 }
