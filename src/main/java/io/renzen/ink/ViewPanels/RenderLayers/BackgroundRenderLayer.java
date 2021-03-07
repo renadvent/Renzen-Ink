@@ -1,14 +1,19 @@
 package io.renzen.ink.ViewPanels.RenderLayers;
 
 import io.renzen.ink.Services.CanvasService;
+import io.renzen.ink.Services.CasterService;
+import io.renzen.ink.Services.RenderShapeService;
 import io.renzen.ink.ViewPanels.CanvasPanel;
+import org.springframework.stereotype.Component;
 
 import java.awt.*;
 
+@Component
 public class BackgroundRenderLayer extends AbstractCustomRenderLayer {
 
-    public BackgroundRenderLayer(CanvasService canvasService) {
-        super(canvasService);
+
+    protected BackgroundRenderLayer(CasterService casterService, RenderShapeService renderShapeService, CanvasPanel canvasPanel) {
+        super(casterService, renderShapeService, canvasPanel);
     }
 
     @Override

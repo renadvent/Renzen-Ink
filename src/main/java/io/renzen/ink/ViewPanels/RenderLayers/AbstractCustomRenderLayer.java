@@ -9,24 +9,24 @@ import org.springframework.stereotype.Component;
 
 import java.awt.*;
 
+@Component
 public abstract class AbstractCustomRenderLayer {
 
     final CasterService casterService;
     final RenderShapeService renderShapeService;
-    final CanvasPanelCO canvasPanelCO;
-    final CanvasService canvasService;
+    CanvasPanelCO canvasPanelCO;
+//    final CanvasService canvasService;
     final CanvasPanel canvasPanel;
 
-    AbstractCustomRenderLayer(CanvasService canvasService) {
+    protected AbstractCustomRenderLayer(CasterService casterService, RenderShapeService renderShapeService, CanvasPanel canvasPanel) {
+        this.casterService = casterService;
+        this.renderShapeService = renderShapeService;
+//        this.canvasService = canvasService;
+        this.canvasPanel = canvasPanel;
 
-        this.canvasPanel = canvasService.canvasPanel;
-        this.canvasPanelCO = canvasService.getCanvasPanelCO();
-
-        this.canvasService = canvasService;
-
-        this.casterService = canvasService.casterService;
-        this.renderShapeService = canvasService.renderShapeService;
+        this.canvasPanelCO = canvasPanel.getCanvasPanelCO();
     }
+
 
     public abstract void render(Graphics g);
 

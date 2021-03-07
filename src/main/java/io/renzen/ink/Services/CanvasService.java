@@ -1,6 +1,5 @@
 package io.renzen.ink.Services;
 
-import io.renzen.ink.ArtObjects.Caster;
 import io.renzen.ink.Converters.CasterAndBaseToCasterCOConverter;
 import io.renzen.ink.ViewObjects.CanvasPanelCO;
 import io.renzen.ink.ViewPanels.CanvasPanel;
@@ -32,63 +31,38 @@ public class CanvasService {
 
     public final CanvasPanel canvasPanel;
 
-    public final CasterService casterService;
-    public final RenderShapeService renderShapeService;
-
     final CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter;
-    //public final CanvasPanelController canvasPanelController;
+
     public JavaFXPanel javaFXPanel;
     public CanvasPanelCO canvasPanelCO;
     public BufferedImage tempBackground;
 
+    final BackgroundRenderLayer backgroundRenderLayer;
+    final CasterRenderLayer casterRenderLayer;
+    final ShapeRenderLayer shapeRenderLayer;
+    final RayPathRenderLayer rayPathRenderLayer;
+
 
     public CanvasService(CanvasPanel canvasPanel,
-                         CasterService casterService,
-                         RenderShapeService renderShapeService, CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter) {
+
+                         CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter,
+                         BackgroundRenderLayer backgroundRenderLayer,
+                         CasterRenderLayer casterRenderLayer,
+                         ShapeRenderLayer shapeRenderLayer,
+                         RayPathRenderLayer rayPathRenderLayer) {
 
         this.canvasPanel = canvasPanel;
-        this.renderShapeService = renderShapeService;
-        getInit();
-
-
-        this.casterService = casterService;
+        this.backgroundRenderLayer = backgroundRenderLayer;
+        this.casterRenderLayer = casterRenderLayer;
+        this.shapeRenderLayer = shapeRenderLayer;
+        this.rayPathRenderLayer = rayPathRenderLayer;
 
         this.casterAndBaseToCasterCOConverter = casterAndBaseToCasterCOConverter;
 
-        //add render layers on top of background
-        canvasPanel.addRenderLayer(new BackgroundRenderLayer(this));
-        canvasPanel.addRenderLayer(new CasterRenderLayer(this));
-        canvasPanel.addRenderLayer(new ShapeRenderLayer(this));
-        canvasPanel.addRenderLayer(new RayPathRenderLayer(this));
-
-
-    }
-
-    public void getInit() {
-
-        setCanvasPanelCO(new CanvasPanelCO());
-
-        BufferedImage bufferedImage = new BufferedImage(1280, 1024, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = bufferedImage.createGraphics();
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHints(rh);
-
-        BufferedImage loadedImage = null;
-
-        try {
-            File f = new File("src/main/java/io/renzen/ink/body.jpg");
-            loadedImage = ImageIO.read(f);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            System.exit(0);
-        }
-
-        g2d.drawImage(loadedImage, 0, 0, null);
-
-        getCanvasPanelCO().setBaseBuffer(bufferedImage);
-
-        tempBackground = bufferedImage;
-        setTempBackground(tempBackground);
+        canvasPanel.addRenderLayer(this.backgroundRenderLayer);
+        canvasPanel.addRenderLayer(this.casterRenderLayer);
+        canvasPanel.addRenderLayer(this.shapeRenderLayer);
+        canvasPanel.addRenderLayer(this.rayPathRenderLayer);
 
     }
 

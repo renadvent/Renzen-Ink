@@ -1,15 +1,20 @@
 package io.renzen.ink.ViewPanels.RenderLayers;
 
 import io.renzen.ink.Services.CanvasService;
+import io.renzen.ink.Services.CasterService;
+import io.renzen.ink.Services.RenderShapeService;
 import io.renzen.ink.ViewPanels.CanvasPanel;
+import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
 
+@Component
 public class CasterRenderLayer extends AbstractCustomRenderLayer {
 
-    public CasterRenderLayer(CanvasService canvasService) {
-        super(canvasService);
+
+    protected CasterRenderLayer(CasterService casterService, RenderShapeService renderShapeService, CanvasPanel canvasPanel) {
+        super(casterService, renderShapeService, canvasPanel);
     }
 
     @Override
@@ -17,7 +22,8 @@ public class CasterRenderLayer extends AbstractCustomRenderLayer {
 
         var g2d = CanvasPanel.resetHints(g);
 
-        for (var caster : casterService.getCanvasPanelCOtoRepaint(canvasService.getTempBackground()).getCasterCOList()) {
+//        for (var caster : casterService.getCanvasPanelCOtoRepaint(canvasService.getTempBackground()).getCasterCOList()) {
+        for (var caster : casterService.getCanvasPanelCOtoRepaint(canvasPanelCO.getBaseBuffer()).getCasterCOList()) {
             g2d.drawImage(caster.getStrokeBuffer(), 0, 0, null);
 
             //draws ray bath on canvas
