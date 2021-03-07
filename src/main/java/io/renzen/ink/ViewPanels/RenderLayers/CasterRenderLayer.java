@@ -1,6 +1,5 @@
 package io.renzen.ink.ViewPanels.RenderLayers;
 
-import io.renzen.ink.Services.CanvasService;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenderShapeService;
 import io.renzen.ink.ViewPanels.CanvasPanel;

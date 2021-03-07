@@ -31,7 +31,7 @@ public class CasterAdaptor extends Abstract_CanvasInputAdaptor {
         canvasPanel.addMouseMotionListener(this);
     }
 
-    public void setCasterName(String name){
+    public void setCasterName(String name) {
         this.casterName = name;
     }
 

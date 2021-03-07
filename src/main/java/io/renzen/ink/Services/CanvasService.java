@@ -15,7 +15,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Base64;
 
@@ -32,15 +31,13 @@ public class CanvasService {
     public final CanvasPanel canvasPanel;
 
     final CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter;
-
-    public JavaFXPanel javaFXPanel;
-    public CanvasPanelCO canvasPanelCO;
-    public BufferedImage tempBackground;
-
     final BackgroundRenderLayer backgroundRenderLayer;
     final CasterRenderLayer casterRenderLayer;
     final ShapeRenderLayer shapeRenderLayer;
     final RayPathRenderLayer rayPathRenderLayer;
+    public JavaFXPanel javaFXPanel;
+    public CanvasPanelCO canvasPanelCO;
+    public BufferedImage tempBackground;
 
 
     public CanvasService(CanvasPanel canvasPanel,

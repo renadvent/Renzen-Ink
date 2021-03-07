@@ -56,19 +56,6 @@ public class CasterService {
 
     }
 
-    public void setCasterRenderCache(List cache) {
-        casterRenderCache = cache;
-    }
-
-    public Optional<CasterCO> findInCache(String id) {
-        for (var casterCO : casterRenderCache) {
-            if (casterCO.getName().equals(id)) {
-                return Optional.of(casterCO);
-            }
-        }
-        return Optional.empty();
-    }
-
     public void selectCaster(String id) {
         selectedCaster = findByName(id);
     }
@@ -83,14 +70,6 @@ public class CasterService {
         return null;
     }
 
-    public Caster getSelectedCaster() {
-        return selectedCaster;
-    }
-
-    public void setSelectedCaster(Caster caster) {
-        selectedCaster = caster;
-    }
-
     public Caster save(Caster caster) {
 
         casterArrayList.add(caster);
@@ -98,12 +77,6 @@ public class CasterService {
         return caster;
 
     }
-
-    public List<Caster> getAll() {
-        return casterArrayList;
-    }
-
-
 
     public CanvasPanelCO getCanvasPanelCOtoRepaint(BufferedImage tempBackground) {
 
@@ -142,6 +115,31 @@ public class CasterService {
 
         setCasterRenderCache(canvasPanelCO.getCasterCOList());
         return canvasPanelCO;
+    }
+
+    public List<Caster> getAll() {
+        return casterArrayList;
+    }
+
+    public Optional<CasterCO> findInCache(String id) {
+        for (var casterCO : casterRenderCache) {
+            if (casterCO.getName().equals(id)) {
+                return Optional.of(casterCO);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public Caster getSelectedCaster() {
+        return selectedCaster;
+    }
+
+    public void setCasterRenderCache(List cache) {
+        casterRenderCache = cache;
+    }
+
+    public void setSelectedCaster(Caster caster) {
+        selectedCaster = caster;
     }
 
 

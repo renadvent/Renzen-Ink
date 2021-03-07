@@ -24,15 +24,16 @@ public class PaintAdaptor extends Abstract_CanvasInputAdaptor {
     RenderShape last;
     double lastX;
     double lastY;
-
-    protected PaintAdaptor(CanvasService canvasService, BrushService brushService, RenderShapeService renderShapeService, CanvasPanel canvasPanel, CasterService casterService) {
-        super(canvasService, brushService, renderShapeService, canvasPanel, casterService);
-    }
+    PaintBrush brush; //= brushService.getSelectedBrush();
 
 //    final CanvasService canvasService;
 //    final BrushService brushService;
 //    final RenderShapeService renderShapeService;
 //    final CanvasPanel canvasPanel;
+
+    protected PaintAdaptor(CanvasService canvasService, BrushService brushService, RenderShapeService renderShapeService, CanvasPanel canvasPanel, CasterService casterService) {
+        super(canvasService, brushService, renderShapeService, canvasPanel, casterService);
+    }
 
     @Override
     public void activate() {
@@ -40,10 +41,6 @@ public class PaintAdaptor extends Abstract_CanvasInputAdaptor {
         this.canvasPanel.addMouseMotionListener(this);
         brush = this.brushService.getSelectedBrush();
     }
-
-
-    PaintBrush brush; //= brushService.getSelectedBrush();
-
 
     @Override
     public void mousePressed(MouseEvent e) {
