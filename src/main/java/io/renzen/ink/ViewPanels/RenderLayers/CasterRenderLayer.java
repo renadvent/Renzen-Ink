@@ -21,17 +21,16 @@ public class CasterRenderLayer extends AbstractCustomRenderLayer {
 
         var g2d = CanvasPanel.resetHints(g);
 
-//        for (var caster : casterService.getCanvasPanelCOtoRepaint(canvasService.getTempBackground()).getCasterCOList()) {
         for (var caster : casterService.getCanvasPanelCOtoRepaint(canvasPanelCO.getBaseBuffer()).getCasterCOList()) {
             g2d.drawImage(caster.getStrokeBuffer(), 0, 0, null);
 
-            //draws ray bath on canvas
-            if (canvasPanel.isShowRayPath()) {
-                for (var x : caster.getRay_path()) {
-                    g2d.draw(new Line2D.Double(x.getOrigin_ray().get_x(), x.getOrigin_ray().get_y(),
-                            x.get_x(), x.get_y()));
-                }
-            }
+//            //draws ray bath on canvas
+//            if (canvasPanel.isShowRayPath()) {
+//                for (var x : caster.getRay_path()) {
+//                    g2d.draw(new Line2D.Double(x.getOrigin_ray().get_x(), x.getOrigin_ray().get_y(),
+//                            x.get_x(), x.get_y()));
+//                }
+//            }
         }
 
     }

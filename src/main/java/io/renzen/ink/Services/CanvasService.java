@@ -91,10 +91,7 @@ public class CanvasService {
 
     public void saveCanvasToFile(File file) {
 
-        BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = (Graphics2D) bi.getGraphics();
-        canvasPanel.printAll(g2d);
-        g2d.dispose();
+        var bi = getCanvasBufferedImage();
 
         try {
             ImageIO.write(bi, "png", file);
@@ -103,9 +100,7 @@ public class CanvasService {
         }
     }
 
-    public String getCanvasContents() {
-
-        //get canvas and save it to a temporary file as a png
+    public BufferedImage getCanvasBufferedImage(){
         var base = getCanvasPanelCO().getBaseBuffer();
 
         //TODO
@@ -119,6 +114,15 @@ public class CanvasService {
         canvasPanel.printAll(g2d);
         g2d.dispose();
 
+        return bi;
+    }
+
+    public File getTempCanvasFile(){
+
+        //get canvas and save it to a temporary file as a png
+
+        var bi = getCanvasBufferedImage();
+
         File file = null;
 
         try {
@@ -127,8 +131,18 @@ public class CanvasService {
             ImageIO.write(bi, "png", file);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return "failed";
+            return null;
+            //return "failed";
         }
+
+        return file;
+
+    }
+
+    public String getCanvasBase64String() {
+
+
+        var file = getTempCanvasFile();
 
         String fileContent = "";
 

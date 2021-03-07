@@ -13,16 +13,13 @@ public abstract class AbstractCustomRenderLayer {
 
     final CasterService casterService;
     final RenderShapeService renderShapeService;
-    //    final CanvasService canvasService;
     final CanvasPanel canvasPanel;
     CanvasPanelCO canvasPanelCO;
 
     protected AbstractCustomRenderLayer(CasterService casterService, RenderShapeService renderShapeService, CanvasPanel canvasPanel) {
         this.casterService = casterService;
         this.renderShapeService = renderShapeService;
-//        this.canvasService = canvasService;
         this.canvasPanel = canvasPanel;
-
         this.canvasPanelCO = canvasPanel.getCanvasPanelCO();
     }
 

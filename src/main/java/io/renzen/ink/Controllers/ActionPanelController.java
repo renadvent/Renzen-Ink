@@ -165,7 +165,7 @@ public class ActionPanelController {
     }
 
     public String uploadOnline() {
-        var jacksonResponse = renzenService.UploadArticle(canvasService.getCanvasContents());
+        var jacksonResponse = renzenService.UploadArticle(canvasService.getCanvasBase64String());
 
         //TODO switch from uploading just an image, to uploading an image that creates a draft
 
