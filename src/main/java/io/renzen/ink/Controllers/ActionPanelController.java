@@ -38,6 +38,11 @@ public class ActionPanelController {
         this.canvasService = canvasService;
     }
 
+    public void useBrush(){
+        casterService.setSelectedCaster(null);
+        canvasService.paintOnCanvas();
+    }
+
     public ActionPanelAccountInfoCO login(String username, String password) {
         return renzenService.getLoginInfo(username, password);
     }
@@ -71,7 +76,9 @@ public class ActionPanelController {
     }
 
     public void setBrushColor(Color color) {
+
         brushService.setSelectedColor(color);
+        canvasService.getCanvasPanel().repaint();
     }
 
     public java.awt.Color getBrushColor(Color color) {
@@ -112,11 +119,20 @@ public class ActionPanelController {
 
         canvasService.setTempBackground(loadedImage);
 
+        canvasService.getCanvasPanel().repaint();
+
         //tempBackground = loadedImage;
     }
 
     public void setCasterColor(Color color) {
+
         casterService.setCasterColor(color);
+        canvasService.getCanvasPanel().repaint();
+
+    }
+
+    public String uploadOnline(){
+        return canvasService.SAVE_CANVAS_AND_CREATE_NEW_ARTICLE_ON_RENZEN();
     }
 
 }

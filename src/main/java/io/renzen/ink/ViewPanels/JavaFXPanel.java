@@ -268,11 +268,7 @@ public class JavaFXPanel {
         renderRayPath.setOnMouseClicked(mouseEvent -> canvasService.toggleShowRayPath());
 
 
-        useBrush.setOnMouseClicked(mouseEvent -> {
-            //fixed rerender issue
-            casterService.setSelectedCaster(null);
-            canvasService.paintOnCanvas();
-        });
+        useBrush.setOnMouseClicked(mouseEvent -> actionPanelController.useBrush());
 
         openWebsiteButton.setOnMouseClicked(mouseEvent -> actionPanelController.openRenzen());
         raysSlider.valueProperty().addListener((observableValue, number, t1) -> actionPanelController.updateNumberOfRays(t1.intValue()));//(controller::updateNumberOfRays);
@@ -283,13 +279,10 @@ public class JavaFXPanel {
         //TODO working on. need to set in a service
         casterColorPicker.valueProperty().addListener((observableValue, number, t1) -> {
             actionPanelController.setCasterColor(t1);
-            //messy
-            springContext.getBean(CanvasPanel.class).repaint();
         });
 
         brushColorPicker.valueProperty().addListener((observableValue, number, t1) -> {
             actionPanelController.setBrushColor(t1);
-            springContext.getBean(CanvasPanel.class).repaint();
         });
 
         showLoadedImageCheckbox.setOnMouseClicked(e -> {
@@ -298,8 +291,7 @@ public class JavaFXPanel {
 
         uploadOnlineButton.setOnMouseClicked(mouseEvent -> {
 
-
-            var link = canvasService.SAVE_CANVAS_AND_CREATE_NEW_ARTICLE_ON_RENZEN();
+            var link = actionPanelController.uploadOnline();
 
             var button = new Button(link);
             button.setOnMouseClicked(e -> {
@@ -310,13 +302,7 @@ public class JavaFXPanel {
         });
 
         openFileButton.setOnMouseClicked(e -> {
-            var file = fileChooser.showOpenDialog(stage);
-
-            actionPanelController.openFile(file);
-
-            //shouldn't be done here like this
-            springContext.getBean(CanvasPanel.class).repaint();
-
+            actionPanelController.openFile(fileChooser.showOpenDialog(stage));
         });
 
         saveFileButton.setOnMouseClicked(e -> {
