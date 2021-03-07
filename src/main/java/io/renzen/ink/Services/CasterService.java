@@ -1,10 +1,13 @@
 package io.renzen.ink.Services;
 
 import io.renzen.ink.ArtObjects.Caster;
+import io.renzen.ink.Converters.CasterAndBaseToCasterCOConverter;
+import io.renzen.ink.ViewObjects.CanvasPanelCO;
 import io.renzen.ink.ViewObjects.CasterCO;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,11 +16,17 @@ import java.util.Optional;
 public class CasterService {
 
     final ArrayList<Caster> casterArrayList = new ArrayList<>();
+    final CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter;
+
 
     Caster selectedCaster;
     Color awtColor;
     //TODO use this to store rendered Casters that haven't changed
     List<CasterCO> casterRenderCache = new ArrayList<>();
+
+    public CasterService(CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter) {
+        this.casterAndBaseToCasterCOConverter = casterAndBaseToCasterCOConverter;
+    }
 
     public Color getCasterColor() {
         return awtColor;
@@ -93,4 +102,47 @@ public class CasterService {
     public List<Caster> getAll() {
         return casterArrayList;
     }
+
+
+
+    public CanvasPanelCO getCanvasPanelCOtoRepaint(BufferedImage tempBackground) {
+
+        var canvasPanelCO = new CanvasPanelCO();
+
+        for (var caster : getAll()) {
+
+            findInCache(caster.getName())
+                    .ifPresentOrElse(casterCO -> {
+
+                                //if in cache
+                                if (getSelectedCaster() != null) {
+                                    if (getSelectedCaster().getName().equals(caster.getName())) {
+                                        if (((Caster) casterCO).equals(getSelectedCaster())) {
+                                            canvasPanelCO.getCasterCOList().add(casterCO);
+                                        } else {
+                                            canvasPanelCO.getCasterCOList()
+                                                    .add(casterAndBaseToCasterCOConverter.toCasterCO(caster, tempBackground));
+                                        }
+
+                                    } else {
+                                        canvasPanelCO.getCasterCOList().add(casterCO);
+                                    }
+
+                                } else {
+                                    canvasPanelCO.getCasterCOList().add(casterCO);
+                                }
+                            },
+
+
+                            //if not in cache
+                            () -> canvasPanelCO.getCasterCOList()
+                                    .add(casterAndBaseToCasterCOConverter.toCasterCO(caster, tempBackground)));
+
+        }
+
+        setCasterRenderCache(canvasPanelCO.getCasterCOList());
+        return canvasPanelCO;
+    }
+
+
 }

@@ -2,6 +2,8 @@ package io.renzen.ink.Controllers;
 
 import io.renzen.ink.ArtObjects.Caster;
 import io.renzen.ink.Converters.ModelToActionPanelCOConverter;
+import io.renzen.ink.MouseInputAdaptors.CasterAdaptor;
+import io.renzen.ink.MouseInputAdaptors.PaintAdaptor;
 import io.renzen.ink.Services.BrushService;
 import io.renzen.ink.Services.CanvasService;
 import io.renzen.ink.Services.CasterService;
@@ -36,21 +38,28 @@ public class ActionPanelController {
     final BrushService brushService;
     final CanvasService canvasService;
 
-    public ActionPanelController(ModelToActionPanelCOConverter modelToActionPanelCOConverter, CasterService casterService, RenzenService renzenService, BrushService brushService, CanvasService canvasService) {
+    final PaintAdaptor paintAdaptor;
+    final CasterAdaptor casterAdaptor;
+
+    public ActionPanelController(ModelToActionPanelCOConverter modelToActionPanelCOConverter, CasterService casterService, RenzenService renzenService, BrushService brushService, CanvasService canvasService, PaintAdaptor paintAdaptor, CasterAdaptor casterAdaptor) {
         this.modelToActionPanelCOConverter = modelToActionPanelCOConverter;
         this.casterService = casterService;
         this.renzenService = renzenService;
         this.brushService = brushService;
         this.canvasService = canvasService;
+        this.paintAdaptor = paintAdaptor;
+        this.casterAdaptor = casterAdaptor;
     }
 
+    //Not needed?
     public void setJavaFXPanelForCanvasService(JavaFXPanel javaFXPanel){
         this.canvasService.javaFXPanel=javaFXPanel;
     }
 
     public void useBrush(){
         casterService.setSelectedCaster(null);
-        canvasService.paintOnCanvas();
+        paintAdaptor.activate();
+        //canvasService.paintOnCanvas();
     }
 
     public void toggleShowRayPath(){
@@ -79,7 +88,9 @@ public class ActionPanelController {
     }
 
     public ActionPanelCO createCaster(Object e, String casterName) {
-        canvasService.getClicksFromCanvasPanelAndCreateCaster(casterName);
+        casterAdaptor.activate();
+        casterAdaptor.setCasterName(casterName);
+        //canvasService.getClicksFromCanvasPanelAndCreateCaster(casterName);
         return new ActionPanelCO();
     }
 
@@ -154,7 +165,7 @@ public class ActionPanelController {
     }
 
     public String uploadOnline(){
-        var jacksonResponse = renzenService.UploadArticle(canvasService.SAVE_CANVAS());
+        var jacksonResponse = renzenService.UploadArticle(canvasService.getCanvasContents());
 
         //TODO switch from uploading just an image, to uploading an image that creates a draft
 
@@ -184,7 +195,7 @@ public class ActionPanelController {
     }
 
     public void saveCanvasAsFile(File file){
-        canvasService.saveCanvasAsFile(file);
+        canvasService.saveCanvasToFile(file);
     }
 
 //    public void createNewCaster(){

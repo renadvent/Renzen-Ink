@@ -2,26 +2,48 @@ package io.renzen.ink.MouseInputAdaptors;
 
 import io.renzen.ink.ArtObjects.PaintBrush;
 import io.renzen.ink.ArtObjects.RenderShape;
+import io.renzen.ink.Services.BrushService;
 import io.renzen.ink.Services.CanvasService;
+import io.renzen.ink.Services.CasterService;
+import io.renzen.ink.Services.RenderShapeService;
+import io.renzen.ink.ViewPanels.CanvasPanel;
+import org.springframework.stereotype.Component;
 
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 
+
+//TODO make a component. inject services into adapter?
+//TODO inject this into canvasService? or actionPanelController?
+//TODO paintAdapter.activate
+
+@Component
 public class PaintAdaptor extends Abstract_CanvasInputAdaptor {
 
     RenderShape last;
     double lastX;
     double lastY;
 
+    protected PaintAdaptor(CanvasService canvasService, BrushService brushService, RenderShapeService renderShapeService, CanvasPanel canvasPanel, CasterService casterService) {
+        super(canvasService, brushService, renderShapeService, canvasPanel, casterService);
+    }
+
+//    final CanvasService canvasService;
+//    final BrushService brushService;
+//    final RenderShapeService renderShapeService;
+//    final CanvasPanel canvasPanel;
+
+    @Override
+    public void activate() {
+        this.canvasPanel.addMouseListener(this);
+        this.canvasPanel.addMouseMotionListener(this);
+        brush = this.brushService.getSelectedBrush();
+    }
+
+
     PaintBrush brush; //= brushService.getSelectedBrush();
 
-    public PaintAdaptor(CanvasService canvasService) {
-        super(canvasService);
-        canvasPanel.addMouseListener(this);
-        canvasPanel.addMouseMotionListener(this);
-        brush = brushService.getSelectedBrush();
-    }
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -73,4 +95,6 @@ public class PaintAdaptor extends Abstract_CanvasInputAdaptor {
 
         canvasService.repaintCanvas();
     }
+
+
 }

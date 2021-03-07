@@ -1,10 +1,7 @@
 package io.renzen.ink.Services;
 
 import io.renzen.ink.ArtObjects.Caster;
-import io.renzen.ink.ArtObjects.RenderShape;
 import io.renzen.ink.Converters.CasterAndBaseToCasterCOConverter;
-import io.renzen.ink.MouseInputAdaptors.CasterAdaptor;
-import io.renzen.ink.MouseInputAdaptors.PaintAdaptor;
 import io.renzen.ink.ViewObjects.CanvasPanelCO;
 import io.renzen.ink.ViewPanels.CanvasPanel;
 import io.renzen.ink.ViewPanels.JavaFXPanel;
@@ -13,7 +10,6 @@ import io.renzen.ink.ViewPanels.RenderLayers.CasterRenderLayer;
 import io.renzen.ink.ViewPanels.RenderLayers.RayPathRenderLayer;
 import io.renzen.ink.ViewPanels.RenderLayers.ShapeRenderLayer;
 import lombok.Data;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -21,12 +17,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Base64;
-import java.util.HashMap;
 
 /**
  * Gives and set information on the Canvas
@@ -39,10 +31,10 @@ import java.util.HashMap;
 public class CanvasService {
 
     public final CanvasPanel canvasPanel;
-    public final RenderShapeService renderShapeService;
-    public final CasterService casterService;
 
-    public final BrushService brushService;
+    public final CasterService casterService;
+    public final RenderShapeService renderShapeService;
+
     final CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter;
     //public final CanvasPanelController canvasPanelController;
     public JavaFXPanel javaFXPanel;
@@ -50,19 +42,17 @@ public class CanvasService {
     public BufferedImage tempBackground;
 
 
-    public CanvasService(CanvasPanel canvasPanel, RenderShapeService renderShapeService,
-                         CasterService casterService, BrushService brushService,
-                         CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter) {
+    public CanvasService(CanvasPanel canvasPanel,
+                         CasterService casterService,
+                         RenderShapeService renderShapeService, CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter) {
 
         this.canvasPanel = canvasPanel;
+        this.renderShapeService = renderShapeService;
         getInit();
 
 
-        this.renderShapeService = renderShapeService;
         this.casterService = casterService;
 
-        this.brushService = brushService;
-        //this.canvasPanelController = canvasPanelController;
         this.casterAndBaseToCasterCOConverter = casterAndBaseToCasterCOConverter;
 
         //add render layers on top of background
@@ -74,7 +64,7 @@ public class CanvasService {
 
     }
 
-    public CanvasPanelCO getInit() {
+    public void getInit() {
 
         setCanvasPanelCO(new CanvasPanelCO());
 
@@ -100,12 +90,6 @@ public class CanvasService {
         tempBackground = bufferedImage;
         setTempBackground(tempBackground);
 
-        return getCanvasPanelCO();
-
-    }
-
-    public void paintOnCanvas() {
-        new PaintAdaptor(this);
     }
 
     public void removeCanvasListeners() {
@@ -134,7 +118,7 @@ public class CanvasService {
         repaintCanvas();
     }
 
-    public void saveCanvasAsFile(File file) {
+    public void saveCanvasToFile(File file) {
 
         BufferedImage bi = new BufferedImage(canvasPanel.getWidth(), canvasPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = (Graphics2D) bi.getGraphics();
@@ -148,42 +132,20 @@ public class CanvasService {
         }
     }
 
-    public String SAVE_CANVAS() {
+    public String getCanvasContents() {
 
         //get canvas and save it to a temporary file as a png
         var base = getCanvasPanelCO().getBaseBuffer();
-        var canvasPanelCO = getCanvasPanelCO();
 
         //TODO
         //for cases for right now, base buffer will be largest buffer
         //for future, will need to set max canvas size in CanvasPanelCO
 
         BufferedImage bi = new BufferedImage(base.getWidth(), base.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        //var bi = base.getSubimage(0,0,base.getWidth(),base.getHeight());
-        //BufferedImage bi = new BufferedImage(canvasPanelCO.getBaseBuffer().getWidth(), canvasPanelCO.getBaseBuffer().getHeight(), BufferedImage.TYPE_INT_ARGB);
-
 
         Graphics2D g2d = (Graphics2D) bi.getGraphics();
-        //this.canvasPanelController.getInit().getBaseBuffer().
 
-        //g2d.drawImage(base);
-        //canvasPanel.printAll(g2d);
-
-        //if (showBackground) {
-        g2d.drawImage(canvasPanelCO.getBaseBuffer(), 0, 0, null);
-        //}
-
-        for (var caster : getCanvasPanelCOtoRepaint().getCasterCOList()) {
-            g2d.drawImage(caster.getStrokeBuffer(), 0, 0, null);
-        }
-
-        //draws RenderShapes on screen
-        for (RenderShape renderShape : renderShapeService.getRenderShapeArrayList()) {
-            g2d.setColor(renderShape.getColor());
-            g2d.draw(renderShape.getShape());
-        }
-
-
+        canvasPanel.printAll(g2d);
         g2d.dispose();
 
         File file = null;
@@ -209,71 +171,6 @@ public class CanvasService {
 
         return fileContent;
 
-//        var jacksonResponse = renzenService.UploadArticle(fileContent);
-//
-//
-//        //System.out.println("Trying to open");
-//
-//        //TODO switch from uploading just an image, to uploading an image that creates a draft
-//
-//        try {
-//            OpenArticleInBrowser(jacksonResponse);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            System.out.println("could not open");
-//        }
-//
-//        return (String) jacksonResponse.get("SASUrl");
-
     }
-
-    public CanvasPanelCO getCanvasPanelCOtoRepaint() {
-
-        var canvasPanelCO = new CanvasPanelCO();
-
-        for (var caster : casterService.getAll()) {
-
-            casterService.findInCache(caster.getName())
-                    .ifPresentOrElse(casterCO -> {
-
-                                //if in cache
-                                if (casterService.getSelectedCaster() != null) {
-                                    if (casterService.getSelectedCaster().getName().equals(caster.getName())) {
-                                        if (((Caster) casterCO).equals(casterService.getSelectedCaster())) {
-                                            canvasPanelCO.getCasterCOList().add(casterCO);
-                                        } else {
-                                            canvasPanelCO.getCasterCOList()
-                                                    .add(casterAndBaseToCasterCOConverter.toCasterCO(caster, tempBackground));
-                                        }
-
-                                    } else {
-                                        canvasPanelCO.getCasterCOList().add(casterCO);
-                                    }
-
-                                } else {
-                                    canvasPanelCO.getCasterCOList().add(casterCO);
-                                }
-                            },
-
-
-                            //if not in cache
-                            () -> canvasPanelCO.getCasterCOList()
-                                    .add(casterAndBaseToCasterCOConverter.toCasterCO(caster, tempBackground)));
-
-        }
-
-        casterService.setCasterRenderCache(canvasPanelCO.getCasterCOList());
-        return canvasPanelCO;
-    }
-
-    /**
-     * this function will create a click listener
-     * that will listen for the given number of clicks on the canvas
-     * and then
-     */
-    public void getClicksFromCanvasPanelAndCreateCaster(String casterName) {
-        new CasterAdaptor(this, casterName);
-    }
-
 
 }

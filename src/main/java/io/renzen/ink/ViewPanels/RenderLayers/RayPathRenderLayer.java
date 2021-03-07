@@ -17,7 +17,7 @@ public class RayPathRenderLayer extends AbstractCustomRenderLayer {
 
         var g2d = CanvasPanel.resetHints(g);
 
-        for (var caster : canvasService.getCanvasPanelCOtoRepaint().getCasterCOList()) {
+        for (var caster : casterService.getCanvasPanelCOtoRepaint(canvasService.getTempBackground()).getCasterCOList()) {
 //            g2d.drawImage(caster.getStrokeBuffer(), 0, 0, null);
 
             //draws ray bath on canvas
