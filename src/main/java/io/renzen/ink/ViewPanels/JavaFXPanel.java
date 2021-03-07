@@ -1,7 +1,6 @@
 package io.renzen.ink.ViewPanels;
 
 import io.renzen.ink.Controllers.ActionPanelController;
-import io.renzen.ink.Controllers.CanvasPanelController;
 import io.renzen.ink.InkClass;
 import io.renzen.ink.Services.CanvasService;
 import io.renzen.ink.Services.CasterService;
@@ -96,7 +95,7 @@ public class JavaFXPanel {
     final Accordion selectionAcc = new Accordion(selectionPane);
 
     final Button showControlVertices = new Button("Toggle Show Control Vertices");
-    final Button selectCVs = new Button ("Select Control Vertices");
+    final Button selectCVs = new Button("Select Control Vertices");
 
     final Label propAlongLabel = new Label("Prop Along");
     final Slider propAlong = new Slider();
@@ -112,8 +111,6 @@ public class JavaFXPanel {
 
     final Label casterOffsetYLabel = new Label("Offset Y");
     final Slider casterOffsetY = new Slider();
-
-
 
 
     //-------------------------------------------------------------
@@ -134,7 +131,7 @@ public class JavaFXPanel {
     final ListView<HBox> articleList = new ListView<>();
     ConfigurableApplicationContext springContext = null;
     ActionPanelController actionPanelController = null;
-    CanvasPanelController canvasPanelController = null;
+    //CanvasPanelController canvasPanelController = null;
     Stage stage = null;
     int createCasterCounter = 0;
     CanvasService canvasService = null;
@@ -147,7 +144,7 @@ public class JavaFXPanel {
         this.stage = primaryStage;
         this.springContext = springContext;
         this.actionPanelController = springContext.getBean(ActionPanelController.class);
-        this.canvasPanelController = springContext.getBean(CanvasPanelController.class);
+        //this.canvasPanelController = springContext.getBean(actionPanelController.class);
         this.casterService = springContext.getBean(CasterService.class);
         this.canvasService = springContext.getBean(
                 CanvasService.class
@@ -170,7 +167,7 @@ public class JavaFXPanel {
         fileChooser.setTitle("Open File");
         casterColorPicker.setValue(new Color(0, 0, 0, 1));
         brushColorPicker.setValue(new Color(0, 0, 0, 1));
-        canvasPanelController.setCasterColor(casterColorPicker.getValue());
+        actionPanelController.setCasterColor(casterColorPicker.getValue());
         actionPanelController.setBrushColor(brushColorPicker.getValue());
 
 
@@ -204,10 +201,10 @@ public class JavaFXPanel {
 
 
         selectionBox.getChildren().addAll(showControlVertices, selectCVs,
-                propAlongLabel,propAlong,casterRandXLabel,casterRandX,
-                casterRandYLabel,casterRandY,
-                casterOffsetXLabel,casterOffsetX,
-                casterOffsetYLabel,casterOffsetY);
+                propAlongLabel, propAlong, casterRandXLabel, casterRandX,
+                casterRandYLabel, casterRandY,
+                casterOffsetXLabel, casterOffsetX,
+                casterOffsetYLabel, casterOffsetY);
         //selectionAcc.getPanes().add(showControlVertices)
 
         fileBox.getChildren().addAll(openFileButton, saveFileButton);
@@ -268,7 +265,7 @@ public class JavaFXPanel {
 
     private void linkButtonsToActionController() {
 
-        renderRayPath.setOnMouseClicked(mouseEvent -> canvasService.toggleShowRayPath() );
+        renderRayPath.setOnMouseClicked(mouseEvent -> canvasService.toggleShowRayPath());
 
 
         useBrush.setOnMouseClicked(mouseEvent -> {
@@ -285,7 +282,7 @@ public class JavaFXPanel {
 
         //TODO working on. need to set in a service
         casterColorPicker.valueProperty().addListener((observableValue, number, t1) -> {
-            canvasPanelController.setCasterColor(t1);
+            actionPanelController.setCasterColor(t1);
             //messy
             springContext.getBean(CanvasPanel.class).repaint();
         });
@@ -315,7 +312,7 @@ public class JavaFXPanel {
         openFileButton.setOnMouseClicked(e -> {
             var file = fileChooser.showOpenDialog(stage);
 
-            canvasPanelController.openFile(file);
+            actionPanelController.openFile(file);
 
             //shouldn't be done here like this
             springContext.getBean(CanvasPanel.class).repaint();

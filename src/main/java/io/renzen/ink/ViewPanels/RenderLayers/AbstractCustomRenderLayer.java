@@ -1,6 +1,6 @@
 package io.renzen.ink.ViewPanels.RenderLayers;
 
-import io.renzen.ink.Controllers.CanvasPanelController;
+import io.renzen.ink.Services.CanvasService;
 import io.renzen.ink.Services.CasterService;
 import io.renzen.ink.Services.RenderShapeService;
 import io.renzen.ink.ViewObjects.CanvasPanelCO;
@@ -12,19 +12,18 @@ public abstract class AbstractCustomRenderLayer {
 
     final CasterService casterService;
     final RenderShapeService renderShapeService;
-    final CanvasPanelController canvasPanelController;
     final CanvasPanelCO canvasPanelCO;
-
+    final CanvasService canvasService;
     final CanvasPanel canvasPanel;
 
-//    Graphics2D g2d;
+    AbstractCustomRenderLayer(CanvasService canvasService) {
 
-    AbstractCustomRenderLayer(CanvasPanel canvasPanel){
-        this.canvasPanel=canvasPanel;
-        this.casterService = canvasPanel.casterService;
-        this.renderShapeService = canvasPanel.renderShapeService;
-        this.canvasPanelController = canvasPanel.canvasPanelController;
-        this.canvasPanelCO = canvasPanel.getCanvasPanelCO();
+        this.canvasPanel = canvasService.canvasPanel;
+        this.canvasPanelCO = canvasService.getCanvasPanelCO();
+
+        this.canvasService = canvasService;
+        this.casterService = canvasService.casterService;
+        this.renderShapeService = canvasService.renderShapeService;
     }
 
     public abstract void render(Graphics g);

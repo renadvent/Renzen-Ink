@@ -11,6 +11,11 @@ import io.renzen.ink.ViewObjects.ActionPanelCO;
 import javafx.scene.paint.Color;
 import org.springframework.stereotype.Controller;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Action Panel makes direct requests to this controller
  * Action Panel Function Definitions
@@ -90,6 +95,28 @@ public class ActionPanelController {
     public void updateTolerance(int e) {
         casterService.getSelectedCaster().setTolerance(e);
         canvasService.repaintCanvas();
+    }
+
+    public void openFile(File file) {
+
+        BufferedImage loadedImage = null;
+
+        try {
+            loadedImage = ImageIO.read(file);
+        } catch (IOException exception) {
+            System.out.println(exception.getMessage());
+            System.exit(0);
+        }
+
+        canvasService.getCanvasPanelCO().setBaseBuffer(loadedImage);
+
+        canvasService.setTempBackground(loadedImage);
+
+        //tempBackground = loadedImage;
+    }
+
+    public void setCasterColor(Color color) {
+        casterService.setCasterColor(color);
     }
 
 }

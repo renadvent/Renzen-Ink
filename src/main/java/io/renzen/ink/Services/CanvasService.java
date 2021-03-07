@@ -1,12 +1,20 @@
 package io.renzen.ink.Services;
 
+import io.renzen.ink.ArtObjects.Caster;
 import io.renzen.ink.ArtObjects.RenderShape;
-import io.renzen.ink.Controllers.CanvasPanelController;
+import io.renzen.ink.Converters.CasterAndBaseToCasterCOConverter;
 import io.renzen.ink.MouseInputAdaptors.CasterAdaptor;
 import io.renzen.ink.MouseInputAdaptors.PaintAdaptor;
+import io.renzen.ink.ViewObjects.CanvasPanelCO;
 import io.renzen.ink.ViewPanels.CanvasPanel;
 import io.renzen.ink.ViewPanels.JavaFXPanel;
+import io.renzen.ink.ViewPanels.RenderLayers.BackgroundRenderLayer;
+import io.renzen.ink.ViewPanels.RenderLayers.CasterRenderLayer;
+import io.renzen.ink.ViewPanels.RenderLayers.RayPathRenderLayer;
+import io.renzen.ink.ViewPanels.RenderLayers.ShapeRenderLayer;
+import lombok.Data;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -26,7 +34,8 @@ import java.util.HashMap;
  * and CanvasPanelController to interact
  */
 
-@Controller
+@Service
+@Data
 public class CanvasService {
 
     public final CanvasPanel canvasPanel;
@@ -34,19 +43,66 @@ public class CanvasService {
     public final CasterService casterService;
     public final RenzenService renzenService;
     public final BrushService brushService;
-    public final CanvasPanelController canvasPanelController;
+    final CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter;
+    //public final CanvasPanelController canvasPanelController;
     public JavaFXPanel javaFXPanel;
+    public CanvasPanelCO canvasPanelCO;
+    public BufferedImage tempBackground;
+
 
     public CanvasService(CanvasPanel canvasPanel, RenderShapeService renderShapeService,
-                         CasterService casterService, RenzenService renzenService, BrushService brushService
-            , CanvasPanelController canvasPanelController) {
+                         CasterService casterService, RenzenService renzenService, BrushService brushService,
+                         CasterAndBaseToCasterCOConverter casterAndBaseToCasterCOConverter) {
+
         this.canvasPanel = canvasPanel;
+        getInit();
+
+
         this.renderShapeService = renderShapeService;
         this.casterService = casterService;
         this.renzenService = renzenService;
 
         this.brushService = brushService;
-        this.canvasPanelController = canvasPanelController;
+        //this.canvasPanelController = canvasPanelController;
+        this.casterAndBaseToCasterCOConverter = casterAndBaseToCasterCOConverter;
+
+        //add render layers on top of background
+        canvasPanel.addRenderLayer(new BackgroundRenderLayer(this));
+        canvasPanel.addRenderLayer(new CasterRenderLayer(this));
+        canvasPanel.addRenderLayer(new ShapeRenderLayer(this));
+        canvasPanel.addRenderLayer(new RayPathRenderLayer(this));
+
+
+    }
+
+    public CanvasPanelCO getInit() {
+
+        setCanvasPanelCO(new CanvasPanelCO());
+
+        BufferedImage bufferedImage = new BufferedImage(1280, 1024, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = bufferedImage.createGraphics();
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHints(rh);
+
+        BufferedImage loadedImage = null;
+
+        try {
+            File f = new File("src/main/java/io/renzen/ink/body.jpg");
+            loadedImage = ImageIO.read(f);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            System.exit(0);
+        }
+
+        g2d.drawImage(loadedImage, 0, 0, null);
+
+        getCanvasPanelCO().setBaseBuffer(bufferedImage);
+
+        tempBackground = bufferedImage;
+        setTempBackground(tempBackground);
+
+        return getCanvasPanelCO();
+
     }
 
     public void paintOnCanvas() {
@@ -69,14 +125,14 @@ public class CanvasService {
         repaintCanvas();
     }
 
-    public void toggleShowRayPath() {
-        canvasPanel.setShowRayPath(!canvasPanel.isShowRayPath());
-        repaintCanvas();
-    }
-
     public void repaintCanvas() {
         canvasPanel.validate();
         canvasPanel.repaint();
+    }
+
+    public void toggleShowRayPath() {
+        canvasPanel.setShowRayPath(!canvasPanel.isShowRayPath());
+        repaintCanvas();
     }
 
     public void saveCanvasAsFile(File file) {
@@ -96,8 +152,8 @@ public class CanvasService {
     public String SAVE_CANVAS_AND_CREATE_NEW_ARTICLE_ON_RENZEN() {
 
         //get canvas and save it to a temporary file as a png
-        var base = this.canvasPanelController.getCanvasPanelCO().getBaseBuffer();
-        var canvasPanelCO = this.canvasPanelController.getCanvasPanelCO();
+        var base = getCanvasPanelCO().getBaseBuffer();
+        var canvasPanelCO = getCanvasPanelCO();
 
         //TODO
         //for cases for right now, base buffer will be largest buffer
@@ -118,7 +174,7 @@ public class CanvasService {
         g2d.drawImage(canvasPanelCO.getBaseBuffer(), 0, 0, null);
         //}
 
-        for (var caster : canvasPanelController.getCanvasPanelCOtoRepaint().getCasterCOList()) {
+        for (var caster : getCanvasPanelCOtoRepaint().getCasterCOList()) {
             g2d.drawImage(caster.getStrokeBuffer(), 0, 0, null);
         }
 
@@ -170,6 +226,45 @@ public class CanvasService {
 
     }
 
+    public CanvasPanelCO getCanvasPanelCOtoRepaint() {
+
+        var canvasPanelCO = new CanvasPanelCO();
+
+        for (var caster : casterService.getAll()) {
+
+            casterService.findInCache(caster.getName())
+                    .ifPresentOrElse(casterCO -> {
+
+                                //if in cache
+                                if (casterService.getSelectedCaster() != null) {
+                                    if (casterService.getSelectedCaster().getName().equals(caster.getName())) {
+                                        if (((Caster) casterCO).equals(casterService.getSelectedCaster())) {
+                                            canvasPanelCO.getCasterCOList().add(casterCO);
+                                        } else {
+                                            canvasPanelCO.getCasterCOList()
+                                                    .add(casterAndBaseToCasterCOConverter.toCasterCO(caster, tempBackground));
+                                        }
+
+                                    } else {
+                                        canvasPanelCO.getCasterCOList().add(casterCO);
+                                    }
+
+                                } else {
+                                    canvasPanelCO.getCasterCOList().add(casterCO);
+                                }
+                            },
+
+
+                            //if not in cache
+                            () -> canvasPanelCO.getCasterCOList()
+                                    .add(casterAndBaseToCasterCOConverter.toCasterCO(caster, tempBackground)));
+
+        }
+
+        casterService.setCasterRenderCache(canvasPanelCO.getCasterCOList());
+        return canvasPanelCO;
+    }
+
     private void OpenArticleInBrowser(HashMap<?, ?> jacksonResponse) throws IOException, URISyntaxException {
         var URL = new java.net.URL(renzenService.getRoot()
 
@@ -184,6 +279,8 @@ public class CanvasService {
         Desktop.getDesktop().browse(URL.toURI());
     }
 
+//    CanvasPanelCO canvasPanelCO;
+
     /**
      * this function will create a click listener
      * that will listen for the given number of clicks on the canvas
@@ -192,5 +289,6 @@ public class CanvasService {
     public void getClicksFromCanvasPanelAndCreateCaster(String casterName) {
         new CasterAdaptor(this, casterName);
     }
+
 
 }

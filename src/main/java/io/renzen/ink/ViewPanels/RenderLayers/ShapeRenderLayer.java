@@ -1,13 +1,15 @@
 package io.renzen.ink.ViewPanels.RenderLayers;
 
 import io.renzen.ink.ArtObjects.RenderShape;
+import io.renzen.ink.Services.CanvasService;
 import io.renzen.ink.ViewPanels.CanvasPanel;
 
 import java.awt.*;
 
 public class ShapeRenderLayer extends AbstractCustomRenderLayer {
-    public ShapeRenderLayer(CanvasPanel canvasPanel) {
-        super(canvasPanel);
+
+    public ShapeRenderLayer(CanvasService canvasService) {
+        super(canvasService);
     }
 
     @Override
